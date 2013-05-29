@@ -1,0 +1,28 @@
+<!doctype html>
+<html ng-app>
+<head>
+	<title>Node RSS</title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="rss.css">
+	<style>[ng-cloak], .ng-cloak { display: none; }</style>
+</head>
+<body ng-cloak>
+	<div class="statusbar" ng-controller="Status">
+		<div>Remaining: {{unreadCount}}</div>
+	</div>
+	
+	<div class="stream-container">
+		<ul class="stream" ng-controller="Stream">
+			<li ng-repeat="item in items">
+				<a href="{{item.url}}"><h2>{{item.title}}</h2></a>
+				<h3>{{item.author}}</h3>
+				<div class="content" ng-bind-html-unsafe="item.content"></div>
+				<cite>{{item.published}}</cite>
+			</li>
+		</ul>
+	</div>
+
+	<script src="angular.min.js"></script>
+	<script src="rss.js"></script>
+</body>
+</html>
