@@ -4,7 +4,29 @@
     box-sizing: border-box;
 }
 
+html, body {
+    background: #E8E8E8;
+}
+
 body {
     font-family: calibri, tahoma, verdana, sans-serif;
     font-size: 13px;
 }
+
+.root-container {
+    margin: auto;
+    max-width: 800px;
+}
+
+.menu {
+    float: left;
+    width: 20%;
+    background: white;
+    margin-right: 4%;
+}
+
+.stream-container {
+    width: 75%;
+    background: white;
+    float: left;
+};

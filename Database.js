@@ -55,9 +55,10 @@ var db = {
 
 	//add an item for a specific feed
 	addItem: function(feed, article, c) {
-		if (!article.pubDate || isNaN(article.pubDate.getTime())) article.pubDate = new Date();
+		//if there's no pubdate, we need to 
+		var date = article.date || article.pubDate || new Date(2000, 0, 1);
 		var q = psql.query("INSERT INTO stories (feed, title, url, author, content, guid, published) VALUES ($1, $2, $3, $4, $5, $6, $7)",
-			[feed, article.title, article.link, article.author, article.description, article.guid, article.pubDate]);
+			[feed, article.title, article.link, article.author, article.description, article.guid, date]);
 		q.on("error", console.log.bind(console, article.link, article.pubDate));
 		if (c) return c();
 	},
@@ -76,7 +77,7 @@ var db = {
 	mark: function(item, unread, c) {
 		var q = "UPDATE stories SET read = " + (!unread) + " WHERE id = " + (item * 1);
 		psql.query(q, function(err, data) {
-			c(err);
+			if (c) c(err);
 		});
 	},
 	

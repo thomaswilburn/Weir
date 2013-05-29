@@ -11,7 +11,7 @@ var setDB = function(db) {
 	database = db;
 };
 
-var feedSlice = 3;
+var feedSlice = 0;
 
 var fetch = function() {
 	if (Hound.busy) return;
@@ -28,14 +28,19 @@ var fetch = function() {
 			var r = request(row.url);
 			r.on("error", console.log.bind(console, row.url));
 			r.on("response", function(response) {
-				if (response.statusCode !== 200) return;
+				if (response.statusCode !== 200) {
+					database.setFeedResult(row.id, response.statusCode);
+					return;
+				};
 				var parser = new FeedParser();
 				parser.on('complete', function(meta, articles) {
 					Hound.busy = false;
+					database.setFeedResult(row.id, 200);
 					saveItems(row.id, meta, articles);
 				});
 				parser.on("error", function() {
 					console.log("Broken feed:", row.url);
+					database.setFeedResult(row.id, 0);
 				});
 				r.pipe(parser);
 			});
@@ -44,6 +49,7 @@ var fetch = function() {
 };
 
 var saveItems = function(feed, meta, articles) {
+	var added = 0;
 	database.getIdentifiers(feed, function(err, marks) {
 		//console.log(feed, "markers", marks);
 		articles.forEach(function(article) {
@@ -55,8 +61,10 @@ var saveItems = function(feed, meta, articles) {
 			if (unique) {
 				//console.log("New story found:", article.title)
 				database.addItem(feed, article);
+				added++;
 			}
 		});
+		if (added) console.log("Added", added, "items from", meta.title);
 	});
 };
 

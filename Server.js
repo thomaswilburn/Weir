@@ -33,7 +33,7 @@ var serveFile = function(pathname, req) {
 					Err.log("Serving file:", pathname);
 					req.write(data);
 					req.end();
-					files[pathname] = data;
+					//files[pathname] = data;
 				});
 			});
 		} else {
