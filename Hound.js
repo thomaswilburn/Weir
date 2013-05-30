@@ -2,6 +2,7 @@ var FeedParser = require('feedparser');
 var request = require('request');
 var pg = require('pg');
 var EventEmitter = require('events').EventEmitter;
+var cfg = require("./Config.js");
 
 var noop = function() {};
 
@@ -18,17 +19,28 @@ var fetch = function() {
 	Hound.busy = true;
 	Hound.emit("fetch:start");
 	database.getFeeds(function(err, rows) {
-		console.log(rows.length);
+		//trim feeds down to 1/10, so as not to request everything at once
 		rows = rows.filter(function(row, i) {
 			return i.toString().split("").pop() == feedSlice;
 		});
 		feedSlice = (feedSlice + 1) % 10;
-		console.log("Pulling", rows.length, "feeds");
 		rows.forEach(function(row) {
-			var r = request(row.url);
-			r.on("error", console.log.bind(console, row.url));
+			var r = request({
+				url: row.url,
+				followAllRedirects: true,
+				headers: {
+					"User-Agent": "Mozilla/5.0 (Windows NT 6.1; rv:21.0) Gecko/20100101 Firefox/21.0"
+				}
+			});
+			r.on("error", function(err) {
+				console.log("Request error:", row.url, err);
+				if (err.code == "ENOTFOUND" || err.code == "EHOSTUNREACH") {
+					database.setFeedResult(row.id, 0);
+				}
+			});
 			r.on("response", function(response) {
 				if (response.statusCode !== 200) {
+					console.log("Unsuccessful request:", row.url);
 					database.setFeedResult(row.id, response.statusCode);
 					return;
 				};
@@ -51,6 +63,10 @@ var fetch = function() {
 var saveItems = function(feed, meta, articles) {
 	var added = 0;
 	database.getIdentifiers(feed, function(err, marks) {
+		var max = cfg.feedMax || 20;
+		if (articles.length > max) {
+			articles = articles.slice(0, max);
+		}
 		//console.log(feed, "markers", marks);
 		articles.forEach(function(article) {
 			var date = article.pubDate instanceof Date ? article.pubDate.getTime() : 0;

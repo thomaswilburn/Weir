@@ -1,22 +1,15 @@
-Node-RSS (name pending)
+Weir
 =======================
-
-Names:
-Audrey
-Delta
-Entropy
-Flood
-* Weir (type of dam)
 
 Components:
 Reader - main class instantiates others
 Hound - fetches RSS on a timer, dispatches events with new counts when the fetch concludes
-Feed - DB abstraction layer
-Database.js - tech-specific database layer 
-ErrLog - logs out to a file
+Database.js - tech-specific database layer, start with pgsql
+Console - logs out to a file
 Config - key/value store loaded from JSON
 Setup - startup check for existence of the database
 Server - HTTP requests and AJAX calls
+Stream - Registers routes and passes on to the database
 
 Notes:
  - Use Angular on client side
@@ -25,3 +18,5 @@ Notes:
  	/stream/status
  	/stream/unread
  	/stream/mark
+ - Enforce passwords using TOTP, with a quick script to generate those codes
+

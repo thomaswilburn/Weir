@@ -1,5 +1,5 @@
 var cfg = require("./Config.js");
-var Err = require("./ErrLog.js");
+var console = require("./DevConsole.js");
 
 var http = require("http");
 var url = require("url");
@@ -16,7 +16,7 @@ var respond = function(request, data) {
 
 var serveFile = function(pathname, req) {
 	if (files[pathname]) {
-		Err.log("Serving cached file:", pathname);
+		//console.log("Serving cached file:", pathname);
 		var data = files[pathname];	
 		req.write(data);
 		req.end();
@@ -30,9 +30,10 @@ var serveFile = function(pathname, req) {
 					filePath = path.join(filePath, "/index.html");
 				}
 				fs.readFile(filePath, function(err, data) {
-					Err.log("Serving file:", pathname);
+					//console.log("Serving file:", pathname);
 					req.write(data);
 					req.end();
+					//TODO: un-comment this line to enable in-memory file cache
 					//files[pathname] = data;
 				});
 			});
@@ -51,14 +52,14 @@ var Server = {
 	}
 };
 
-Server.http.listen(8675);
+Server.http.listen(cfg.port || 8080);
 
 Server.http.on("request", function(incoming, response) {
 	for (var i = 0; i < routes.length; i++) {
 		var route = routes[i];
 		var parsed = url.parse(incoming.url, true, true);
 		if (route.p.test(parsed.pathname)) {
-			Err.log("Requested route:", parsed.pathname);
+			//console.log("Requested route:", parsed.pathname);
 			var request = {
 				url: parsed.pathname,
 				params: parsed.query,
