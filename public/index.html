@@ -1,31 +1,31 @@
 <!doctype html>
 <html ng-app="Weir">
 <head>
-	<title>Node RSS</title>
-	<meta charset="utf-8">
-	<link rel="stylesheet" type="text/css" href="rss.css">
-	<style>[ng-cloak], .ng-cloak { display: none; }</style>
+  <title>Node RSS</title>
+  <meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="rss.css">
+  <style>[ng-cloak], .ng-cloak { display: none; }</style>
 </head>
 <body ng-cloak>
-	<div class="root-container" ng-controller="Stream">
-		<div class="menu">
-			<div>Remaining: {{items.unreadCount}}</div>
-			<a href="javascript:;" ng-click="refresh()">Refresh</a>
-		</div>
-		
-		<div class="stream-container">
-			<ul class="stream">
-				<li ng-repeat="item in items.current">
-					<a href="{{item.url}}"><h2>{{item.title}}</h2></a>
-					<h3>{{item.author}}</h3>
-					<div class="content" ng-bind-html-unsafe="item.content"></div>
-					<cite>{{item.published}}</cite>
-				</li>
-			</ul>
-		</div>
-	</div>
+  <div class="root-container" ng-controller="Stream">
+    <div class="menu">
+      <div>Remaining: {{items.unreadCount}}</div>
+      <a href="javascript:;" ng-click="refresh()">Refresh</a>
+    </div>
+    
+    <div class="stream-container">
+      <ul class="stream">
+        <li ng-repeat="item in items.current">
+          <a href="{{item.url}}"><h2>{{item.title}}</h2></a>
+          <h3>{{item.author}}</h3>
+          <div class="content" ng-bind-html-unsafe="item.content"></div>
+          <cite>{{item.published}}</cite>
+        </li>
+      </ul>
+    </div>
+  </div>
 
-	<script src="angular.min.js"></script>
-	<script src="rss.js"></script>
+  <script src="angular.min.js"></script>
+  <script src="rss.js"></script>
 </body>
 </html>

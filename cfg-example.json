@@ -1,0 +1,11 @@
+{
+  "port": 0,
+  "database": {
+    "type": "string",
+    "user": "string",
+    "password": "string",
+    "db": "string"
+  },
+  "updateInterval": 0,
+  "feedMax": 0
+}

@@ -6,10 +6,10 @@ var console = require("./DevConsole.js");
 var Server = require("./Server.js");
 
 var fetch = function() {
-    Hound.fetch();
-    var interval = (cfg.updateInterval || 15) * 60 * 1000;
-    //fetch only gets 1/10 the feeds, so divide up into 10 fetches
-    setTimeout(fetch, interval / 10);
+  Hound.fetch();
+  var interval = (cfg.updateInterval || 15) * 60 * 1000;
+  //fetch only gets 1/10 the feeds, so divide up into 10 fetches
+  setTimeout(fetch, interval / 10);
 }
 
 var Reader = function() {

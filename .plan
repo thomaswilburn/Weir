@@ -10,13 +10,13 @@ Config - key/value store loaded from JSON
 Setup - startup check for existence of the database
 Server - HTTP requests and AJAX calls
 Stream - Registers routes and passes on to the database
+Manos - utility functions for async without importing all of caolan's library
 
 Notes:
- - Use Angular on client side
- - beginning routes:
- 	/
- 	/stream/status
- 	/stream/unread
- 	/stream/mark
  - Enforce passwords using TOTP, with a quick script to generate those codes
-
+ 	(or better yet, give people the key as an option, let them set it in cfg.json)
+ - Add OPML import
+ - Add some options (local-only)
+ - Add UI for collapsed/expanded view, floating menu
+ - Add simple DB SQL builder
+ - Add setup script
