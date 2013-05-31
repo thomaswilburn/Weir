@@ -5,6 +5,8 @@ var http = require("http");
 var url = require("url");
 var fs = require("fs");
 var path = require("path");
+var less = require("less");
+var Manos = require("./Manos");
 var routes = [];
 var files = {};
 
@@ -22,26 +24,76 @@ var serveFile = function(pathname, req) {
     req.end();
     return;
   }
+  var extension = /\.\w+$/.exec(pathname);
+  extension = extension ? extension[0] : "";
   var filePath = path.join("./public", pathname);
+  if (/\/$/.test(pathname)) {
+    //trailing slashes (we assume) are directories
+    filePath = path.join(filePath, "index.html");
+  }
   fs.exists(filePath, function(does) {
     if (does) {
-      fs.stat(filePath, function(err, stats) {
-        if (stats.isDirectory()) {
-          filePath = path.join(filePath, "/index.html");
-        }
-        fs.readFile(filePath, function(err, data) {
-          //console.log("Serving file:", pathname);
-          req.write(data);
-          req.end();
-          //TODO: un-comment this line to enable in-memory file cache
-          //files[pathname] = data;
-        });
+      if (extension == ".css") {
+        return sendLESS(filePath, req);
+      }
+      fs.readFile(filePath, function(err, data) {
+        //console.log("Serving file:", pathname);
+        req.write(data);
+        req.end();
+        //TODO: un-comment this line to enable in-memory file cache
+        //files[pathname] = data;
       });
     } else {
       req.writeHead(404);
       req.end();
     }
   });
+};
+
+var lessParser = new less.Parser();
+
+var sendLESS = function(path, req) {
+  var send = function(file) {
+    fs.readFile(file, function(err, data) {
+      req.write(data);
+      req.end();
+    });
+  }
+  var lessPath = path.replace(/css$/, "less");
+  Manos.when(
+    [fs.exists, path],
+    [fs.exists, lessPath],
+    function(css, less) {
+      if (css[0] && less[0]) {
+        Manos.when(
+          [fs.stat, path],
+          [fs.stat, lessPath],
+          function(css, less) {
+            //check dates on less and css files
+            if (!css[0] && !less[0] && css[1].mtime < less[1].mtime) {
+              //less is newer, compile and send
+              Manos.chain(
+                function(c) {
+                  fs.readFile(lessPath, { encoding: "utf-8" }, c);
+                },
+                function(err, data, c) {
+                  lessParser.parse(data, c);
+                },
+                function(err, tree, c) {
+                  fs.writeFile(path, tree.toCSS(), function() {
+                    send(path);
+                  });
+                }
+              );
+              return;
+            }
+            //CSS is newer, just send it
+            send(path);
+          }
+        );
+      }
+    }
+  );
 };
 
 var Server = {

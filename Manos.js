@@ -9,12 +9,10 @@ var when = function() {
   var returned = [];
   var done = calls.pop();
   var all = calls.length;
-  console.log(all);
   calls.forEach(function(call, index) {
     var f = typeof call == "function" ? f : call.shift();
     var args = typeof call == "function" ? [] : call;
     args.push(function() {
-      console.log(">>>", arguments);
       returned[index] = slice.call(arguments);
       finished++;
       if (finished == all) {
@@ -25,6 +23,31 @@ var when = function() {
   });
 };
 
+var chain = function() {
+  var tasks = slice.call(arguments);
+  var args = [];
+  //get starting arguments
+  if (typeof tasks[0] != "function") {
+    var start = tasks.shift();
+    if (start instanceof Array) {
+      args = start;
+    } else {
+      args.push(start);
+    }
+  }
+  var index = -1;
+  var next = function() {
+    var args = slice.call(arguments);
+    args.push(next);
+    index++;
+    if (index == tasks.length) return;
+    var f = tasks[index];
+    f.apply(null, args);
+  }
+  next.apply(null, args);
+};
+
 module.exports = {
-  when: when
+  when: when,
+  chain: chain
 }
