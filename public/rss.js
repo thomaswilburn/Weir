@@ -48,18 +48,33 @@ module.service("Weir.Server", ["$http", "$q", function($http, $q) {
   return facade;
 }]);
 
+module.directive("preventDefault", function() {
+  return {
+    restrict: "A",
+    link: function(scope, element) {
+      element.bind("click", function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+      });
+    }
+  }
+});
+
 var Menu = function($scope, Server) {
   $scope.items = Server;
 };
 Menu.$inject = ["$scope", "Weir.Server"];
 
 var Stream = function($scope, Server) {
-  console.log(Server);
   $scope.items = Server;
   Server.getUnread();
   Server.getUnreadCount();
   $scope.refresh = function() {
     Server.markAndGo();
+  };
+  
+  $scope.activate = function(item) {
+    item.active = !item.active;
   };
 };
 Stream.$inject = ["$scope", "Weir.Server"];

@@ -24,8 +24,7 @@ var serveFile = function(pathname, req) {
     req.end();
     return;
   }
-  var extension = /\.\w+$/.exec(pathname);
-  extension = extension ? extension[0] : "";
+  
   var filePath = path.join("./public", pathname);
   if (/\/$/.test(pathname)) {
     //trailing slashes (we assume) are directories
@@ -33,9 +32,6 @@ var serveFile = function(pathname, req) {
   }
   fs.exists(filePath, function(does) {
     if (does) {
-      if (extension == ".css") {
-        return sendLESS(filePath, req);
-      }
       fs.readFile(filePath, function(err, data) {
         //console.log("Serving file:", pathname);
         req.write(data);
@@ -48,52 +44,6 @@ var serveFile = function(pathname, req) {
       req.end();
     }
   });
-};
-
-var lessParser = new less.Parser();
-
-var sendLESS = function(path, req) {
-  var send = function(file) {
-    fs.readFile(file, function(err, data) {
-      req.write(data);
-      req.end();
-    });
-  }
-  var lessPath = path.replace(/css$/, "less");
-  Manos.when(
-    [fs.exists, path],
-    [fs.exists, lessPath],
-    function(css, less) {
-      if (css[0] && less[0]) {
-        Manos.when(
-          [fs.stat, path],
-          [fs.stat, lessPath],
-          function(css, less) {
-            //check dates on less and css files
-            if (!css[0] && !less[0] && css[1].mtime < less[1].mtime) {
-              //less is newer, compile and send
-              Manos.chain(
-                function(c) {
-                  fs.readFile(lessPath, { encoding: "utf-8" }, c);
-                },
-                function(err, data, c) {
-                  lessParser.parse(data, c);
-                },
-                function(err, tree, c) {
-                  fs.writeFile(path, tree.toCSS(), function() {
-                    send(path);
-                  });
-                }
-              );
-              return;
-            }
-            //CSS is newer, just send it
-            send(path);
-          }
-        );
-      }
-    }
-  );
 };
 
 var Server = {

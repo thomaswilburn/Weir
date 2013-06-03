@@ -17,6 +17,7 @@ Notes:
  	(or better yet, give people the key as an option, let them set it in cfg.json)
  - Add OPML import
  - Add some options (local-only)
- - Add UI for collapsed/expanded view, floating menu
  - Add simple DB SQL builder
  - Add setup script
+ - Refactor Angular for better separation between service and controllers (multiple scripts)
+ - Add mobile theme/UX

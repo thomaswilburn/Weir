@@ -1,0 +1,43 @@
+.stream-container {
+  width: 75%;
+  margin-left: 25%;
+  background: @background;
+  padding: 1em 4px;
+  
+  .stream {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    
+    li {
+      display: block;
+      background: white;
+      list-style-type: none;
+      margin-bottom: 1em;
+      padding: 0 2px;
+      
+      h2 {
+        margin: 0;
+        display: inline-block;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        width: 80%;
+        overflow: hidden;
+        border-bottom: 1px solid #DDD;
+        font-size: 18px;
+        font-weight: normal;
+        
+        &:hover {
+          background: darken(@background, 10%);
+        }
+      }
+      
+      img, object, embed, video, audio {
+        max-width: 100%;
+      }
+      
+    }
+    
+  }
+  
+};

@@ -1,0 +1,34 @@
+.menu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 20%;
+  list-style-type: none;
+  padding: 0;
+  margin-top: 0;
+  text-transform: uppercase;
+  color: lighten(@foreground, 20%);
+  background: @background;
+  
+  li {
+    margin-bottom: 4px;
+    padding: 4px 1em;
+    letter-spacing: 1.5px;
+    
+    &.header {
+      font-weight: normal;
+    }
+    
+    &:hover {
+      color: @foreground;
+    }
+    
+    a {
+      font-weight: bold;
+      display: block;
+    }
+    
+  }
+  
+}
