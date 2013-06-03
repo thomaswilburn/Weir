@@ -13,8 +13,7 @@ Stream - Registers routes and passes on to the database
 Manos - utility functions for async without importing all of caolan's library
 
 Notes:
- - Enforce passwords using TOTP, with a quick script to generate those codes
- 	(or better yet, give people the key as an option, let them set it in cfg.json)
+ - Add TOTP auth (or display token if none has been set)
  - Add OPML import
  - Add some options (local-only)
  - Add setup script
@@ -37,5 +36,4 @@ Notes:
  - Add right-hand panel with links to various in-stream actions/options
  - Add tags, blog titles to item data
  - Mark as read on activation
- - 
  - Prevent loading of content until such a time as the item is shown
