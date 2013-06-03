@@ -16,6 +16,14 @@
       margin-bottom: 1em;
       padding: 0 2px;
       
+      .header {
+        border-bottom: 1px solid #DDD;
+        
+        &:hover {
+          background: darken(@background, 10%);
+        }
+      }
+      
       h2 {
         margin: 0;
         display: inline-block;
@@ -23,17 +31,21 @@
         white-space: nowrap;
         width: 80%;
         overflow: hidden;
-        border-bottom: 1px solid #DDD;
         font-size: 18px;
         font-weight: normal;
-        
-        &:hover {
-          background: darken(@background, 10%);
-        }
+      }
+      
+      h3 {
+        font-size: 12px;
       }
       
       img, object, embed, video, audio {
         max-width: 100%;
+      }
+      
+      .content {
+        padding: 0 2em;
+        border-left: 4px solid darken(@background, 20%);
       }
       
     }

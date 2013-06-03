@@ -18,16 +18,15 @@
     <div class="stream-container">
       <ul class="stream">
         <li ng-repeat="item in items.current">
-          <div class="header">
-            <a href="{{item.url}}" prevent-default ng-click="activate(item)">
+          <div class="header" ng-click="activate(item)">
+            <a href="{{item.url}}" prevent-default>
               <h2>{{item.title}}</h2>
             </a>
             <!-- tags go here -->
           </div>
           <div class="content" ng-show="item.active">
-            <h3>{{item.author}}</h3>
+            <h3>Posted by {{item.author}} at {{item.published}}</h3>
             <div class="text" ng-bind-html-unsafe="item.content"></div>
-            <cite>{{item.published}}</cite>
           </div>
         </li>
       </ul>

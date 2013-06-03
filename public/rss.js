@@ -54,7 +54,6 @@ module.directive("preventDefault", function() {
     link: function(scope, element) {
       element.bind("click", function(e) {
         e.preventDefault();
-        e.stopPropagation();
       });
     }
   }
