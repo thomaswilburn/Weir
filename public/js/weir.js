@@ -28,7 +28,6 @@ Weir.service("Weir.Server", ["Weir.Request", "$q", function(Request, $q) {
     items: [],
     unread: 0,
     total: 0,
-    current: 0,
     updatedAt: new Date()
   };
 
@@ -48,6 +47,7 @@ Weir.service("Weir.Server", ["Weir.Request", "$q", function(Request, $q) {
       var ids = stream.items.map(function(item) {
         return item.id;
       });
+      var deferred = $q.defer();
       ask({
         url: "/stream/markRefresh",
         params: {
@@ -55,16 +55,20 @@ Weir.service("Weir.Server", ["Weir.Request", "$q", function(Request, $q) {
         }
       }).then(function(data) {
         stream.items = data.items;
+        stream.items[0].active = true;
         stream.unread = data.unread;
         stream.total = data.total;
         stream.updatedAt = new Date();
+        deferred.resolve();
       });
+      return deferred.promise;
     },
     refresh: function() {
       ask({
         url: "/stream/unread"
       }).then(function(data) {
         stream.items = data.items;
+        stream.items[0].active = true;
         stream.updatedAt = new Date();
       });
     },
@@ -75,10 +79,6 @@ Weir.service("Weir.Server", ["Weir.Request", "$q", function(Request, $q) {
         stream.unread = data.unread;
         stream.total = data.total;
       });
-    },
-    activate: function(item) {
-      item.active = !item.active;
-      stream.current = stream.items.indexOf(current);
     }
   }
 
@@ -92,16 +92,46 @@ Weir.service("Weir.Server", ["Weir.Request", "$q", function(Request, $q) {
 //CONTROLLERS
 
 //stream controller handles UI for the stream and status
-var StreamController = function($scope, Server) {
+var StreamController = function($scope, Server, $document) {
+
   $scope.stream = Server.stream;
 
   $scope.activate = function(item) {
     item.active = !item.active;
   };
 
-  $scope.markRefresh = function() { Server.markAll() };
+  $scope.markRefresh = function() {
+    $scope.message = "Marking items as read, refreshing...";
+    Server.markAll().then(function() {
+      $scope.message = "";
+      //wow, that's ugly
+      Array.prototype.map.call(document.querySelectorAll("html, body"), function(el) { el.scrollTop = 0 });
+    });
+  };
+
+  angular.element($document).bind("keypress", function(e) {
+    var key = String.fromCharCode(e.charCode).toLowerCase();
+    switch (key) {
+      case "j":
+        $scope.next();
+        break;
+
+      case "k":
+        $scope.previous();
+        break;
+
+      case ".":
+      case "r":
+        $scope.markRefresh();
+        break;
+
+      case " ":
+
+        break;
+    }
+  })
 };
-StreamController.$inject = ["$scope", "Weir.Server"];
+StreamController.$inject = ["$scope", "Weir.Server", "$document"];
 
 //feed controller talks to the DB for feed-related data
 var FeedController = function($scope) {

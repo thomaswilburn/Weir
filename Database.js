@@ -39,7 +39,7 @@ var db = {
 
   //update a feed with its last fetch result code
   setFeedResult: function(id, status) {
-    psql.query("UPDATE feeds SET last_result = " + (status * 1) + " WHERE id = " + (id * 1));
+    psql.query("UPDATE feeds SET last_result = " + (status * 1) + ", pulled = now() WHERE id = " + (id * 1));
   },
   
   //get story GUID and dates

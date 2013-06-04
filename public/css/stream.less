@@ -20,7 +20,7 @@
         border-bottom: 1px solid #DDD;
         
         &:hover {
-          background: darken(@background, 10%);
+          //background: darken(@background, 10%);
         }
 
         a {
@@ -47,9 +47,17 @@
         max-width: 100%;
       }
       
-      .content {
-        padding: 0 2em;
-        border-left: 4px solid darken(@background, 20%);
+      .content .text {
+        padding: 0 1em;
+        border-left: 1px solid darken(@background, 20%);
+      }
+
+      .view-full {
+        text-decoration: underline;
+        display: block;
+        margin-top: 8px;
+        text-transform: lowercase;
+        text-align: right;
       }
       
     }

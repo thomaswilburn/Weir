@@ -31,5 +31,29 @@
     }
     
   }
+
+  .alert {
+    border: 1px solid black;
+    margin: 0px 8px;
+    padding: 4px;
+    border-radius: 4px;
+
+  }
+
+  .message {
+    border-color: #DDD;
+  }
+
+  .warning {
+    border-color: @warning;
+    background: lighten(@warning, 20%);
+    color: darken(@warning, 50%);
+  }
+
+  .error {
+    border-color: @error;
+    background: lighten(@error, 20%);
+    color: darken(@error, 50%);
+  }
   
 }

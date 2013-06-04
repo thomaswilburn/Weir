@@ -13,6 +13,10 @@
       <li> Last update: {{stream.updatedAt.toLocaleTimeString()}}
       <li> Remaining: {{stream.unread}} / {{stream.total}}
       <li> <a href="javascript:;" ng-click="markRefresh()">Mark as Read</a>
+
+      <li class="alert message" ng-show="message"> {{message}}
+      <li class="alert warning" ng-show="warning"> {{warning}}
+      <li class="alert error" ng-show="error"> {{error}}
     </ul>
     
     <div class="stream-container">
@@ -28,6 +32,7 @@
           <div class="content" ng-show="item.active">
             <h3>Posted by {{item.author}} at {{item.published}}</h3>
             <div class="text" ng-bind-html-unsafe="item.content"></div>
+            <a class="view-full" href="{{item.url}}" target="_blank">View full post</a>
           </div>
         </li>
       </ul>
