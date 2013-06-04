@@ -8,6 +8,7 @@
 </head>
 <body ng-cloak>
   <div class="root-container" ng-controller="StreamController">
+    
     <ul class="menu">
       <li class="header">Weir
       <li> Last update: {{stream.updatedAt.toLocaleTimeString()}}
@@ -36,6 +37,12 @@
           </div>
         </li>
       </ul>
+    </div>
+
+    <div class="charm-panel">
+      <a class="charm" href="javascript:;" ng-click="next()">&#x21E3;</a>
+      <a class="charm" href="javascript:;" ng-click="refresh()">&#x21BA;</a>
+      <a class="charm" href="javascript:;" ng-click="menu()">&#x205D;</a>
     </div>
   </div>
 

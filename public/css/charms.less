@@ -1,0 +1,37 @@
+.charm-panel {
+    position: fixed;
+    right: 0;
+    top: 0;
+    height: 100%;
+    width: 100px;
+    border-left: 1px dotted #DDD;
+    text-align: center;
+    padding-top: 2em;
+
+    .charm {
+        display: block;
+        margin: 0 auto 8px;
+    }
+}
+
+@charm-radius: 50px;
+@charm-inactive: #888;
+@charm-active: black;
+
+.charm {
+    border-radius: 50px;
+    border: 2px solid @charm-inactive;
+    color: @charm-inactive;
+    width: @charm-radius;
+    height: @charm-radius;
+    font-size: @charm-radius * .8;
+    display: inline-block;
+    text-align: center;
+    vertical-align: middle;
+    line-height: @charm-radius * .9;
+
+    &:hover {
+        border-color: @charm-active;
+        color: @charm-active;
+    }
+}

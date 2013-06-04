@@ -69,7 +69,7 @@ a {
 }
 .stream-container {
   width: 75%;
-  margin-left: 25%;
+  margin-left: 20%;
   background: #ffffff;
   padding: 1em 4px;
 }
@@ -121,4 +121,34 @@ a {
   margin-top: 8px;
   text-transform: lowercase;
   text-align: right;
+}
+.charm-panel {
+  position: fixed;
+  right: 0;
+  top: 0;
+  height: 100%;
+  width: 100px;
+  border-left: 1px dotted #DDD;
+  text-align: center;
+  padding-top: 2em;
+}
+.charm-panel .charm {
+  display: block;
+  margin: 0 auto 8px;
+}
+.charm {
+  border-radius: 50px;
+  border: 2px solid #888888;
+  color: #888888;
+  width: 50px;
+  height: 50px;
+  font-size: 40px;
+  display: inline-block;
+  text-align: center;
+  vertical-align: middle;
+  line-height: 45px;
+}
+.charm:hover {
+  border-color: #000000;
+  color: #000000;
 }
