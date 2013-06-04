@@ -1,0 +1,101 @@
+* {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+body {
+  font-family: calibri, tahoma, verdana, sans-serif;
+  font-size: 14px;
+  line-height: 20px;
+  padding: 0;
+  margin: 0;
+}
+a {
+  color: #1a1a1a;
+  font-weight: bold;
+  text-decoration: none;
+}
+.root-container {
+  margin: auto;
+  max-width: 800px;
+}
+.menu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 20%;
+  list-style-type: none;
+  padding: 0;
+  margin-top: 0;
+  text-transform: uppercase;
+  color: #333333;
+  background: #ffffff;
+  border-right: 1px dotted #DDD;
+}
+.menu li {
+  margin-bottom: 4px;
+  padding: 4px 1em;
+  letter-spacing: 1.5px;
+}
+.menu li.header {
+  font-weight: normal;
+}
+.menu li:hover {
+  color: #000000;
+}
+.menu li a {
+  font-weight: bold;
+  display: block;
+}
+.stream-container {
+  width: 75%;
+  margin-left: 25%;
+  background: #ffffff;
+  padding: 1em 4px;
+}
+.stream-container .stream {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+.stream-container .stream li {
+  display: block;
+  background: white;
+  list-style-type: none;
+  margin-bottom: 1em;
+  padding: 0 2px;
+}
+.stream-container .stream li .header {
+  border-bottom: 1px solid #DDD;
+}
+.stream-container .stream li .header:hover {
+  background: #e6e6e6;
+}
+.stream-container .stream li .header a {
+  display: block;
+}
+.stream-container .stream li h2 {
+  margin: 0;
+  display: inline-block;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 80%;
+  overflow: hidden;
+  font-size: 18px;
+  font-weight: normal;
+}
+.stream-container .stream li h3 {
+  font-size: 12px;
+}
+.stream-container .stream li img,
+.stream-container .stream li object,
+.stream-container .stream li embed,
+.stream-container .stream li video,
+.stream-container .stream li audio {
+  max-width: 100%;
+}
+.stream-container .stream li .content {
+  padding: 0 2em;
+  border-left: 4px solid #cccccc;
+}

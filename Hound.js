@@ -74,7 +74,7 @@ var saveItems = function(feed, meta, articles) {
         added++;
       }
     });
-    if (added) console.log("Added", added, "items from", meta.title);
+    //if (added) console.log("Added", added, "items from", meta.title);
   });
 };
 

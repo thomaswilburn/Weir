@@ -1,6 +1,7 @@
 //Postgres abstraction
 
-var cfg = require("./Config.js");
+var cfg = require("./Config");
+var Manos = require("./Manos");
 
 var pg = require("pg");
 var psql = new pg.Client({
@@ -10,6 +11,18 @@ var psql = new pg.Client({
 });
 
 var db = {
+  //setup
+  create: function(c) {
+    psql.query("SELECT * FROM pg_catalog.pg_tables WHERE tablename = 'feeds';", function(err, data) {
+      if (err || !data.rows.length) {
+        psql.query("CREATE TABLE feeds (id SERIAL, title TEXT, url TEXT, pulled TIMESTAMP, last_result INTEGER");
+        psql.query("CREATE TABLE stories (id SERIAL, title TEXT, url TEXT, author TEXT, content TEXT, guid TEXT, read BOOLEAN, published TIMESTAMP DEFAULT now() NOT NULL");
+        psql.query("CREATE TABLE options (name TEXT, value TEXT)");
+      };
+    })
+    
+  },
+
   //get all feeds for listing with unread counts, etc.
   getFeeds: function(c) {
     var q = psql.query("SELECT * FROM feeds", function(err, data) {
@@ -40,11 +53,11 @@ var db = {
   getUnread: function(limit, c) {
     if (typeof limit == "function") {
       c = limit;
-      limit = cfg.displayLimit || 20;
+      limit = cfg.displayLimit || 15;
     }
-    var q = "SELECT * FROM stories WHERE read = false ORDER BY published DESC LIMIT " + limit;
+    var q = "SELECT s.*, f.title AS feed FROM stories AS s, feeds AS f WHERE s.read = false AND s.feed = f.id ORDER BY published DESC LIMIT " + limit;
     psql.query(q, function(err, data) {
-      c(err, data.rows);      
+      c(err, data && data.rows);
     });
   },
   
@@ -75,6 +88,10 @@ var db = {
   
   //mark item as read or unread (default read)
   mark: function(item, unread, c) {
+    if (typeof unread == "function") {
+      c = unread;
+      unread = false;
+    }
     var q = "UPDATE stories SET read = " + (!unread) + " WHERE id = " + (item * 1);
     psql.query(q, function(err, data) {
       if (c) c(err);
@@ -82,15 +99,35 @@ var db = {
   },
   
   getUnreadCount: function(c) {
+    var q = "SELECT count(title) FROM stories WHERE read = false;";
+    psql.query(q, function(err, data) {
+      c(err, data && data.rows[0].count);
+    });
+  },
+
+  getTotal: function(c) {
     var q = "SELECT count(title) FROM stories;";
     psql.query(q, function(err, data) {
-      c(err, data.rows[0].count);
+      c(err, data && data.rows[0].count);
     });
   },
   
   //cull old database items
   reap: function(age, c) {
   
+  },
+
+  getStatus: function(c) {
+    Manos.when(
+      db.getUnreadCount,
+      db.getTotal,
+      function(unread, total) {
+        c(unread[0] || total[0], {
+          unread: unread[1],
+          total: total[1]
+        });
+      }
+    );
   }
   
 };

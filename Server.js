@@ -9,9 +9,18 @@ var less = require("less");
 var Manos = require("./Manos");
 var routes = [];
 var files = {};
+var mimeTypes = {
+  "css": "text/css",
+  "js": "application/javascript",
+  "json": "application/json",
+  "txt": "text/plaintext"
+};
 
 var respond = function(request, data) {
   var json = JSON.stringify(data);
+  request.setHeader("Content-Type", "application/json");
+  request.setHeader("Access-Control-Allow-Origin", "*");
+  request.writeHead(200);
   request.write(json);
   request.end();
 };
@@ -34,9 +43,16 @@ var serveFile = function(pathname, req) {
     if (does) {
       fs.readFile(filePath, function(err, data) {
         //console.log("Serving file:", pathname);
+        var status = err ? 500 : 200;
+        var extension = /\.(\w+)$/.exec(pathname);
+        extension = extension ? extension[1] : "html";
+        req.setHeader("Content-Type", mimeTypes[extension] || "text/html");
+        req.setHeader("Access-Control-Allow-Origin", "*");
+        req.writeHead(status);
         req.write(data);
         req.end();
         //TODO: un-comment this line to enable in-memory file cache
+        //NOTE: enhance cache to store mime type, status code
         //files[pathname] = data;
       });
     } else {

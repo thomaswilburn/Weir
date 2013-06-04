@@ -1,9 +1,9 @@
-var cfg = require("./Config.js");
-var stream = require("./Stream.js");
-var db = require("./Database.js");
-var Hound = require("./Hound.js");
-var console = require("./DevConsole.js");
-var Server = require("./Server.js");
+var cfg = require("./Config");
+var stream = require("./Stream");
+var db = require("./Database");
+var Hound = require("./Hound");
+var console = require("./DevConsole");
+var Server = require("./Server");
 
 var fetch = function() {
   Hound.fetch();
@@ -12,11 +12,12 @@ var fetch = function() {
   setTimeout(fetch, interval / 10);
 }
 
+//sets up the database if none exists
+db.create();
+
 var Reader = function() {
 	Hound.setDB(db);
 	fetch();
 };
 
 module.exports = Reader;
-
-

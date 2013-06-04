@@ -10,7 +10,7 @@ var when = function() {
   var done = calls.pop();
   var all = calls.length;
   calls.forEach(function(call, index) {
-    var f = typeof call == "function" ? f : call.shift();
+    var f = typeof call == "function" ? call : call.shift();
     var args = typeof call == "function" ? [] : call;
     args.push(function() {
       returned[index] = slice.call(arguments);
