@@ -7,14 +7,81 @@ var fs = require("fs");
 var path = require("path");
 var less = require("less");
 var Manos = require("./Manos");
+
 var routes = [];
-var files = {};
-var mimeTypes = {
-  "css": "text/css",
-  "js": "application/javascript",
-  "json": "application/json",
-  "txt": "text/plaintext"
+var files = {
+  has: function(path) {
+    return typeof this[path] == "object";
+  },
+  cache: function(path, type, contents) {
+    if (typeof this[path] == "function") return;
+    if (!contents) {
+      contents = type;
+      type = "text/html";
+    }
+    /*
+      this[path] = {
+        mime: type,
+        data: contents
+      };
+    */
+  },
+  send: function(path, req) {
+    var cached = this[path];
+    req.setHeader("Content-Type", cached.mime);
+    req.writeHead(200);
+    req.write(cached.data);
+    req.end();
+  }
 };
+var pub = "./public/";
+
+var mimeTypes = {
+  ".css": "text/css",
+  ".js": "application/javascript",
+  ".json": "application/json",
+  ".txt": "text/plaintext"
+};
+
+var lessParser = new less.Parser({
+  paths: ["./public/css"]
+});
+
+var handlers = {
+  ".css": function(pathname, req) {
+    req.setHeader("Content-Type", mimeTypes[".css"]);
+    var filePath = path.join(pub, pathname);
+    var lessPath = filePath.replace(/css$/, "less");
+    fs.exists(lessPath, function(does) {
+      if (does) {
+        Manos.chain(
+          function(c) {
+            fs.readFile(lessPath, {encoding: "utf8"}, c);
+          },
+          function(err, data, c) {
+            lessParser.parse(data, c);
+          },
+          function(err, tree) {
+            if (err) {
+              req.write("Error parsing LESS");
+            } else {
+              try {
+                var css = tree.toCSS();
+              } catch (e) {
+                css = e.message;
+              }
+              req.write(css);
+              files.cache(css);
+            }
+            req.end();
+          }
+        );
+      } else {
+        serveFile(filePath, req);
+      }
+    });
+  }
+}
 
 var respond = function(request, data) {
   var json = JSON.stringify(data);
@@ -25,41 +92,43 @@ var respond = function(request, data) {
   request.end();
 };
 
-var serveFile = function(pathname, req) {
-  if (files[pathname]) {
-    //console.log("Serving cached file:", pathname);
-    var data = files[pathname]; 
-    req.write(data);
-    req.end();
-    return;
-  }
-  
-  var filePath = path.join("./public", pathname);
-  if (/\/$/.test(pathname)) {
-    //trailing slashes (we assume) are directories
-    filePath = path.join(filePath, "index.html");
-  }
-  fs.exists(filePath, function(does) {
-    if (does) {
-      fs.readFile(filePath, function(err, data) {
-        //console.log("Serving file:", pathname);
-        var status = err ? 500 : 200;
-        var extension = /\.(\w+)$/.exec(pathname);
-        extension = extension ? extension[1] : "html";
-        req.setHeader("Content-Type", mimeTypes[extension] || "text/html");
-        req.setHeader("Access-Control-Allow-Origin", "*");
-        req.writeHead(status);
-        req.write(data);
-        req.end();
-        //TODO: un-comment this line to enable in-memory file cache
-        //NOTE: enhance cache to store mime type, status code
-        //files[pathname] = data;
+var serveFile = function(file, req) {
+  file = path.join(pub, file);
+  if (file.slice(-1) == "/") file += "index.html";
+
+  fs.exists(file, function(exists) {
+    if (exists) {
+      fs.readFile(file, {encoding: "utf8"}, function(err, data) {
+        if (err) {
+          req.writeHead(500);
+          req.end();
+        } else {
+          var ext = path.extname(file);
+          req.setHeader("Content-Type", mimeTypes[ext] || "text/html");
+          req.writeHead(200);
+          req.write(data);
+          req.end();
+        }
       });
     } else {
       req.writeHead(404);
       req.end();
     }
   });
+};
+
+var serve = function(pathname, req) {
+  if (files.has(pathname)) {
+    files.send(pathname, req);
+  }
+  
+  //handle special extension processing
+  var ext = path.extname(pathname);
+  if (handlers[ext]) {
+    return handlers[ext](pathname, req);
+  }
+  
+  serveFile(pathname, req);
 };
 
 var Server = {
@@ -77,7 +146,6 @@ Server.http.on("request", function(incoming, response) {
     var route = routes[i];
     var parsed = url.parse(incoming.url, true, true);
     if (route.p.test(parsed.pathname)) {
-      //console.log("Requested route:", parsed.pathname);
       var request = {
         url: parsed.pathname,
         params: parsed.query,
@@ -88,7 +156,7 @@ Server.http.on("request", function(incoming, response) {
       return route.c(request);
     }
   }
-  serveFile(parsed.pathname, response);
+  serve(parsed.pathname, response);
 });
 
 module.exports = Server;

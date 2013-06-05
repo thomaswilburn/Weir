@@ -126,7 +126,7 @@ var StreamController = function($scope, Server, $document) {
         break;
 
       case " ":
-
+        //adjust selection based on position
         break;
     }
   })
