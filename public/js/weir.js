@@ -55,7 +55,7 @@ Weir.service("Weir.Server", ["Weir.Request", "$q", function(Request, $q) {
         }
       }).then(function(data) {
         stream.items = data.items;
-        stream.items[0].active = true;
+        if (matchMedia("(min-width: 800px)").matches) stream.items[0].active = true;
         stream.unread = data.unread;
         stream.total = data.total;
         stream.updatedAt = new Date();
@@ -68,7 +68,7 @@ Weir.service("Weir.Server", ["Weir.Request", "$q", function(Request, $q) {
         url: "/stream/unread"
       }).then(function(data) {
         stream.items = data.items;
-        stream.items[0].active = true;
+        if (matchMedia("(min-width: 800px)").matches) stream.items[0].active = true;
         stream.updatedAt = new Date();
       });
     },

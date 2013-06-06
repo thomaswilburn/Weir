@@ -7,10 +7,26 @@
     border-left: 1px dotted #DDD;
     text-align: center;
     padding-top: 2em;
+    background: @background;
+
+    @media @mobile {
+        top: inherit;
+        bottom: 0px;
+        width: 100%;
+        height: 80px;
+        border-left: none;
+        padding-top: 8px;
+        border-top: 1px dotted #DDD;
+    }
 
     .charm {
         display: block;
         margin: 0 auto 8px;
+
+        @media @mobile {
+            display: inline-block;
+            margin: 0;
+        }
     }
 }
 
