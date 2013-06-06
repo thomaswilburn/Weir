@@ -92,7 +92,7 @@ Weir.service("Weir.Server", ["Weir.Request", "$q", function(Request, $q) {
 //CONTROLLERS
 
 //stream controller handles UI for the stream and status
-var StreamController = function($scope, Server, $document) {
+var StreamController = function($scope, Server, $document, $anchorScroll, $location) {
 
   $scope.stream = Server.stream;
 
@@ -100,6 +100,9 @@ var StreamController = function($scope, Server, $document) {
     $scope.stream.items.forEach(function(i) {
       i.active = i === item;
     });
+    $location.replace()
+    $location.hash(item.id);
+    $anchorScroll();
   };
 
   $scope.markRefresh = function() {
@@ -119,8 +122,7 @@ var StreamController = function($scope, Server, $document) {
     if (currentIndex == stream.length - 1) {
       return $scope.markRefresh();
     }
-    current.active = false;
-    stream[currentIndex + 1].active = true;
+    $scope.activate(stream[currentIndex + 1]);
     $scope.$apply();
   };
 
@@ -129,8 +131,7 @@ var StreamController = function($scope, Server, $document) {
     var current = stream.filter(function(i) { return i.active }).pop();
     var currentIndex = stream.indexOf(current);
     if (currentIndex == 0) return;
-    current.active = false;
-    stream[currentIndex - 1].active = true;
+    $scope.activate(stream[currentIndex - 1]);
     $scope.$apply();
   }
 
@@ -156,7 +157,7 @@ var StreamController = function($scope, Server, $document) {
     }
   })
 };
-StreamController.$inject = ["$scope", "Weir.Server", "$document"];
+StreamController.$inject = ["$scope", "Weir.Server", "$document", "$anchorScroll", "$location"];
 
 //feed controller talks to the DB for feed-related data
 var FeedController = function($scope) {
