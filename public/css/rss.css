@@ -1,0 +1,200 @@
+* {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+body {
+  font-family: calibri, tahoma, verdana, sans-serif;
+  font-size: 14px;
+  line-height: 20px;
+  padding: 0;
+  margin: 0;
+}
+a {
+  color: #1a1a1a;
+  font-weight: bold;
+  text-decoration: none;
+}
+.root-container {
+  margin: auto;
+  max-width: 800px;
+}
+.menu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 20%;
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  text-transform: uppercase;
+  color: #333333;
+  background: #ffffff;
+  border-right: 1px dotted #DDD;
+}
+@media (max-width: 800px) {
+  .menu {
+    position: relative;
+    width: 100%;
+    height: auto;
+    font-size: 14px;
+    border-right: none;
+    border-bottom: 1px dotted #DDD;
+  }
+}
+.menu li {
+  margin-bottom: 4px;
+  padding: 4px 1em;
+  letter-spacing: 1.5px;
+}
+@media (max-width: 800px) {
+  .menu li {
+    display: inline-block;
+  }
+}
+.menu li.header {
+  font-weight: normal;
+}
+.menu li:hover {
+  color: #000000;
+}
+.menu li a {
+  font-weight: bold;
+  display: block;
+}
+.menu .alert {
+  border: 1px solid black;
+  margin: 0px 8px;
+  padding: 4px;
+  border-radius: 4px;
+}
+.menu .message {
+  border-color: #DDD;
+}
+.menu .warning {
+  border-color: #ffcc33;
+  background: #ffe699;
+  color: #332600;
+}
+.menu .error {
+  border-color: #dd8888;
+  background: #f4d7d7;
+  color: #4f1717;
+}
+.stream-container {
+  width: 75%;
+  margin-left: 20%;
+  background: #ffffff;
+  padding: 1em 4px;
+}
+@media (max-width: 800px) {
+  .stream-container {
+    padding: 0 1em 100px;
+    width: 100%;
+    margin: 0;
+  }
+}
+.stream-container .stream {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+.stream-container .stream li {
+  display: block;
+  background: white;
+  list-style-type: none;
+  margin-bottom: 1em;
+  padding: 0 2px;
+}
+.stream-container .stream li .header {
+  border-bottom: 1px solid #DDD;
+}
+.stream-container .stream li .header a {
+  display: block;
+}
+.stream-container .stream li h2 {
+  margin: 0;
+  display: inline-block;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 80%;
+  overflow: hidden;
+  font-size: 18px;
+  font-weight: normal;
+}
+.stream-container .stream li h3 {
+  font-size: 12px;
+}
+.stream-container .stream li img,
+.stream-container .stream li object,
+.stream-container .stream li embed,
+.stream-container .stream li video,
+.stream-container .stream li audio {
+  max-width: 100%;
+}
+.stream-container .stream li .content .text {
+  padding: 0 1em;
+  border-left: 1px solid #cccccc;
+}
+@media (max-width: 800px) {
+  .stream-container .stream li .content .text {
+    padding: 0;
+    border: none;
+  }
+}
+.stream-container .stream li .view-full {
+  text-decoration: underline;
+  display: block;
+  margin-top: 8px;
+  text-transform: lowercase;
+  text-align: right;
+}
+.charm-panel {
+  position: fixed;
+  right: 0;
+  top: 0;
+  height: 100%;
+  width: 100px;
+  border-left: 1px dotted #DDD;
+  text-align: center;
+  padding-top: 2em;
+  background: #ffffff;
+}
+@media (max-width: 800px) {
+  .charm-panel {
+    top: inherit;
+    bottom: 0px;
+    width: 100%;
+    height: 80px;
+    border-left: none;
+    padding-top: 8px;
+    border-top: 1px dotted #DDD;
+  }
+}
+.charm-panel .charm {
+  display: block;
+  margin: 0 auto 8px;
+}
+@media (max-width: 800px) {
+  .charm-panel .charm {
+    display: inline-block;
+    margin: 0;
+  }
+}
+.charm {
+  border-radius: 50px;
+  border: 2px solid #888888;
+  color: #888888;
+  width: 50px;
+  height: 50px;
+  font-size: 40px;
+  display: inline-block;
+  text-align: center;
+  vertical-align: middle;
+  line-height: 45px;
+}
+.charm:hover {
+  border-color: #000000;
+  color: #000000;
+}

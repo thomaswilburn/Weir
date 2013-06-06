@@ -1,0 +1,78 @@
+.stream-container {
+  width: 75%;
+  margin-left: 20%;
+  background: @background;
+  padding: 1em 4px;
+
+  @media @mobile {
+    padding: 0 1em 100px;
+    width: 100%;
+    margin: 0;
+  }
+  
+  .stream {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    
+    li {
+      display: block;
+      background: white;
+      list-style-type: none;
+      margin-bottom: 1em;
+      padding: 0 2px;
+      
+      .header {
+        border-bottom: 1px solid #DDD;
+        
+        &:hover {
+          //background: darken(@background, 10%);
+        }
+
+        a {
+          display: block;
+        }
+      }
+      
+      h2 {
+        margin: 0;
+        display: inline-block;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        width: 80%;
+        overflow: hidden;
+        font-size: 18px;
+        font-weight: normal;
+      }
+      
+      h3 {
+        font-size: 12px;
+      }
+      
+      img, object, embed, video, audio {
+        max-width: 100%;
+      }
+      
+      .content .text {
+        padding: 0 1em;
+        border-left: 1px solid darken(@background, 20%);
+
+        @media @mobile {
+          padding: 0;
+          border: none;
+        }
+      }
+
+      .view-full {
+        text-decoration: underline;
+        display: block;
+        margin-top: 8px;
+        text-transform: lowercase;
+        text-align: right;
+      }
+      
+    }
+    
+  }
+  
+};
