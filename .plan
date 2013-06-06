@@ -7,7 +7,6 @@ Hound - fetches RSS on a timer, dispatches events with new counts when the fetch
 Database.js - tech-specific database layer, start with pgsql
 Console - logs out to a file
 Config - key/value store loaded from JSON
-Setup - startup check for existence of the database
 Server - HTTP requests and AJAX calls
 Stream - Registers routes and passes on to the database
 Manos - utility functions for async without importing all of caolan's library
@@ -15,25 +14,16 @@ Manos - utility functions for async without importing all of caolan's library
 Notes:
  - Add TOTP auth (or display token if none has been set)
  - Add OPML import
+ - Add database culling, figure out how to do so safely (don't accept old stories?)
  - Add some options (local-only)
- - Add setup script
- - Refactor Angular for better separation between service and controllers (multiple scripts)
-  - Weir.Server
-    -> markItemsAsRead()
-    -> getPage()
-    -> getStatus()
-    -> stream
-      .items
-      .unread
-      .total
-      .activate()
-      .next()
-      .activeItemIndex
-      .activeItem
-  - Stream Controller (handles keyboard events, navigation, display)
-  - App Controller (handles options, status, updates)
- - Add mobile theme/UX
- - Add right-hand panel with links to various in-stream actions/options
- - Add tags, blog titles to item data
+  - security
+  - view styles: expanded, list-only, list with first active
+  - key remapping or compatibility
+  - list length
+  - infinite scroll?
+  - visual theme colors?
+ - Add tags
  - Mark as read on activation
- - Prevent loading of content until such a time as the item is shown
+ - scroll should trigger activation in the full view
+ - move UI handling into possibly another service?
+ - Prevent loading of content until such a time as the item is shown (defer images)

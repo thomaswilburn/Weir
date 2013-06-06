@@ -7,5 +7,6 @@
     "db": "string"
   },
   "updateInterval": 0,
-  "feedMax": 0
+  "feedMax": 0,
+  "expirationDate": 0
 }

@@ -48,9 +48,8 @@ model is a wasteland lacking named groups and I haven't gotten around to copying
 routing code from Grue.
 * The Database layer executes SQL directly, instead of going through a builder like it 
 probably should.
-* The only status messages are the number of unread items. Useful information like the 
-current Hound, the unread items grouped by tag or filter, or any warning encountered, are 
-still waiting on a display mechanism
+* The only status messages are the number of unread items. There are some primitive 
+messages, but useful notes like Hound status or errors are not exposed yet
 * The Hound is not very efficient with memory, and has a pretty brutish method of dividing 
 feeds into smaller chunks instead of making all requests simultaneously.
 * The database tables themselves are almost certainly missing information we'd like to 
