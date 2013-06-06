@@ -20,7 +20,7 @@
       <li class="alert error" ng-show="error"> {{error}}
     </ul>
     
-    <div class="stream-container">
+    <div class="stream-container" id="top">
       <ul class="stream">
         <li ng-repeat="item in stream.items" id="{{item.id}}">
           <div class="header" ng-click="activate(item)">

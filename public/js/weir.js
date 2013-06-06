@@ -100,7 +100,7 @@ var StreamController = function($scope, Server, $document, $anchorScroll, $locat
     $scope.stream.items.forEach(function(i) {
       i.active = i === item;
     });
-    $location.replace()
+    $location.replace();
     $location.hash(item.id);
     $anchorScroll();
   };
@@ -109,8 +109,9 @@ var StreamController = function($scope, Server, $document, $anchorScroll, $locat
     $scope.message = "Marking items as read, refreshing...";
     Server.markAll().then(function() {
       $scope.message = "";
-      //wow, that's ugly
-      Array.prototype.map.call(document.querySelectorAll("html, body"), function(el) { el.scrollTop = 0 });
+      $location.replace();
+      $location.hash("top");
+      $anchorScroll();
     });
     $scope.$apply();
   };
