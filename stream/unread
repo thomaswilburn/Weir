@@ -1,10 +1,10 @@
 {
   "unread": 0,
   "total": 4,
-  "items": {
+  "items": [{
     "title": "This space intentionally left blank.",
     "author": "Thomas",
     "feed": "Weir Demonstration",
     "content": "test"
-  }
+  }]
 }
