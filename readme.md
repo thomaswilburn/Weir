@@ -49,7 +49,8 @@ routing code from Grue.
 * The Database layer executes SQL directly, instead of going through a builder like it 
 probably should.
 * The only status messages are the number of unread items. Useful information like the 
-current Hound, the unread items grouped by tag or filter
+current Hound, the unread items grouped by tag or filter, or any warning encountered, are 
+still waiting on a display mechanism
 * The Hound is not very efficient with memory, and has a pretty brutish method of dividing 
 feeds into smaller chunks instead of making all requests simultaneously.
 * The database tables themselves are almost certainly missing information we'd like to 
@@ -83,5 +84,5 @@ amount of construction, it seemed appropriate.
 License
 -------
 
-Weir is licensed under the GPL because I'm a filthy socialist. Take it and make it better 
-for you.
+Weir is licensed under the GPL because I'm a filthy socialist. Take it, change it, make it 
+better for your needs.

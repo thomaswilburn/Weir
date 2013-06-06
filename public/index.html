@@ -22,7 +22,7 @@
     
     <div class="stream-container">
       <ul class="stream">
-        <li ng-repeat="item in stream.items">
+        <li ng-repeat="item in stream.items" id="{{item.id}}">
           <div class="header" ng-click="activate(item)">
             <cite>{{item.feed}}</cite>
             <a href="{{item.url}}" prevent-default>

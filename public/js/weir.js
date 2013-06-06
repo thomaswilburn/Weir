@@ -97,7 +97,9 @@ var StreamController = function($scope, Server, $document) {
   $scope.stream = Server.stream;
 
   $scope.activate = function(item) {
-    item.active = !item.active;
+    $scope.stream.items.forEach(function(i) {
+      i.active = i === item;
+    });
   };
 
   $scope.markRefresh = function() {
@@ -107,7 +109,30 @@ var StreamController = function($scope, Server, $document) {
       //wow, that's ugly
       Array.prototype.map.call(document.querySelectorAll("html, body"), function(el) { el.scrollTop = 0 });
     });
+    $scope.$apply();
   };
+
+  $scope.next = function() {
+    var stream = Server.stream.items;
+    var current = stream.filter(function(i) { return i.active }).pop();
+    var currentIndex = stream.indexOf(current);
+    if (currentIndex == stream.length - 1) {
+      return $scope.markRefresh();
+    }
+    current.active = false;
+    stream[currentIndex + 1].active = true;
+    $scope.$apply();
+  };
+
+  $scope.previous = function() {
+    var stream = Server.stream.items;
+    var current = stream.filter(function(i) { return i.active }).pop();
+    var currentIndex = stream.indexOf(current);
+    if (currentIndex == 0) return;
+    current.active = false;
+    stream[currentIndex - 1].active = true;
+    $scope.$apply();
+  }
 
   angular.element($document).bind("keypress", function(e) {
     var key = String.fromCharCode(e.charCode).toLowerCase();
