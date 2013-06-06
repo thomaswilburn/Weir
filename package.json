@@ -1,6 +1,6 @@
 {
   "name": "weir-rss",
-  "version": "0.5",
+  "version": "0.5.0",
   "author": "Thomas Wilburn <news@thomaswilburn.net>",
   "description": "Minimalist, self-hosted RSS reader for Node.js",
   "scripts": {
