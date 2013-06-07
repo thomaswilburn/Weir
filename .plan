@@ -12,16 +12,20 @@ Stream - Registers routes and passes on to the database
 Manos - utility functions for async without importing all of caolan's library
 
 Notes:
+ - set messages to be fixed on mobile
+ - reconsider general AJAX API, flow
+ - rethink how the active item is set
  - Add TOTP auth (or display token if none has been set)
  - Add OPML import
- - Add database culling, figure out how to do so safely (don't accept old stories?)
- - Add some options (local-only)
+ - Add database culling, don't accept stories older than the expiration date
+ - Add options service (local-only)
   - security
   - view styles: expanded, list-only, list with first active
   - key remapping or compatibility
   - list length
   - infinite scroll?
   - visual theme colors?
+  - defaults based on form factor
  - Add tags
  - Mark as read on activation
  - scroll should trigger activation in the full view

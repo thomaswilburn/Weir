@@ -30,6 +30,18 @@ Weir.service("Weir.Server", ["Weir.Request", "$q", function(Request, $q) {
     total: 0,
     updatedAt: new Date()
   };
+  
+  var updateStatus = function(data) {
+    stream.unread = data.unread;
+    stream.total = data.total;
+    stream.updatedAt = new Date();
+  };
+  
+  var updateItems = function(data) {
+    stream.items = data.items;
+    //TODO: not wild about setting this on CSS, should use local option service
+    if (matchMedia("(min-width: 800px)").matches) stream.items[0].active = true;
+  };
 
   var facade = {
     stream: stream,
@@ -54,11 +66,8 @@ Weir.service("Weir.Server", ["Weir.Request", "$q", function(Request, $q) {
           items: ids.join(",")
         }
       }).then(function(data) {
-        stream.items = data.items;
-        if (matchMedia("(min-width: 800px)").matches) stream.items[0].active = true;
-        stream.unread = data.unread;
-        stream.total = data.total;
-        stream.updatedAt = new Date();
+        updateItems(data);
+        updateStatus(data);
         deferred.resolve();
       });
       return deferred.promise;
@@ -67,17 +76,14 @@ Weir.service("Weir.Server", ["Weir.Request", "$q", function(Request, $q) {
       ask({
         url: "/stream/unread"
       }).then(function(data) {
-        stream.items = data.items;
-        if (matchMedia("(min-width: 800px)").matches) stream.items[0].active = true;
-        stream.updatedAt = new Date();
+        updateItems(data);
       });
     },
     stats: function() {
       ask({
         url: "/stream/status"
       }).then(function(data) {
-        stream.unread = data.unread;
-        stream.total = data.total;
+        updateStatus(data);
       });
     }
   }
