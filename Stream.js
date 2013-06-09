@@ -16,7 +16,7 @@ server.route("/stream/unread", function(req) {
   })
 });
 
-server.route("/stream/read", function(req) {
+server.route("/stream/mark", function(req) {
   var items = req.params.items;
   if (items) {
     items = items.split(",");
@@ -26,10 +26,6 @@ server.route("/stream/read", function(req) {
     req.reply({marked: items.length});
   }
   req.reply({marked: 0});
-});
-
-server.route("/stream/mark", function(req) {
-  req.reply({marked: 0})
 });
 
 server.route("/stream/markRefresh", function(req) {

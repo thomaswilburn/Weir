@@ -21,6 +21,10 @@
       list-style-type: none;
       margin-bottom: 1em;
       padding: 0 2px;
+
+      &.read .header, &.read .header a {
+        color: lighten(@foreground, 50%);
+      }
       
       .header {
         border-bottom: 1px solid #DDD;
