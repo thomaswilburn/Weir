@@ -14,7 +14,6 @@ Manos - utility functions for async without importing all of caolan's library
 Notes:
  - set messages to be fixed on mobile
  - reconsider general AJAX API, flow
- - rethink how the active item is set
  - Add TOTP auth (or display token if none has been set)
  - Add OPML import
  - Add database culling, don't accept stories older than the expiration date
@@ -30,4 +29,3 @@ Notes:
  - Mark as read on activation
  - scroll should trigger activation in the full view
  - move UI handling into possibly another service?
- - Prevent loading of content until such a time as the item is shown (defer images)
