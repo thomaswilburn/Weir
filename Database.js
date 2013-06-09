@@ -16,7 +16,7 @@ var db = {
     psql.query("SELECT * FROM pg_catalog.pg_tables WHERE tablename = 'feeds';", function(err, data) {
       if (err || !data.rows.length) {
         psql.query("CREATE TABLE feeds (id SERIAL, title TEXT, url TEXT, pulled TIMESTAMP, last_result INTEGER");
-        psql.query("CREATE TABLE stories (id SERIAL, title TEXT, url TEXT, author TEXT, content TEXT, guid TEXT, read BOOLEAN, published TIMESTAMP DEFAULT now() NOT NULL");
+        psql.query("CREATE TABLE stories (id SERIAL, title TEXT, url TEXT, author TEXT, content TEXT, guid TEXT, read BOOLEAN, published TIMESTAMP DEFAULT now()");
         psql.query("CREATE TABLE options (name TEXT, value TEXT)");
       };
     })
@@ -68,8 +68,8 @@ var db = {
 
   //add an item for a specific feed
   addItem: function(feed, article, c) {
-    //if there's no pubdate, we need to 
-    var date = article.date || article.pubDate || new Date(2000, 0, 1);
+    //if there's no pubdate, we use null 
+    var date = article.date || article.pubDate || null;
     var q = psql.query("INSERT INTO stories (feed, title, url, author, content, guid, published) VALUES ($1, $2, $3, $4, $5, $6, $7)",
       [feed, article.title, article.link, article.author, article.description, article.guid, date]);
     q.on("error", console.log.bind(console, article.link, article.pubDate));
@@ -113,8 +113,12 @@ var db = {
   },
   
   //cull old database items
-  reap: function(age, c) {
-  
+  reap: function(c) {
+    //postgres (or the adapter) is treating null as 2000, so yeah.
+    var q = "DELETE FROM stories WHERE published IS NOT null AND published < now() - INTERVAL '" + (cfg.expirationDate * 1) + " DAYS'";
+    psql.query(q, function(err, data) {
+      if (c) c(err, data);
+    });
   },
 
   getStatus: function(c) {

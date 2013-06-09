@@ -18,6 +18,7 @@ var fetch = function() {
   if (Hound.busy) return;
   Hound.busy = true;
   Hound.emit("fetch:start");
+  //database.reap();
   database.getFeeds(function(err, rows) {
     //trim feeds down to 1/10, so as not to request everything at once
     rows = rows.filter(function(row, i) {
@@ -26,6 +27,7 @@ var fetch = function() {
     feedSlice = (feedSlice + 1) % 10;
     rows.forEach(function(row) {
       var r = request(row.url);
+      //console.log(">>>", row.url);
       r.on("error", function(err) {
         console.log("Request error:", row.url, err);
         if (err.code == "ENOTFOUND" || err.code == "EHOSTUNREACH") {
@@ -63,9 +65,13 @@ var saveItems = function(feed, meta, articles) {
     }
     //console.log(feed, "markers", marks);
     articles.forEach(function(article) {
-      var date = article.pubDate instanceof Date ? article.pubDate.getTime() : 0;
+      var date = article.pubDate instanceof Date ? article.pubDate.getTime() : null;
+      //don't add old articles, assuming a pubdate is available
+      if (date && date < Date.now() - (cfg.expirationDate * 1000 * 60 * 60 * 24)) {
+        return;
+      }
       var unique = marks.every(function(item) {
-        var published = item.published instanceof Date ? item.published.getTime() : 0;
+        var published = item.published instanceof Date ? item.published.getTime() : null;
         return published != date && item.guid != article.guid;
       });
       if (unique) {
