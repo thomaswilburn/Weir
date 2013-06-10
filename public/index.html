@@ -23,7 +23,9 @@
     
     <div class="stream-container" id="top">
       <ul class="stream">
-        <li ng-repeat="item in stream.items" id="{{item.id}}" ng-class="{'read':item.read == true}">
+        <li 
+          ng-repeat="item in stream.items" id="{{item.id}}" 
+          ng-class="{'read':item.read == true, 'active':item.active == true}">
           <div class="header" ng-click="activate(item)" >
             <cite>{{item.feed}}</cite>
             <a href="{{item.url}}" prevent-default>
@@ -31,7 +33,7 @@
             </a>
             <!-- tags go here -->
           </div>
-          <div class="content" ng-show="item.active">
+          <div class="content">
             <h3>Posted by {{item.author}} at {{item.published}}</h3>
             <div class="text" ng-bind-html-unsafe="item.content"></div>
             <a class="view-full" href="{{item.url}}" target="_blank">View full post</a>

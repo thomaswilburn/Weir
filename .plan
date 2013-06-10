@@ -12,20 +12,21 @@ Stream - Registers routes and passes on to the database
 Manos - utility functions for async without importing all of caolan's library
 
 Notes:
- - set messages to be fixed on mobile
- - change visibility to be based on class/media query, not ng-show/hide
+ - Set alert messages to be fixed on mobile
+ - Add ability to write config file with .save();
+ - Handle "no unread items"
+ - Add some local style removal to Weir.Sanitize
  - reconsider general AJAX API, flow
  - Add TOTP auth (or display token if none has been set)
  - Add OPML import
- - Add database culling, don't accept stories older than the expiration date
- - Add options service (local-only)
-  - security
-  - view styles: expanded, list-only, list with first active
+ - Add to options service
+  - security - get a random key (possibly set it as well)
   - key remapping or compatibility
   - list length
   - infinite scroll?
   - visual theme colors?
-  - defaults based on form factor
  - Add tags
  - Mark as read on activation
- - move UI handling into possibly another service?
+ - Write Grunt build tasks for LESS, JS concatenation
+  - (remove handlers from Server once done?)
+ - Configure router to support REST

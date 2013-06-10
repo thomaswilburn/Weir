@@ -57,6 +57,55 @@ Weir.service("Weir.Sanitize", ["$document", function($document) {
 
 }]);
 
+//LocalSettings allows us to set various per-device options
+//It provides defaults based on form factor
+Weir.service("Weir.LocalSettings", [function() {
+
+  var storageKey = "WeirOptions";
+  var settings;
+
+  var fill = function(src, dest) {
+    for (var key in src) {
+      if (!dest[key]) {
+        dest[key] = src[key];
+      }
+    }
+  }
+
+  var form = matchMedia("(min-width: 800px)").matches ? "large" : "small"
+  var defaults = {
+    stream: {
+      startActive: form == "large",
+      length: 10,
+      infinite: false
+    }
+  };
+
+  var revive = function() {
+    var settings = localStorage.getItem(storageKey);
+    if (!settings) {
+      //if never used, install
+      settings = defaults;
+    } else {
+      //otherwise, parse and augment with any new properties
+      settings = JSON.parse(settings);
+      settings = fill(defaults, settings);
+      settings.save = function() {
+        localStorage.setItem(storageKey, JSON.stringify(this));
+      }
+    }
+    return settings;
+  };
+
+  return {
+    get: revive,
+    reset: function() {
+      localStorage.removeItem(storageKey);
+    }
+  }
+
+}]);
+
 //Weir.Request handles making requests with TOTP auth (eventually)
 Weir.service("Weir.Request", ["$http", "$q", function($http, $q) {
   return {
@@ -82,143 +131,94 @@ Weir.service("Weir.Server", [
   "Weir.LocalSettings",
   "$q",
   function(Request, Sanitize, Settings, $q) {
-  var ask = Request.ask;
+    var ask = Request.ask;
 
-  var stream = {
-    items: [],
-    unread: 0,
-    total: 0,
-    updatedAt: new Date()
-  };
-  
-  var updateStatus = function(data) {
-    stream.unread = data.unread;
-    stream.total = data.total;
-    stream.updatedAt = new Date();
-  };
-  
-  var updateItems = function(data) {
-    data.items.forEach(function(item) {
-      item.content = Sanitize.prepare(item.content);
-    });
-    stream.items = data.items;
-    if (Settings.get().stream.startActive) {
-      stream.items[0].active = true;
-    }
-  };
-
-  var facade = {
-    stream: stream,
-    markAsRead: function(item) {
-      ask({
-        url: "/stream/mark",
-        params: {
-          item: item.id
-        }
-      }).then(function() {
-        stream.unread--;
+    var stream = {
+      items: [],
+      unread: 0,
+      total: 0,
+      updatedAt: new Date()
+    };
+    
+    var updateStatus = function(data) {
+      stream.unread = data.unread;
+      stream.total = data.total;
+      stream.updatedAt = new Date();
+    };
+    
+    var updateItems = function(data) {
+      data.items.forEach(function(item) {
+        item.content = Sanitize.prepare(item.content);
       });
-    },
-    markAll: function() {
-      var ids = stream.items.map(function(item) {
-        return item.id;
-      });
-      var deferred = $q.defer();
-      ask({
-        url: "/stream/markRefresh",
-        params: {
-          items: ids.join(",")
-        }
-      }).then(function(data) {
-        updateItems(data);
-        updateStatus(data);
-        deferred.resolve();
-      });
-      return deferred.promise;
-    },
-    refresh: function() {
-      ask({
-        url: "/stream/unread"
-      }).then(function(data) {
-        updateItems(data);
-      });
-    },
-    stats: function() {
-      ask({
-        url: "/stream/status"
-      }).then(function(data) {
-        updateStatus(data);
-      });
-    },
-    activate: function(item) {
-      for (var i = 0; i < stream.items.length; i++) {
-        var post = stream.items[i];
-        //mark previously active item as read
-        if (post.active) {
-          post.read = true;
-          //TODO: should mark as read on the server, too
-        }
-        post.active = false;
+      stream.items = data.items;
+      if (Settings.get().stream.startActive) {
+        stream.items[0].active = true;
       }
-      item.active = true;
+    };
+
+    var facade = {
+      stream: stream,
+      markAsRead: function(item) {
+        ask({
+          url: "/stream/mark",
+          params: {
+            item: item.id
+          }
+        }).then(function() {
+          stream.unread--;
+        });
+      },
+      markAll: function() {
+        var ids = stream.items.map(function(item) {
+          return item.id;
+        });
+        var deferred = $q.defer();
+        ask({
+          url: "/stream/markRefresh",
+          params: {
+            items: ids.join(",")
+          }
+        }).then(function(data) {
+          updateItems(data);
+          updateStatus(data);
+          deferred.resolve();
+        });
+        return deferred.promise;
+      },
+      refresh: function() {
+        ask({
+          url: "/stream/unread"
+        }).then(function(data) {
+          updateItems(data);
+        });
+      },
+      stats: function() {
+        ask({
+          url: "/stream/status"
+        }).then(function(data) {
+          updateStatus(data);
+        });
+      },
+      activate: function(item) {
+        for (var i = 0; i < stream.items.length; i++) {
+          var post = stream.items[i];
+          //mark previously active item as read
+          if (post.active) {
+            post.read = true;
+            //TODO: should mark as read on the server, too
+          }
+          post.active = false;
+        }
+        item.active = true;
+      }
     }
-  }
 
-  facade.stats();
-  facade.refresh();
+    facade.stats();
+    facade.refresh();
 
-  return facade;
+    return facade;
 
 }]);
-
-//LocalSettings allows us to set various per-device options
-//It provides defaults based on form factor
-Weir.service("Weir.LocalSettings", function() {
-
-  var storageKey = "WeirOptions";
-  var settings;
-
-  var fill = function(src, dest) {
-    for (var key in src) {
-      if (!dest[key]) {
-        dest[key] = src[key];
-      }
-    }
-  }
-
-  var form = matchMedia("(min-width: 800px)").matches ? "large" : "small"
-  var defaults = {
-    stream: {
-      view: form == "large" ? "expanded" : "list",
-      startActive: form == "large",
-      length: 10,
-      infinite: false
-    }
-  };
-
-  var revive = function() {
-    var settings = localStorage.getItem(storageKey);
-    if (!settings) {
-      //if never used, install
-      settings = defaults;
-    } else {
-      //otherwise, parse and augment with any new properties
-      settings = JSON.parse(settings);
-      settings = fill(defaults, settings);
-      settings.save = function() {
-        localStorage.setItem(storageKey, JSON.stringify(this));
-      }
-    }
-  };
-
-  return {
-    get: revive,
-    reset: function() {
-      localStorage.removeItem(storageKey);
-    }
-  }
-
-})
 
 //CONTROLLERS
 
@@ -253,7 +253,6 @@ var StreamController = function($scope, Server, $document, $anchorScroll, $locat
       return $scope.markRefresh();
     }
     $scope.activate(stream[currentIndex + 1]);
-    $scope.$apply();
   };
 
   $scope.previous = function() {
@@ -262,7 +261,6 @@ var StreamController = function($scope, Server, $document, $anchorScroll, $locat
     var currentIndex = stream.indexOf(current);
     if (currentIndex == 0) return;
     $scope.activate(stream[currentIndex - 1]);
-    $scope.$apply();
   }
 
   angular.element($document).bind("keypress", function(e) {
