@@ -253,6 +253,7 @@ var StreamController = function($scope, Server, $document, $anchorScroll, $locat
       return $scope.markRefresh();
     }
     $scope.activate(stream[currentIndex + 1]);
+    $scope.$apply();
   };
 
   $scope.previous = function() {
@@ -261,6 +262,7 @@ var StreamController = function($scope, Server, $document, $anchorScroll, $locat
     var currentIndex = stream.indexOf(current);
     if (currentIndex == 0) return;
     $scope.activate(stream[currentIndex - 1]);
+    $scope.$apply();
   }
 
   angular.element($document).bind("keypress", function(e) {
