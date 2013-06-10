@@ -49,6 +49,11 @@ var lessParser = new less.Parser({
 
 var handlers = {
   ".css": function(pathname, req) {
+    //skip if LESS building is turned off
+    //should probably change to only build if CSS doesn't exist
+    if (!cfg.build.less) {
+      serveFile(filePath, req);
+    }
     req.setHeader("Content-Type", mimeTypes[".css"]);
     var filePath = path.join(pub, pathname);
     var lessPath = filePath.replace(/css$/, "less");

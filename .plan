@@ -13,6 +13,7 @@ Manos - utility functions for async without importing all of caolan's library
 
 Notes:
  - set messages to be fixed on mobile
+ - change visibility to be based on class/media query, not ng-show/hide
  - reconsider general AJAX API, flow
  - Add TOTP auth (or display token if none has been set)
  - Add OPML import
@@ -27,5 +28,4 @@ Notes:
   - defaults based on form factor
  - Add tags
  - Mark as read on activation
- - scroll should trigger activation in the full view
  - move UI handling into possibly another service?

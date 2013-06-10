@@ -8,5 +8,9 @@
   },
   "updateInterval": 0,
   "feedMax": 0,
-  "expirationDate": 0
+  "expirationDate": 0,
+  "build": {
+    "less": false,
+    "js": false
+  }
 }

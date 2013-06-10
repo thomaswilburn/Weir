@@ -76,7 +76,12 @@ Weir.service("Weir.Request", ["$http", "$q", function($http, $q) {
 }]);
 
 //Weir.Server talks to the DB and gets stream updates
-Weir.service("Weir.Server", ["Weir.Request", "Weir.Sanitize", "$q", function(Request, Sanitize, $q) {
+Weir.service("Weir.Server", [
+  "Weir.Request",
+  "Weir.Sanitize",
+  "Weir.LocalSettings",
+  "$q",
+  function(Request, Sanitize, Settings, $q) {
   var ask = Request.ask;
 
   var stream = {
@@ -97,8 +102,9 @@ Weir.service("Weir.Server", ["Weir.Request", "Weir.Sanitize", "$q", function(Req
       item.content = Sanitize.prepare(item.content);
     });
     stream.items = data.items;
-    //TODO: not wild about setting this on CSS, should use local option service
-    if (matchMedia("(min-width: 800px)").matches) stream.items[0].active = true;
+    if (Settings.get().stream.startActive) {
+      stream.items[0].active = true;
+    }
   };
 
   var facade = {
@@ -150,7 +156,7 @@ Weir.service("Weir.Server", ["Weir.Request", "Weir.Sanitize", "$q", function(Req
         //mark previously active item as read
         if (post.active) {
           post.read = true;
-          //should mark as read on the server, too
+          //TODO: should mark as read on the server, too
         }
         post.active = false;
       }
@@ -164,6 +170,55 @@ Weir.service("Weir.Server", ["Weir.Request", "Weir.Sanitize", "$q", function(Req
   return facade;
 
 }]);
+
+//LocalSettings allows us to set various per-device options
+//It provides defaults based on form factor
+Weir.service("Weir.LocalSettings", function() {
+
+  var storageKey = "WeirOptions";
+  var settings;
+
+  var fill = function(src, dest) {
+    for (var key in src) {
+      if (!dest[key]) {
+        dest[key] = src[key];
+      }
+    }
+  }
+
+  var form = matchMedia("(min-width: 800px)").matches ? "large" : "small"
+  var defaults = {
+    stream: {
+      view: form == "large" ? "expanded" : "list",
+      startActive: form == "large",
+      length: 10,
+      infinite: false
+    }
+  };
+
+  var revive = function() {
+    var settings = localStorage.getItem(storageKey);
+    if (!settings) {
+      //if never used, install
+      settings = defaults;
+    } else {
+      //otherwise, parse and augment with any new properties
+      settings = JSON.parse(settings);
+      settings = fill(defaults, settings);
+      settings.save = function() {
+        localStorage.setItem(storageKey, JSON.stringify(this));
+      }
+    }
+  };
+
+  return {
+    get: revive,
+    reset: function() {
+      localStorage.removeItem(storageKey);
+    }
+  }
+
+})
 
 //CONTROLLERS
 
