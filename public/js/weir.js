@@ -223,7 +223,7 @@ Weir.service("Weir.Server", [
 //CONTROLLERS
 
 //stream controller handles UI for the stream and status
-var StreamController = function($scope, Server, $document, $anchorScroll, $location) {
+Weir.StreamController = function($scope, Server, $document, $anchorScroll, $location) {
 
   $scope.stream = Server.stream;
 
@@ -287,7 +287,7 @@ var StreamController = function($scope, Server, $document, $anchorScroll, $locat
     }
   })
 };
-StreamController.$inject = ["$scope", "Weir.Server", "$document", "$anchorScroll", "$location"];
+Weir.StreamController.$inject = ["$scope", "Weir.Server", "$document", "$anchorScroll", "$location"];
 
 //DIRECTIVES
 Weir.directive("preventDefault", function() {
