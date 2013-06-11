@@ -30,3 +30,5 @@ Notes:
  - Write Grunt build tasks for LESS, JS concatenation
   - (remove handlers from Server once done?)
  - Configure router to support REST
+ - fix some annoying DB traits:
+  - getUnreadCount and getTotal should just be getStatus

@@ -5,8 +5,8 @@ var Hound = require("./Hound");
 
 var add = function(outline, tags) {
   //no tag support yet, working on it
-  var query = pg.query("INSERT INTO feeds (title, url) VALUES ($1, $2)",
-    [outline.title, outline.xmlUrl],
+  var query = pg.query("INSERT INTO feeds (title, url, site_url) VALUES ($1, $2, $3)",
+    [outline.title, outline.xmlUrl, outline.htmlUrl],
     function(err, data) {
       if (err) console.log(err);
     }

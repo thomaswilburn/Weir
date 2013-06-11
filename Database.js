@@ -17,7 +17,7 @@ var db = {
   create: function(c) {
     psql.query("SELECT * FROM pg_catalog.pg_tables WHERE tablename = 'feeds';", function(err, data) {
       if (err || !data.rows.length) {
-        psql.query("CREATE TABLE feeds (id SERIAL, title TEXT, url TEXT, pulled TIMESTAMP, last_result INTEGER);");
+        psql.query("CREATE TABLE feeds (id SERIAL, title TEXT, url TEXT, site_url TEXT, pulled TIMESTAMP, last_result INTEGER);");
         psql.query("CREATE TABLE stories (id SERIAL, feed INTEGER, title TEXT, url TEXT, author TEXT, content TEXT, guid TEXT, read BOOLEAN DEFAULT false, published TIMESTAMP DEFAULT now());");
         
         //We don't use the database for server-side options yet (possibly ever)
@@ -62,7 +62,7 @@ var db = {
       c = limit;
       limit = cfg.displayLimit || 15;
     }
-    var q = "SELECT s.*, f.title AS feed FROM stories AS s, feeds AS f WHERE s.read = false AND s.feed = f.id ORDER BY published DESC LIMIT " + limit;
+    var q = "SELECT s.*, f.title as feed, f.site_url AS site FROM stories AS s, feeds AS f WHERE s.read = false AND s.feed = f.id ORDER BY published DESC LIMIT " + limit;
     psql.query(q, function(err, data) {
       c(err, data ? data.rows : []);
     });

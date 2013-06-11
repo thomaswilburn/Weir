@@ -12,11 +12,24 @@ server.route("/stream/status", function(req) {
 });
 
 server.route("/stream/unread", function(req) {
-  db.getUnread(function(err, items) {
-    req.reply({
-      items: items
-    })
-  })
+  Manos.when(
+    db.getUnread,
+    db.getUnreadCount,
+    db.getTotal,
+    function(unread, count, total) {
+      if (!unread[0] && !count[0] && !total[0]) {
+        req.reply({
+          items: unread[1],
+          unread: count[1],
+          total: total[1]
+        });
+      } else {
+        req.reply({
+          error: "Could not get unread items"
+        });
+      }
+    }
+  )
 });
 
 server.route("/stream/mark", function(req) {

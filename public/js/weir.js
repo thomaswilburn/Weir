@@ -27,15 +27,23 @@ Weir.service("Weir.Sanitize", ["$document", function($document) {
   window.addEventListener("scroll", reveal);
 
   return {
-    prepare: function(unclean) {
+    prepare: function(unclean, url) {
       var doc = document.implementation.createHTMLDocument("");
       doc.body.innerHTML = unclean;
 
-      //change targets on all links
+      //remove trailing slashes
+      url = url.replace(/\/$/, "");
+      var relative = /^\/[^\\]/;
+
+      //change targets on all links, map to site URL if relative
       var links = doc.querySelectorAll('a');
       for (var i = 0; i < links.length; i++) {
         var link = links[i];
         link.target = "_blank";
+        var href = link.href;
+        if (relative.test(href)) {
+          link.href = url + href;
+        }
       }
 
       //remove scripts and other malicious elements (add to selector)
@@ -47,7 +55,11 @@ Weir.service("Weir.Sanitize", ["$document", function($document) {
       //defer images
       var images = doc.querySelectorAll("img");
       each.call(images, function(img) {
-        img.setAttribute("data-src", img.src);
+        var src = img.src
+        if (relative.test(src)) {
+          src = url + src;
+        }
+        img.setAttribute("data-src", src);
         img.src = "";
       });
 
@@ -141,14 +153,14 @@ Weir.service("Weir.Server", [
     };
     
     var updateStatus = function(data) {
-      stream.unread = data.unread;
-      stream.total = data.total;
+      stream.unread = data.unread || stream.unread;
+      stream.total = data.total || stream.total;
       stream.updatedAt = new Date();
     };
     
     var updateItems = function(data) {
       data.items.forEach(function(item) {
-        item.content = Sanitize.prepare(item.content);
+        item.content = Sanitize.prepare(item.content, item.site);
       });
       stream.items = data.items;
       if (Settings.get().stream.startActive && stream.items.length) {
@@ -190,6 +202,7 @@ Weir.service("Weir.Server", [
         ask({
           url: "stream/unread"
         }).then(function(data) {
+          updateStatus(data);
           updateItems(data);
           deferred.resolve();
         });
