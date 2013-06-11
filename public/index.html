@@ -20,8 +20,24 @@
       <li class="alert warning" ng-show="warning"> {{warning}}
       <li class="alert error" ng-show="error"> {{error}}
     </ul>
+
+    <div class="settings-container ui-panel" id="settings" ng-show="showSettings">
+      <div ng-controller="Weir.SettingsController">
+        <h2>Local Settings</h2>
+        <p>
+          These settings will be applied only to your local client. For server-side settings, edit the <var>cfg.json</var> file in your Weir installation directory.
+
+        <div class="opml">
+          <label>Import OPML</label>
+          <input type="file" class="inputOPML">
+        </div>
+
+        <button ng-click="toggleSettings(false)">cancel</button>
+        <button ng-click="saveSettings()">done</button>
+      </div>
+    </div>
     
-    <div class="stream-container" id="top">
+    <div class="stream-container" id="top" ng-show="!showSettings">
       <ul class="stream">
         <li 
           ng-repeat="item in stream.items" id="{{item.id}}" 
@@ -40,11 +56,15 @@
           </div>
         </li>
       </ul>
+      <div class="no-items" ng-show="stream.items.length == 0">
+        <h2>You have no unread items.</h2>
+      </div>
     </div>
 
     <div class="charm-panel">
       <a class="charm" href="javascript:;" ng-click="next()">&#x21E3;</a>
       <a class="charm" href="javascript:;" ng-click="refresh()">&#x21BA;</a>
+      <a class="charm" href="javascript:;" ng-click="showSettings = !showSettings">&amp;</a>
     </div>
   </div>
 

@@ -20,6 +20,11 @@ var fetch = function() {
   Hound.emit("fetch:start");
   //database.reap();
   database.getFeeds(function(err, rows) {
+    //awkward
+    if (rows.length == 0) {
+      Hound.busy = false;
+      return;
+    }
     //trim feeds down to 1/10, so as not to request everything at once
     rows = rows.filter(function(row, i) {
       return i.toString().split("").pop() == feedSlice;

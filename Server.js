@@ -154,11 +154,18 @@ Server.http.on("request", function(incoming, response) {
       var request = {
         url: parsed.pathname,
         params: parsed.query,
+        body: "",
         reply: function(data) {
           respond(response, data);
         }
       };
-      return route.c(request);
+      incoming.on("data", function(bytes) {
+        request.body += bytes;
+      });
+      incoming.on("end", function() {
+        route.c(request);
+      });
+      return;
     }
   }
   serve(parsed.pathname, response);

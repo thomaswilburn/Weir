@@ -151,7 +151,7 @@ Weir.service("Weir.Server", [
         item.content = Sanitize.prepare(item.content);
       });
       stream.items = data.items;
-      if (Settings.get().stream.startActive) {
+      if (Settings.get().stream.startActive && stream.items.length) {
         stream.items[0].active = true;
       }
     };
@@ -160,7 +160,7 @@ Weir.service("Weir.Server", [
       stream: stream,
       markAsRead: function(item) {
         ask({
-          url: "/stream/mark",
+          url: "stream/mark",
           params: {
             item: item.id
           }
@@ -174,7 +174,7 @@ Weir.service("Weir.Server", [
         });
         var deferred = $q.defer();
         ask({
-          url: "/stream/markRefresh",
+          url: "stream/markRefresh",
           params: {
             items: ids.join(",")
           }
@@ -186,15 +186,18 @@ Weir.service("Weir.Server", [
         return deferred.promise;
       },
       refresh: function() {
+        var deferred = $q.defer();
         ask({
-          url: "/stream/unread"
+          url: "stream/unread"
         }).then(function(data) {
           updateItems(data);
+          deferred.resolve();
         });
+        return deferred.promise;
       },
       stats: function() {
         ask({
-          url: "/stream/status"
+          url: "stream/status"
         }).then(function(data) {
           updateStatus(data);
         });
@@ -225,6 +228,7 @@ Weir.service("Weir.Server", [
 //stream controller handles UI for the stream and status
 Weir.StreamController = function($scope, Server, $document, $anchorScroll, $location) {
 
+  $scope.showSettings = false;
   $scope.stream = Server.stream;
 
   $scope.activate = function(item) {
@@ -244,6 +248,17 @@ Weir.StreamController = function($scope, Server, $document, $anchorScroll, $loca
     });
     $scope.$apply();
   };
+
+  $scope.refresh = function(apply) {
+    $scope.message = "Refreshing feeds...";
+    Server.refresh().then(function() {
+      $scope.message = "";
+      $location.replace();
+      $location.hash("top");
+      $anchorScroll();
+    });
+    if (apply) $scope.$apply();
+  }
 
   $scope.next = function() {
     var stream = Server.stream.items;
@@ -285,9 +300,31 @@ Weir.StreamController = function($scope, Server, $document, $anchorScroll, $loca
         //adjust selection based on position
         break;
     }
-  })
+  });
+
+  $scope.toggleSettings = function(state) {
+    $scope.showSettings = state;
+  }
 };
 Weir.StreamController.$inject = ["$scope", "Weir.Server", "$document", "$anchorScroll", "$location"];
+
+Weir.SettingsController = function($scope, $Settings, $Request) {
+  var fileInput = document.querySelector(".inputOPML");
+  fileInput.addEventListener("change", function() {
+    var file = fileInput.files[0];
+    if (file) {
+      var xhr = new XMLHttpRequest();
+      xhr.onload = function() { $scope.toggleSettings(false); $scope.refresh(); };
+      xhr.open("POST", "meta/import/opml");
+      xhr.send(file);
+    }
+  });
+
+  $scope.saveSettings = function() {
+    $scope.toggleSettings(false);
+  }
+}
+Weir.SettingsController.$inject = ["$scope", "Weir.LocalSettings", "Weir.Request"];
 
 //DIRECTIVES
 Weir.directive("preventDefault", function() {

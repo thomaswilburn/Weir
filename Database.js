@@ -11,13 +11,20 @@ var psql = new pg.Client({
 });
 
 var db = {
+  raw: psql,
+
   //setup
   create: function(c) {
     psql.query("SELECT * FROM pg_catalog.pg_tables WHERE tablename = 'feeds';", function(err, data) {
       if (err || !data.rows.length) {
-        psql.query("CREATE TABLE feeds (id SERIAL, title TEXT, url TEXT, pulled TIMESTAMP, last_result INTEGER");
-        psql.query("CREATE TABLE stories (id SERIAL, title TEXT, url TEXT, author TEXT, content TEXT, guid TEXT, read BOOLEAN, published TIMESTAMP DEFAULT now()");
-        psql.query("CREATE TABLE options (name TEXT, value TEXT)");
+        psql.query("CREATE TABLE feeds (id SERIAL, title TEXT, url TEXT, pulled TIMESTAMP, last_result INTEGER);");
+        psql.query("CREATE TABLE stories (id SERIAL, feed INTEGER, title TEXT, url TEXT, author TEXT, content TEXT, guid TEXT, read BOOLEAN DEFAULT false, published TIMESTAMP DEFAULT now());");
+        
+        //We don't use the database for server-side options yet (possibly ever)
+        //psql.query("CREATE TABLE options (name TEXT, value TEXT);");
+        
+        //This table will store auth tokens from the TOTP for a month
+        //psql.query("CREATE TABLE auth (session TEXT);");
       };
     })
     
@@ -26,14 +33,14 @@ var db = {
   //get all feeds for listing with unread counts, etc.
   getFeeds: function(c) {
     var q = psql.query("SELECT * FROM feeds", function(err, data) {
-      if (c) c(err, data.rows);
+      if (c) c(err, data ? data.rows : []);
     });
   },
 
   //get a single feed item
   getFeed: function(id, c) {
     var q = psql.query("SELECT * FROM feeds WHERE id = " + (id * 1), function(err, data) {
-      c(err, data.rows[0]);
+      c(err, data ? data.rows[0] : null);
     });
   },
 
@@ -45,7 +52,7 @@ var db = {
   //get story GUID and dates
   getIdentifiers: function(feed, c) {
     var q = psql.query("SELECT guid, published FROM stories WHERE feed = " + (feed * 1), function(err, data) {
-      return c(err, data.rows);
+      return c(err, data ? data.rows : []);
     });
   },
 
@@ -57,7 +64,7 @@ var db = {
     }
     var q = "SELECT s.*, f.title AS feed FROM stories AS s, feeds AS f WHERE s.read = false AND s.feed = f.id ORDER BY published DESC LIMIT " + limit;
     psql.query(q, function(err, data) {
-      c(err, data && data.rows);
+      c(err, data ? data.rows : []);
     });
   },
   

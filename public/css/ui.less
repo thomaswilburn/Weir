@@ -1,0 +1,33 @@
+.ui-panel {
+    margin: 0 100px 0 20%;
+    background: @foreground;
+    color: @background;
+    padding: 1em;
+
+    @media @mobile {
+        margin: 0;
+        margin-bottom: 100px;
+    }
+
+    label, legend {
+        display: block;
+        text-decoration: underline;
+        margin-top: .5em;
+        font-size: 20px;
+    }
+
+    input, select, textarea {
+        margin: .5em 0;
+        background: darken(@background, 30%);
+        padding: 4px 1em;
+        border: 1px solid @background;
+        display: block;
+    }
+
+    button {
+        background: lighten(@foreground, 20%);
+        color: @background;
+        border: 1px solid @background;
+        padding: 4px 1em;
+    }
+}

@@ -24,7 +24,7 @@ Notes:
   - key remapping or compatibility
   - list length
   - infinite scroll?
-  - visual theme colors?
+  - visual theme colors? (from a palette)
  - Add tags
  - Mark as read on activation
  - Write Grunt build tasks for LESS, JS concatenation

@@ -2,6 +2,9 @@ var server = require("./Server");
 var db = require("./Database");
 var Manos = require("./Manos");
 
+//load import/export routes
+require("./Freedom");
+
 server.route("/stream/status", function(req) {
   db.getStatus(function(err, counts) {
     req.reply(counts);
