@@ -34,10 +34,6 @@
       font-weight: normal;
     }
     
-    &:hover {
-      color: @foreground;
-    }
-    
     a {
       font-weight: bold;
       display: block;
@@ -50,6 +46,20 @@
     margin: 0px 8px;
     padding: 4px;
     border-radius: 4px;
+
+    @media @mobile {
+      position: fixed;
+      border: none;
+      top: 0;
+      left: 0;
+      width: 100%;
+      margin: 0;
+      padding: 1em;
+      text-align: center;
+      color: @background;
+      background: @foreground;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, .3);
+    }
 
   }
 
