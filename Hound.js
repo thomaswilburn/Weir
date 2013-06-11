@@ -34,7 +34,7 @@ var fetch = function() {
       var r = request(row.url);
       //console.log(">>>", row.url);
       r.on("error", function(err) {
-        console.log("Request error:", row.url, err);
+        console.log("Request error:", row.url, err.code);
         if (err.code == "ENOTFOUND" || err.code == "EHOSTUNREACH") {
           database.setFeedResult(row.id, 0);
         }

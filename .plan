@@ -14,8 +14,8 @@ Manos - utility functions for async without importing all of caolan's library
 Notes:
  - Set alert messages to be fixed on mobile
  - Add ability to write config file with .save();
- - Handle "no unread items"
  - Add some local style removal to Weir.Sanitize
+ - Add unread status to all API calls, handle on client
  - reconsider general AJAX API, flow
  - Add TOTP auth (or display token if none has been set)
  - Add OPML import
