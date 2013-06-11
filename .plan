@@ -12,13 +12,11 @@ Stream - Registers routes and passes on to the database
 Manos - utility functions for async without importing all of caolan's library
 
 Notes:
- - Set alert messages to be fixed on mobile
+ - Add a scroll handling service, remove logic from the StreamController
  - Add ability to write config file with .save();
  - Add some local style removal to Weir.Sanitize
- - Add unread status to all API calls, handle on client
  - reconsider general AJAX API, flow
  - Add TOTP auth (or display token if none has been set)
- - Add OPML import
  - Add to options service
   - security - get a random key (possibly set it as well)
   - key remapping or compatibility
