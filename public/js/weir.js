@@ -2,29 +2,72 @@ var Weir = angular.module("Weir", []);
 
 //SERVICES
 
+//Weir.Events makes it easy for services to couple loosely--like, say, Sanitize and StreamController
+Weir.service("Weir.Events", [function() {
+  var registry = {};
+
+  return {
+    on: function(event, listener) {
+      if (!registry[event]) {
+        registry[event] = [];
+      }
+      registry[event].push(listener);
+    },
+    off: function(event, listener) {
+      if (!registry[event]) return;
+      if (listener) {
+        registry[event] = registry[event].filter(function(f) {
+          return f !== listener;
+        });
+      } else {
+        registry[event] = [];
+      }
+    },
+    fire: function(event, data) {
+      if (!registry[event]) return;
+      //make a copy for immutability during this tick
+      var callbacks = registry[event].slice();
+      data = data || {};
+      data.type = data.type || event;
+      for (var i = 0; i < callbacks.length; i++) {
+        callbacks[i](data);
+      }
+    }
+  }
+
+}]);
+
 //Weir.Sanitize cleans up HTML for malicious elements, changes link targets, and defers images
-Weir.service("Weir.Sanitize", ["$document", function($document) {
+Weir.service("Weir.Sanitize", ["$document", "Weir.Events", function($document, Events) {
   var slice = Array.prototype.slice;
   var each = Array.prototype.forEach;
 
-  //this is a little clumsy, but it works.
   var throttled = false;
   var rate = 100; //num of ms to wait before running again
+  var deferred = [];
   var reveal = function() {
     if (throttled) return;
     throttled = true;
     setTimeout(function() { throttled = false }, rate);
-    var deferred = slice.call(document.querySelectorAll("[data-src]"));
-    deferred.forEach(function(img) {
+    //we lazy-filter the list, so that deferred images are never checked again
+    deferred = deferred.filter(function(img) {
       var coords = img.getBoundingClientRect();
-      if (coords.top && coords.left) {
+      if (coords.top && coords.top < window.scrollY + window.innerHeight) {
         img.src = img.getAttribute("data-src");
         img.removeAttribute("data-src");
+        return false;
       }
+      return true;
     });
-  }
+  };
 
   window.addEventListener("scroll", reveal);
+  //using the Events service means we don't have recursive dependencies
+  Events.on("refresh", function() {
+    setTimeout(function() {
+      deferred = slice.call(document.querySelectorAll("[data-src]"));
+    }, 50);
+  });
 
   return {
     prepare: function(unclean, url) {
@@ -52,7 +95,7 @@ Weir.service("Weir.Sanitize", ["$document", function($document) {
         script.parentElement.removeChild(script);
       });
 
-      //defer images
+      //process images (defer loading, remove dimensions for CSS reasons)
       var images = doc.querySelectorAll("img");
       each.call(images, function(img) {
         var src = img.src
@@ -61,6 +104,9 @@ Weir.service("Weir.Sanitize", ["$document", function($document) {
         }
         img.setAttribute("data-src", src);
         img.src = "";
+        
+        img.removeAttribute("height");
+        img.removeAttribute("width");
       });
 
       return doc.body.innerHTML;
@@ -142,7 +188,8 @@ Weir.service("Weir.Server", [
   "Weir.Sanitize",
   "Weir.LocalSettings",
   "$q",
-  function(Request, Sanitize, Settings, $q) {
+  "Weir.Events",
+  function(Request, Sanitize, Settings, $q, Events) {
     var ask = Request.ask;
 
     var stream = {
@@ -166,6 +213,7 @@ Weir.service("Weir.Server", [
       if (Settings.get().stream.startActive && stream.items.length) {
         stream.items[0].active = true;
       }
+      Events.fire("refresh");
     };
 
     var facade = {
@@ -305,8 +353,11 @@ Weir.StreamController = function($scope, Server, $document, $anchorScroll, $loca
         break;
 
       case ".":
-      case "r":
         $scope.markRefresh();
+        break;
+
+      case "r":
+        $scope.refresh();
         break;
 
       case " ":
