@@ -1,12 +1,22 @@
 .ui-panel {
     margin: 0 100px 0 20%;
-    background: @foreground;
+    background: lighten(@foreground, 10%);
     color: @background;
     padding: 1em;
 
     @media @mobile {
         margin: 0;
         margin-bottom: 100px;
+    }
+
+    p {
+        max-width: 400px;
+    }
+
+    a {
+        color: darken(@background, 10%);
+        text-decoration: underline;
+        font-weight: bold;
     }
 
     label, legend {

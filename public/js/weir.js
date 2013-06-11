@@ -66,6 +66,7 @@ Weir.service("Weir.Sanitize", ["$document", "Weir.Events", function($document, E
   Events.on("refresh", function() {
     setTimeout(function() {
       deferred = slice.call(document.querySelectorAll("[data-src]"));
+      reveal();
     }, 50);
   });
 

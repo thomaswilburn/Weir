@@ -29,11 +29,18 @@
 
         <div class="opml">
           <label>Import OPML</label>
+          <p>
+            OPML is a standard form of feed list, which you can use to import your subscriptions from another RSS reader. If you've been using Google Reader, visit <a target="_blank" href="https://www.google.com/takeout/">Takeout</a> to get a subscriptions.xml file, then upload it here. Once imported, subscriptions will take a little while to fully load.
           <input type="file" class="inputOPML">
         </div>
 
         <button ng-click="toggleSettings(false)">cancel</button>
         <button ng-click="saveSettings()">done</button>
+
+        <div class="credits">
+          <p>
+            Weir is written by <a href="http://thomaswilburn.net" target="_blank">Thomas Wilburn</a>. You can find the source code for the entire project or submit bug reports <a target="_blank" href="https://github.com/thomaswilburn/Weir">here</a>. Thank you for your time!
+        </div>
       </div>
     </div>
     
