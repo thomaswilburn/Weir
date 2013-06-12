@@ -201,7 +201,7 @@ Weir.service("Weir.Server", [
     };
     
     var updateStatus = function(data) {
-      stream.unread = data.unread || stream.unread;
+      stream.unread = typeof data.unread == "undefined" ? data.unread : stream.unread;
       stream.total = data.total || stream.total;
       stream.updatedAt = new Date();
     };
