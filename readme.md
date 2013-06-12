@@ -74,7 +74,7 @@ a unique port, so it doesn't need to be available to your Apache or Nginx instal
 2. Install Weir's dependencies using NPM. If you have Node installed, you should already 
 have NPM, so navigate to the Weir directory and type the following command:
 
-  npm install
+        npm install
   
 3. Create a Postgres database, using the <var>createdb</var> command. 
   
@@ -86,9 +86,8 @@ the rss.css file yourself.
 
 5. Start the server with either of the following two commands, then just leave it running.
 
-  npm start
-    or
-  node main
+        npm start
+        node main
   
 6. Open a browser to the server/port combination where you're running Weir. For example, if 
 my cfg.json set the port to 8080, I would visit "http://example.com:8080". Click the & icon 
