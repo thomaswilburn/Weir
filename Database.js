@@ -32,14 +32,14 @@ var db = {
 
   //get all feeds for listing with unread counts, etc.
   getFeeds: function(c) {
-    var q = psql.query("SELECT * FROM feeds", function(err, data) {
+    psql.query("SELECT * FROM feeds", function(err, data) {
       if (c) c(err, data ? data.rows : []);
     });
   },
 
   //get a single feed item
   getFeed: function(id, c) {
-    var q = psql.query("SELECT * FROM feeds WHERE id = " + (id * 1), function(err, data) {
+    psql.query("SELECT * FROM feeds WHERE id = " + (id * 1), function(err, data) {
       c(err, data ? data.rows[0] : null);
     });
   },
@@ -51,7 +51,7 @@ var db = {
   
   //get story GUID and dates
   getIdentifiers: function(feed, c) {
-    var q = psql.query("SELECT guid, published FROM stories WHERE feed = " + (feed * 1), function(err, data) {
+    psql.query("SELECT guid, published FROM stories WHERE feed = " + (feed * 1), function(err, data) {
       return c(err, data ? data.rows : []);
     });
   },
@@ -69,7 +69,7 @@ var db = {
   },
   
   //get items for a specific feed
-  getItems: function(feed, c) {
+  getFeedItems: function(feed, c) {
   
   },
 
@@ -106,16 +106,24 @@ var db = {
   },
   
   getUnreadCount: function(c) {
-    var q = "SELECT count(title) FROM stories WHERE read = false;";
+    var q = "SELECT count(read) FROM stories WHERE read = false;";
     psql.query(q, function(err, data) {
       c(err, data && data.rows[0].count);
     });
   },
 
   getTotal: function(c) {
-    var q = "SELECT count(title) FROM stories;";
+    var q = "SELECT count(read) FROM stories;";
     psql.query(q, function(err, data) {
       c(err, data && data.rows[0].count);
+    });
+  },
+  
+  //preferred over individual calls to getUnreadCount and getTotal
+  getStatus: function(c) {
+    var q = "SELECT COUNT(CASE WHEN read THEN null ELSE 1 END) AS unread, COUNT(read) AS total from stories;";
+    psql.query(q, function(err, data) {
+      c(err, data && data.rows[0]);
     });
   },
   
@@ -126,19 +134,6 @@ var db = {
     psql.query(q, function(err, data) {
       if (c) c(err, data);
     });
-  },
-
-  getStatus: function(c) {
-    Manos.when(
-      db.getUnreadCount,
-      db.getTotal,
-      function(unread, total) {
-        c(unread[0] || total[0], {
-          unread: unread[1],
-          total: total[1]
-        });
-      }
-    );
   }
   
 };

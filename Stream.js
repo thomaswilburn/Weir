@@ -14,14 +14,13 @@ server.route("/stream/status", function(req) {
 server.route("/stream/unread", function(req) {
   Manos.when(
     db.getUnread,
-    db.getUnreadCount,
-    db.getTotal,
-    function(unread, count, total) {
-      if (!unread[0] && !count[0] && !total[0]) {
+    db.getStatus,
+    function(unread, status) {
+      if (!unread[0] && !status[0]) {
         req.reply({
           items: unread[1],
-          unread: count[1],
-          total: total[1]
+          unread: status[1].unread,
+          total: status[1].total
         });
       } else {
         req.reply({
@@ -55,14 +54,13 @@ server.route("/stream/markRefresh", function(req) {
     });
     items.push(function() {
       Manos.when(
-        db.getUnreadCount,
-        db.getTotal,
         db.getUnread,
-        function(unreadCount, total, unread) {
+        db.getStatus,
+        function(unread, status) {
           req.reply({
-            unread: unreadCount[1],
-            total: total[1],
-            items: unread[1]
+            items: unread[1],
+            total: status[1] && status[1].total,
+            unread: status[1] && status[1].unread
           });
         }
       );

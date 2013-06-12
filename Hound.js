@@ -31,17 +31,32 @@ var fetch = function() {
     });
     feedSlice = (feedSlice + 1) % 10;
     rows.forEach(function(row) {
-      var r = request(row.url);
-      //console.log(">>>", row.url);
-      r.on("error", function(err) {
-        console.log("Request error:", row.url, err.code);
-        if (err.code == "ENOTFOUND" || err.code == "EHOSTUNREACH") {
-          database.setFeedResult(row.id, 0);
-        }
+    
+      var r = request({
+        url: row.url,
+        headers: {
+          "If-Modified-Since": row.pulled.toGMTString(),
+          "Connection": "close"
+        },
+        jar: false
       });
+      
+      r.on("error", function(err) {
+        if (r.response.statusCode == 304) {
+          //some servers send 304 badly
+          database.setFeedResult(row.id, 304);
+          return;
+        }
+        console.log("Request error:", row.url, err.code);
+        database.setFeedResult(row.id, 0);
+      });
+      
       r.on("response", function(response) {
         if (response.statusCode !== 200) {
-          console.log("Unsuccessful request:", row.url);
+          //Not Modified isn't an error
+          if (response.statusCode !== 304) {
+            console.log("Unsuccessful request:", row.url);
+          }
           database.setFeedResult(row.id, response.statusCode);
           return;
         };
@@ -57,6 +72,7 @@ var fetch = function() {
         });
         r.pipe(parser);
       });
+      
     });
   });
 };

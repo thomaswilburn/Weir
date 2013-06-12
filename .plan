@@ -10,9 +10,13 @@ Config - key/value store loaded from JSON
 Server - HTTP requests and AJAX calls
 Stream - Registers routes and passes on to the database
 Manos - utility functions for async without importing all of caolan's library
+Freedom - import/export, starting with OPML
 
 Notes:
  - Add a scroll handling service, remove logic from the StreamController
+  - activate on scroll
+  - scroll to top based on events
+  - trigger deferred processing
  - Add ability to write config file with .save();
  - Add some local style removal to Weir.Sanitize
  - reconsider general AJAX API, flow
@@ -27,6 +31,4 @@ Notes:
  - Mark as read on activation
  - Write Grunt build tasks for LESS, JS concatenation
   - (remove handlers from Server once done?)
- - Configure router to support REST
- - fix some annoying DB traits:
-  - getUnreadCount and getTotal should just be getStatus
+ - Configure router to support REST params
