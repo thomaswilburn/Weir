@@ -5,30 +5,35 @@ Components:
 Reader - main class instantiates others
 Hound - fetches RSS on a timer, dispatches events with new counts when the fetch concludes
 Database.js - tech-specific database layer, start with pgsql
-Console - logs out to a file
+Console - logs out to a file (eventually) or to stdout (currently)
 Config - key/value store loaded from JSON
 Server - HTTP requests and AJAX calls
 Stream - Registers routes and passes on to the database
 Manos - utility functions for async without importing all of caolan's library
 Freedom - import/export, starting with OPML
 
-Notes:
+Notes (vaguely ordered):
+
+ - Mark as read on activation
+ - Write Grunt build tasks for LESS, JS concatenation
+  - (remove handlers from Server once done?)
  - Add a scroll handling service, remove logic from the StreamController
   - activate on scroll
   - scroll to top based on events
   - trigger deferred processing
+ - Add accent color, to be used to mark active items, unread count, etc.
+ - Add feed management (subscribing, at least, if not unsubscribing and renaming)
+ - Add TOTP auth (or display token if none has been set)
  - Add ability to write config file with .save();
  - Add some local style removal to Weir.Sanitize
  - reconsider general AJAX API, flow
- - Add TOTP auth (or display token if none has been set)
  - Add to options service
   - security - get a random key (possibly set it as well)
   - key remapping or compatibility
   - list length
   - infinite scroll?
   - visual theme colors? (from a palette)
+  - refresh rate
+  - should buttons mark all or just refresh?
  - Add tags
- - Mark as read on activation
- - Write Grunt build tasks for LESS, JS concatenation
-  - (remove handlers from Server once done?)
  - Configure router to support REST params

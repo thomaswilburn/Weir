@@ -205,7 +205,7 @@ Weir.service("Weir.Server", [
       stream.total = data.total || stream.total;
       stream.updatedAt = new Date();
       //can't set the title from the template
-      document.title = "Weir" + (stream.unread ? "(" + stream.unread + ")" : "");
+      document.title = "Weir" + (stream.unread ? " (" + stream.unread + ")" : "");
     };
     
     var updateItems = function(data) {
