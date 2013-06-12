@@ -277,8 +277,15 @@ Weir.service("Weir.Server", [
         item.active = true;
       }
     }
+    
+    var auto = function() {
+      facade.stats();
+      //this should be set from local settings
+      setTimeout(auto, 60 * 1000);
+    };
+    
+    auto();
 
-    facade.stats();
     facade.refresh();
 
     return facade;
