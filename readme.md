@@ -32,7 +32,6 @@ What's still missing?
 At this stage, Weir is sufficient, but not fully fleshed out. There are still plans to add 
 the following features:
 
-* OPML import/export
 * Multiple database support
 * Subscription management
 * Display options for local machines
@@ -60,17 +59,45 @@ able to be recreated given fifteen minutes and a decent Internet connection.
 colliding with regular web services. This is because I personally run all my sites from a 
 single VM, but it's not exactly scalable.
 
-Why Weir instead of other services?
------------------------------------
-
-If you're happy using a subscription or free service, go for it. In the wake of the Reader 
-shutdown, I'm personally wary about relying on other people's servers.
-
 Requirements
 ------------
 
 * NodeJS
 * PostgreSQL (other DB types coming)
+
+Installation Instructions
+-------------------------
+
+1. Clone this repository into a directory. It can be anywhere--Weir hosts its own server on 
+a unique port, so it doesn't need to be available to your Apache or Nginx installation. 
+
+2. Install Weir's dependencies using NPM. If you have Node installed, you should already 
+have NPM, so navigate to the Weir directory and type the following command:
+
+  npm install
+  
+3. Create a Postgres database, using the <var>createdb</var> command. 
+  
+4. Copy the cfg-example.json file to cfg.json, and edit it to fill in your database 
+information, as well as some other configuration options. I recommend having an 
+<var>updateInterval</var> of 15 (it's in minutes) and a <var>expirationDate</var> of 30 
+(it's in days). You'll also need to turn on LESS compilation, unless you want to generate 
+the rss.css file yourself.
+
+5. Start the server with either of the following two commands, then just leave it running.
+
+  npm start
+    or
+  node main
+  
+6. Open a browser to the server/port combination where you're running Weir. For example, if 
+my cfg.json set the port to 8080, I would visit "http://example.com:8080". Click the & icon 
+on the right to open the options menu, and upload an OPML file to import your subscriptions 
+(Google Takeout delivers this as "subscriptions.xml"). Then just start reading! It will take 
+Weir a little time to pull all your subscriptions, but it'll be done by the amount of time 
+you set in the configuration as <var>updateInterval</var>.
+
+7. File bugs, issues, and patches here to make Weir better! Thanks for your help!
 
 What's with the name?
 ---------------------
@@ -80,8 +107,13 @@ allow engineers to measure the flow of water, and they are smaller than other da
 Considering that this program is intended to direct the flow of information with the minimum 
 amount of construction, it seemed appropriate.
 
+Why Weir instead of other services?
+-----------------------------------
+
+If you're happy using a subscription or free service, go for it. In the wake of the Reader 
+shutdown, I'm personally wary about relying on other people's servers.
+
 License
 -------
 
-Weir is licensed under the GPL because I'm a filthy socialist. Take it, change it, make it 
-better for your needs.
+Weir is licensed under the GPL because I'm a filthy socialist. Make yourself at home.
