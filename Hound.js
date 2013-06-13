@@ -42,7 +42,7 @@ var fetch = function() {
       });
       
       r.on("error", function(err) {
-        if (r.response.statusCode == 304) {
+        if (r.response && r.response.statusCode == 304) {
           //some servers send 304 badly
           database.setFeedResult(row.id, 304);
           return;
