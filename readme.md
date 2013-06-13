@@ -79,10 +79,10 @@ have NPM, so navigate to the Weir directory and type the following command:
 3. Create a Postgres database, using the <var>createdb</var> command. 
   
 4. Copy the cfg-example.json file to cfg.json, and edit it to fill in your database 
-information, as well as some other configuration options. I recommend having an 
-<var>updateInterval</var> of 15 (it's in minutes) and a <var>expirationDate</var> of 30 
-(it's in days). You'll also need to turn on LESS compilation, unless you want to generate 
-the rss.css file yourself.
+information (type should be "postgres"), as well as some other configuration options. I 
+recommend having an <var>updateInterval</var> of 15 (it's in minutes) and a 
+<var>expirationDate</var> of 30 (it's in days). You'll also need to turn on LESS 
+compilation, unless you want to generate the rss.css file yourself.
 
 5. Kick off the Weir process with the followign command, which will build the client-side 
 files and start the HTTP server, then just leave it running.
