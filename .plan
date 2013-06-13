@@ -15,8 +15,6 @@ Freedom - import/export, starting with OPML
 Notes (vaguely ordered):
 
  - Mark as read on activation
- - Write Grunt build tasks for LESS, JS concatenation
-  - (remove handlers from Server once done?)
  - Add a scroll handling service, remove logic from the StreamController
   - activate on scroll
   - scroll to top based on events

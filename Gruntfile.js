@@ -6,9 +6,16 @@ module.exports = function(grunt) {
   
   var options = {
     watch: {
-      dev: {
+      css: {
         files: ["public/css/*.less"],
         tasks: ["less"],
+        options: {
+          nospawn: true
+        }
+      },
+      js: {
+        files: ["public/js/Main.js", "public/js/Controller.*.js", "public/js/Service.*.js"],
+        tasks: ["concat"],
         options: {
           nospawn: true
         }

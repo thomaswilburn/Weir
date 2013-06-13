@@ -48,13 +48,15 @@ var lessParser = new less.Parser({
 });
 
 var handlers = {
+  //handler to build LESS - probably not necessary now that we have a Gruntfile
   ".css": function(pathname, req) {
+    req.setHeader("Content-Type", mimeTypes[".css"]);
     //skip if LESS building is turned off
     //should probably change to only build if CSS doesn't exist
     if (!cfg.build.less) {
-      serveFile(filePath, req);
+      serveFile(pathname, req);
+      return;
     }
-    req.setHeader("Content-Type", mimeTypes[".css"]);
     var filePath = path.join(pub, pathname);
     var lessPath = filePath.replace(/css$/, "less");
     fs.exists(lessPath, function(does) {
