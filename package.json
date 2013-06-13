@@ -4,7 +4,7 @@
   "author": "Thomas Wilburn <news@thomaswilburn.net>",
   "description": "Minimalist, self-hosted RSS reader for Node.js",
   "scripts": {
-    "start": "node main.js"
+    "start": "grunt build & node main.js"
   },
   "main": "Reader.js",
   "repository": {
