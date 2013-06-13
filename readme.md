@@ -84,10 +84,10 @@ information, as well as some other configuration options. I recommend having an
 (it's in days). You'll also need to turn on LESS compilation, unless you want to generate 
 the rss.css file yourself.
 
-5. Start the server with either of the following two commands, then just leave it running.
+5. Kick off the Weir process with the followign command, which will build the client-side 
+files and start the HTTP server, then just leave it running.
 
         npm start
-        node main
   
 6. Open a browser to the server/port combination where you're running Weir. For example, if 
 my cfg.json set the port to 8080, I would visit "http://example.com:8080". Click the & icon 
