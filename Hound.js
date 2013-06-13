@@ -35,7 +35,7 @@ var fetch = function() {
       var r = request({
         url: row.url,
         headers: {
-          "If-Modified-Since": row.pulled.toGMTString(),
+          "If-Modified-Since": row.pulled && row.pulled.toGMTString(),
           "Connection": "close"
         },
         jar: false

@@ -84,8 +84,9 @@ recommend having an <var>updateInterval</var> of 15 (it's in minutes) and a
 <var>expirationDate</var> of 30 (it's in days). You'll also need to turn on LESS 
 compilation, unless you want to generate the rss.css file yourself.
 
-5. Kick off the Weir process with the followign command, which will build the client-side 
-files and start the HTTP server, then just leave it running.
+5. Kick off the Weir process with the following command, which will build the client-side 
+files and start the HTTP server. Just leave it running--you may want to do this from a tmux 
+window or as a bash job.
 
         npm start
   
