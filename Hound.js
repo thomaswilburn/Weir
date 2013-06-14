@@ -18,7 +18,6 @@ var fetch = function() {
   if (Hound.busy) return;
   Hound.busy = true;
   Hound.emit("fetch:start");
-  //database.reap();
   database.getFeeds(function(err, rows) {
     //awkward
     if (rows.length == 0) {

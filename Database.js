@@ -128,8 +128,7 @@ var db = {
   },
   
   //cull old database items
-  //we may not want to do this every single time
-  reap: function(c) {
+  reapStories: function(c) {
     var q = "DELETE FROM stories WHERE published IS NOT null AND published < now() - INTERVAL '$1 DAYS'";
     psql.query(q, [cfg.expirationDate || 30], function(err, data) {
       if (c) c(err, data && data.rows);
@@ -168,5 +167,14 @@ var db = {
 psql.connect(function(err) {
   if (err) console.log(err);
 });
+
+//cull on a timer--say, once an hour?
+var cull = function() {
+  //console.log("Culling database...");
+  db.reapSessions();
+  db.reapStories();
+  setTimeout(cull, 60 * 60 * 1000);
+};
+cull();
 
 module.exports = db;
