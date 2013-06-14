@@ -11,6 +11,7 @@ Server - HTTP requests and AJAX calls
 Stream - Registers routes and passes on to the database
 Manos - utility functions for async without importing all of caolan's library
 Freedom - import/export, starting with OPML
+Security - Manage sessions, TOTP authorization
 
 Notes (vaguely ordered):
 
@@ -21,7 +22,6 @@ Notes (vaguely ordered):
   - trigger deferred processing
  - Add accent color, to be used to mark active items, unread count, etc.
  - Add feed management (subscribing, at least, if not unsubscribing and renaming)
- - Add TOTP auth (or display token if none has been set)
  - Add ability to write config file with .save();
  - Add some local style removal to Weir.Sanitize
  - reconsider general AJAX API, flow
