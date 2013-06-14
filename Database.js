@@ -24,7 +24,7 @@ var db = {
         //psql.query("CREATE TABLE options (name TEXT, value TEXT);");
         
         //This table will store auth tokens from the TOTP for a month
-        psql.query("CREATE TABLE auth (session TEXT, expires DATE);");
+        psql.query("CREATE TABLE auth (session TEXT, expires DATE DEFAULT (now() + INTERVAL '30 days'));");
       };
     })
     
@@ -132,18 +132,35 @@ var db = {
   reap: function(c) {
     var q = "DELETE FROM stories WHERE published IS NOT null AND published < now() - INTERVAL '$1 DAYS'";
     psql.query(q, [cfg.expirationDate || 30], function(err, data) {
-      if (c) c(err, data);
+      if (c) c(err, data && data.rows);
     });
   },
   
-  setAuthToken: function(value, c) {
-  
+  setAuthToken: function(session, c) {
+    //the database will take care of the expiration date, because Postgres is awesome.
+    var q = "INSERT INTO auth (session) VALUES ($1)";
+    psql.query(q, [session], function(err) {
+      c(err);
+    });
   },
   
-  getAuthToken: function(value, c) {
-    //injection mania!
+  getAuthToken: function(session, c) {
     var q = "SELECT COUNT(session) FROM auth WHERE session = $1;";
-    
+    db.reapSessions();
+    psql.query(q, [session], function(err, data) {
+      //if token not found, reject this session
+      if (err || data.rows.pop().count == 0) {
+        return c(false);
+      }
+      c(true);
+    });
+  },
+  
+  reapSessions: function(c) {
+    var q = "DELETE FROM auth WHERE expires < now()";
+    psql.query(q, function(err, data) {
+      if (c) c(err, data && data.rows);
+    });
   }
   
 };
