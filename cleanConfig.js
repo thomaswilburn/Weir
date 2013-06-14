@@ -8,7 +8,8 @@ It turns out, despite the stupid name, that JSON.stringify() already has a value
 built in. Handy!
 
 Running this script will also generate a package.json file, or update your existing package 
-with the current node_modules.
+with the current node_modules, and it logs out a list of credits for the packages used. I 
+place this in the Credits section of the settings dialog.
 
 */
 
@@ -20,7 +21,7 @@ var replacer = function(key, value) {
   if (key === "") return value;
   switch (typeof value) {
     case "number": return 0;
-    case "string": return "string";
+    case "string": return "";
     case "boolean": return false;
     case "function": return "f()";
     case "object":
@@ -29,9 +30,8 @@ var replacer = function(key, value) {
   }
 }
 
-console.log(JSON.stringify(cfg, replacer, 2));
-
 fs.writeFileSync("cfg-example.json", JSON.stringify(cfg, replacer, 2));
+var credits = "";
 
 var package = {};
 if (fs.existsSync("package.json")) {
@@ -44,6 +44,25 @@ modules.forEach(function(mod) {
   if (fs.existsSync(packagePath)) {
     var modPackage = JSON.parse(fs.readFileSync(packagePath));
     package.dependencies[modPackage.name] = modPackage.version || "*";
+    var site = modPackage.homepage;
+    credits += "<li> "
+    if (site) {
+      credits += '<a href="' + site + '">';
+    }
+    credits += modPackage.name;
+    if (site) {
+      credits += "</a>";
+    }
+    credits += " - ";
+    if (modPackage.author && modPackage.author.url) {
+      credits += "<a href='" + modPackage.author.url + "'>";
+      credits += modPackage.author.name;
+      credits += "</a>";
+    } else {
+      credits += modPackage.author.name || modPackage.author;
+    }
+    credits += "\n";
   }
 });
 fs.writeFileSync("package.json", JSON.stringify(package, null, 2), "utf8");
+console.log(credits);

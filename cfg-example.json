@@ -1,10 +1,10 @@
 {
   "port": 0,
   "database": {
-    "type": "string",
-    "user": "string",
-    "password": "string",
-    "db": "string"
+    "type": "",
+    "user": "",
+    "password": "",
+    "db": ""
   },
   "updateInterval": 0,
   "feedMax": 0,
@@ -12,5 +12,6 @@
   "build": {
     "less": false,
     "js": false
-  }
+  },
+  "totp": ""
 }

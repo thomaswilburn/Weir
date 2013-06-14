@@ -21,6 +21,8 @@
     "node-gyp": "0.9.6",
     "pg": "1.1.2",
     "request": "2.21.0",
+    "speakeasy": "1.0.3",
+    "sqlite3": "2.1.7",
     "xml2js": "0.2.7"
   },
   "license": "GPL",

@@ -2,7 +2,7 @@
     margin: 0 100px 0 20%;
     background: lighten(@foreground, 10%);
     color: @background;
-    padding: 1em;
+    padding: 1em 0 1em 2em;
     min-height: 100%;
 
     @media @mobile {
@@ -29,10 +29,15 @@
 
     input, select, textarea {
         margin: .5em 0;
-        background: darken(@background, 30%);
+        background: @background;
+        color: @foreground;
         padding: 4px 1em;
         border: 1px solid @background;
         display: block;
+    }
+    
+    .verbs {
+      margin-top: 1em;
     }
 
     button {
@@ -40,5 +45,33 @@
         color: @background;
         border: 1px solid @background;
         padding: 4px 1em;
+    }
+    
+    .totp {
+      
+      .secrets {
+        background: @background;
+        padding: 1em;
+        text-align: center;
+        max-width: 400px;
+        color: @foreground;
+        
+        .base32 {
+          padding: 1em 0;
+          font-size: 1.5em;
+          letter-spacing: 2px;
+        }
+      }
+      
+    }
+    
+    .credits {
+      
+      ul {
+        margin: 0;
+        padding: 0;
+        list-style: inside square;
+      }
+      
     }
 }

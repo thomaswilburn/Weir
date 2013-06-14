@@ -7,6 +7,7 @@
     var slice = Array.prototype.slice;
     var each = Array.prototype.forEach;
 
+    //function to show deferred images on scroll or refresh
     var throttled = false;
     var rate = 100; //num of ms to wait before running again
     var deferred = [];

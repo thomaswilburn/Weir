@@ -20,6 +20,9 @@ Notes (vaguely ordered):
   - activate on scroll
   - scroll to top based on events
   - trigger deferred processing
+ - Move DB cull to a timer instead of per-request
+ - invent real dialog for TOTP entry, alerts
+ - Turn on error output for ask(), Stream
  - Add accent color, to be used to mark active items, unread count, etc.
  - Add feed management (subscribing, at least, if not unsubscribing and renaming)
  - Add ability to write config file with .save();

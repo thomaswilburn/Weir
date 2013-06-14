@@ -33,13 +33,50 @@
             OPML is a standard form of feed list, which you can use to import your subscriptions from another RSS reader. If you've been using Google Reader, visit <a target="_blank" href="https://www.google.com/takeout/">Takeout</a> to get a subscriptions.xml file, then upload it here. Once imported, subscriptions will take a little while to fully load.
           <input type="file" class="inputOPML">
         </div>
+        
+        <div class="totp" ng-show="secret">
+          <label>Security</label>
+          <p>
+          
+            Your instance of Weir is unsecured! Enable TOTP authentication to keep 
+            your reader safe. Add the following key to the "totp" property in your cfg.json 
+            file, and to your smartphone or tablet (using <a 
+            href="https://support.google.com/accounts/answer/1066447">Google 
+            Authenticator</a> or other two-factor apps). You can scan the QR code 
+            to add it more easily to your device:
+          
+          <div class="secrets">
+            <img src="{{secretQR}}">
+            <div class="base32">{{secret}}</div>
+          </div>
+        </div>
 
-        <button ng-click="toggleSettings(false)">cancel</button>
-        <button ng-click="saveSettings()">done</button>
+        <div class="verbs">
+          <!--<button ng-click="toggleSettings(false)">cancel</button>-->
+          <button ng-click="saveSettings()">done</button>
+        </div>
 
         <div class="credits">
           <p>
             Weir is written by <a href="http://thomaswilburn.net" target="_blank">Thomas Wilburn</a>. You can find the source code for the entire project or submit bug reports <a target="_blank" href="https://github.com/thomaswilburn/Weir">here</a>. Thank you for your time!
+            
+          <p>
+            Weir uses the following Node packages:
+            <ul>
+              <li> <a href="http://github.com/danmactough/node-feedparser">feedparser</a> - Dan MacTough
+              <li> <a href="http://gruntjs.com/">grunt</a> - <a href='http://benalman.com/'>"Cowboy" Ben Alman</a>
+              <li> <a href="https://github.com/gruntjs/grunt-contrib-concat">grunt-contrib-concat</a> - <a href='http://gruntjs.com/'>Grunt Team</a>
+              <li> <a href="https://github.com/gruntjs/grunt-contrib-less">grunt-contrib-less</a> - <a href='http://gruntjs.com/'>Grunt Team</a>
+              <li> <a href="https://github.com/gruntjs/grunt-contrib-watch">grunt-contrib-watch</a> - <a href='http://gruntjs.com/'>Grunt Team</a>
+              <li> <a href="http://lesscss.org">less</a> - Alexis Sellier
+              <li> node-gyp - <a href='http://tootallnate.net'>Nathan Rajlich</a>
+              <li> <a href="http://github.com/brianc/node-postgres">pg</a> - Brian Carlson
+              <li> request - Mikeal Rogers
+              <li> <a href="http://github.com/markbao/speakeasy">speakeasy</a> - <a href='http://markbao.com/'>Mark Bao</a>
+              <li> <a href="http://github.com/developmentseed/node-sqlite3">sqlite3</a> - <a href='http://developmentseed.org/'>Development Seed</a>
+              <li> <a href="https://github.com/Leonidas-from-XIV/node-xml2js">xml2js</a> - <a href='http://xivilization.net'>Marek Kubica</a>
+            </ul>
+              
         </div>
       </div>
     </div>

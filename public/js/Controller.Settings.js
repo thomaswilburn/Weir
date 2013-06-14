@@ -19,8 +19,19 @@
       });
 
       $scope.saveSettings = function() {
+        //use LocalSettings eventually
         $scope.toggleSettings(false);
       }
+      
+      var totp = Request.ask({
+        url: "/checkpoint"
+      });
+      
+      totp.then(function(data) {
+        $scope.secret = data.secret;
+        $scope.secretQR = data.secretQR;
+      });
+      
     }]);
   
 })();

@@ -29,10 +29,9 @@
           $location.hash("top");
           $anchorScroll();
         });
-        $scope.$apply();
       };
 
-      $scope.refresh = function(apply) {
+      $scope.refresh = function() {
         $scope.message = "Refreshing feeds...";
         Server.refresh().then(function() {
           $scope.message = "";
@@ -40,7 +39,6 @@
           $location.hash("top");
           $anchorScroll();
         });
-        if (apply) $scope.$apply();
       }
 
       $scope.next = function() {
@@ -51,7 +49,6 @@
           return $scope.markRefresh();
         }
         $scope.activate(stream[currentIndex + 1]);
-        $scope.$apply();
       };
 
       $scope.previous = function() {
@@ -60,7 +57,6 @@
         var currentIndex = stream.indexOf(current);
         if (currentIndex == 0) return;
         $scope.activate(stream[currentIndex - 1]);
-        $scope.$apply();
       }
 
       angular.element($document).bind("keypress", function(e) {
