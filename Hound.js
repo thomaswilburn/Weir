@@ -104,8 +104,15 @@ var saveItems = function(feed, meta, articles) {
   });
 };
 
+var auto = function() {
+  fetch();
+	var interval = (cfg.updateInterval || 15) * 60 * 1000;
+  setTimeout(auto, interval);
+}
+
 var Hound = new EventEmitter();
 Hound.fetch = fetch;
 Hound.setDB = setDB;
+Hound.start = auto;
 
 module.exports = Hound;

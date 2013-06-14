@@ -15,22 +15,21 @@ Security - Manage sessions, TOTP authorization
 
 Notes (vaguely ordered):
 
- - Mark as read on activation
  - Add a scroll handling service, remove logic from the StreamController
   - activate on scroll
   - scroll to top based on events
   - trigger deferred processing
   - automatically throttle scroll events
- - invent real dialog service for TOTP entry, alerts
+ - Mark as read on activation
  - Turn on error output for ask(), Stream
- - Move fetch loop into the Hound proper
- - Refine stream styles
  - Use accent for various UI elements
- - Show unread items since last full refresh with a highlight
+  - Show unread items since last full refresh with a highlight
+  - Refine stream styles
+ - invent real dialog service for TOTP entry, alerts
  - Add feed management (subscribing, at least, if not unsubscribing and renaming)
- - Add ability to write config file with .save();
+ - Add ability to write cfg.json with .save();
  - Add some local style removal to Weir.Sanitize
- - Allow Weir.Sanitize to resize elements if they would be too big (scale movies, etc)
+  - Allow Weir.Sanitize to resize elements if they would be too big (scale movies, etc)
  - reconsider general AJAX API, flow
  - Add to options service
   - security - get a random key (possibly set it as well)
@@ -42,3 +41,4 @@ Notes (vaguely ordered):
   - should buttons mark all or just refresh?
  - Add tags
  - Configure router to support REST params
+ - Add metrics for memory footprint, since it'll be open for many days
