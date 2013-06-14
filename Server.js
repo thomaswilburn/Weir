@@ -7,6 +7,7 @@ var fs = require("fs");
 var path = require("path");
 var less = require("less");
 var Manos = require("./Manos");
+var Security = require("./Security");
 
 var routes = [];
 var files = {
@@ -148,7 +149,7 @@ var Server = {
 
 Server.http.listen(cfg.port || 8080);
 
-Server.http.on("request", function(incoming, response) {
+var dispatch = function(incoming, response) {
   for (var i = 0; i < routes.length; i++) {
     var route = routes[i];
     var parsed = url.parse(incoming.url, true, true);
@@ -171,6 +172,47 @@ Server.http.on("request", function(incoming, response) {
     }
   }
   serve(parsed.pathname, response);
+};
+
+var parseCookie = function(request) {
+  var str = request.headers.cookie || "";
+  var cookie = {};
+  var values = str.split(";");
+  for (var i = 0; i < values.length; i++) {
+    var pair = values[i].trim().split("=");
+    cookie[pair[0]] = pair[1];
+  }
+  request.cookie = cookie;
+};
+
+//before dispatching, check the cookie for session guarantee
+Server.http.on("request", function(req, response) {
+  parseCookie(req);
+  if (cfg.totp) {
+    if (req.cookie.session) {
+      Security.check(req.cookie.session, function(pass) {
+        if (pass) {
+          dispatch(req, response);
+        } else {
+          respond(response, { challenge: "TOTP" });
+        }
+      });
+    } else {
+      respond(response, { challenge: "TOTP" });
+    }
+    return;
+  }
+  dispatch(req, response);
 });
 
 module.exports = Server;
+
+//add built-in route for the security configuration check
+
+Server.route("/checkpoint", function(req) {
+  if (cfg.totp) {
+    req.reply({ secure: true });
+    return;
+  }
+  req.reply(Security.generateKey());
+});
