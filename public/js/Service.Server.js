@@ -105,9 +105,11 @@
         setTimeout(auto, 60 * 1000);
       };
       
-      auto();
-
-      facade.refresh();
+      facade.refresh().then(function() {
+        //only kick off polling after first request
+        //in case TOTP is in effect
+        auto();
+      });
 
       return facade;
 

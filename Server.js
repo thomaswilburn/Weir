@@ -149,32 +149,7 @@ var Server = {
 
 Server.http.listen(cfg.port || 8080);
 
-var dispatch = function(incoming, response) {
-  for (var i = 0; i < routes.length; i++) {
-    var route = routes[i];
-    var parsed = url.parse(incoming.url, true, true);
-    if (route.p.test(parsed.pathname)) {
-      var request = {
-        url: parsed.pathname,
-        params: parsed.query,
-        body: "",
-        reply: function(data) {
-          respond(response, data);
-        }
-      };
-      incoming.on("data", function(bytes) {
-        request.body += bytes;
-      });
-      incoming.on("end", function() {
-        route.c(request);
-      });
-      return;
-    }
-  }
-  serve(parsed.pathname, response);
-};
-
-var parseCookie = function(request) {
+var parseCookies = function(request) {
   var str = request.headers.cookie || "";
   var cookie = {};
   var values = str.split(";");
@@ -185,14 +160,40 @@ var parseCookie = function(request) {
   request.cookie = cookie;
 };
 
-//before dispatching, check the cookie for session guarantee
-Server.http.on("request", function(req, response) {
-  parseCookie(req);
+//checkpoint() is a pseudo-route that's immune to authorization
+var checkpoint = function(req) {
   if (cfg.totp) {
-    if (req.cookie.session) {
-      Security.check(req.cookie.session, function(pass) {
+    //check for passkey
+    if (req.body) {
+      var body;
+      try {
+        body = JSON.parse(req.body);
+      } catch (e) {
+        req.reply({ error: "Couldn't parse request" });
+      }
+      Security.challenge(body.totp, function(passed, token) {
+        if (passed) {
+          req.setHeader("Set-Cookie", "key=" + token + ";");
+          req.reply({ success: true });
+        } else {
+          req.reply({ error: "Failed password challenge" });
+        }
+      });
+      return;
+    }
+    req.reply({ secure: true });
+    return;
+  }
+  req.reply(Security.generateKey());
+};
+
+//before routing, check the cookie for session guarantee
+var authorize = function(req, response, c) {
+  if (cfg.totp) {
+    if (req.cookie.key) {
+      Security.check(req.cookie.key, function(pass) {
         if (pass) {
-          dispatch(req, response);
+          c();
         } else {
           respond(response, { challenge: "TOTP" });
         }
@@ -202,17 +203,45 @@ Server.http.on("request", function(req, response) {
     }
     return;
   }
-  dispatch(req, response);
+  c();
+};
+
+//process requests, checking for routes before serving static files
+Server.http.on("request", function(incoming, response) {
+  parseCookies(incoming);
+  var parsed = url.parse(incoming.url, true, true);
+  var request = {
+    url: parsed.pathname,
+    params: parsed.query,
+    body: "",
+    reply: function(data) {
+      respond(response, data);
+    },
+    setHeader: response.setHeader.bind(response)
+  };
+  incoming.on("data", function(bytes) {
+    request.body += bytes;
+  });
+  incoming.on("end", function() {
+    //special case for the checkpoint
+    if (parsed.pathname == "/checkpoint") {
+      return checkpoint(request);
+    }
+    //check for matching routes
+    for (var i = 0; i < routes.length; i++) {
+      var route = routes[i];
+      if (route.p.test(parsed.pathname)) {
+        authorize(incoming, response, function() {
+          //if auth passes, call the route function
+          route.c(request);
+        });
+        return;
+      }
+    }
+    //static assets do not require auth
+    serve(parsed.pathname, response);
+  });
+  
 });
 
 module.exports = Server;
-
-//add built-in route for the security configuration check
-
-Server.route("/checkpoint", function(req) {
-  if (cfg.totp) {
-    req.reply({ secure: true });
-    return;
-  }
-  req.reply(Security.generateKey());
-});
