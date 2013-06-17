@@ -173,7 +173,10 @@ var checkpoint = function(req) {
       }
       Security.challenge(body.totp, function(passed, token) {
         if (passed) {
-          req.setHeader("Set-Cookie", "key=" + token + ";");
+          var today = new Date();
+          var cookieString = "key=" + token + ";";
+          cookieString += " expires=" + new Date(today.getFullYear() + 1, today.getMonth(), today.getDate()).toGMTString();
+          req.setHeader("Set-Cookie", cookieString);
           req.reply({ success: true });
         } else {
           req.reply({ error: "Failed password challenge" });
