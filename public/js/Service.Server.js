@@ -21,8 +21,6 @@
         updatedAt: new Date()
       };
 
-      window.stream = stream;
-      
       var updateStatus = function(data) {
         stream.unread = data.unread || 0;
         stream.total = data.total || stream.total;

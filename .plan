@@ -15,9 +15,9 @@ Security - Manage sessions, TOTP authorization
 
 Notes (vaguely ordered):
 
+ - Add feed management (subscribing, at least, if not unsubscribing and renaming)
  - Turn on error output for ask(), Stream
  - invent real dialog service for TOTP entry, alerts
- - Add feed management (subscribing, at least, if not unsubscribing and renaming)
  - Add ability to write cfg.json with .save();
  - Add some local style removal to Weir.Sanitize
   * Allow Weir.Sanitize to resize elements if they would be too big (scale movies, etc)
