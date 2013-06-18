@@ -15,20 +15,6 @@ Security - Manage sessions, TOTP authorization
 
 Notes (vaguely ordered):
 
- - Tweak scroll UX:
-  * Mobile:
-    + Images and embeds are loaded only on activation
-    + Items are marked read only on activation
-  * Desktop
-    + Images and embeds are loaded once an element has scrolled on screen
-    + Items are marked read on activation, but
-    + Scroll should activate an item once it's the nearest on-screen item, and
-    + Spacebar should only scroll a full length if the article is very long
-  * Both
-    + Scroll events need to be able to trigger activate
-    + Controller also needs to have access to a list of elements that are past the fold
-    + We need to know more about the next element before scrolling, or treat space as j
-    + This is clearly not an easy solution
  - Turn on error output for ask(), Stream
  - invent real dialog service for TOTP entry, alerts
  - Add feed management (subscribing, at least, if not unsubscribing and renaming)

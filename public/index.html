@@ -13,8 +13,8 @@
     <ul class="menu">
       <li class="header">Weir
       <li> Last update: {{stream.updatedAt.toLocaleTimeString()}}
-      <li> Remaining: {{stream.unread}} / {{stream.total}}
-      <li> <a href="javascript:;" ng-click="markRefresh()">Mark as Read</a>
+      <li> Remaining: <span class="unread">{{stream.unread}}</span> / {{stream.total}}
+      <li> <a href="javascript:;" ng-click="refresh()">Refresh stream</a>
 
       <li class="alert message" ng-show="message"> {{message}}
       <li class="alert warning" ng-show="warning"> {{warning}}
@@ -105,9 +105,9 @@
     </div>
 
     <div class="charm-panel">
-      <a class="charm" title="Next item" href="javascript:;" ng-click="next()">&#x21E3;</a>
-      <a class="charm" title="Refresh stream" href="javascript:;" ng-click="refresh()">&#x21BA;</a>
-      <a class="charm" title="Settings" href="javascript:;" ng-click="showSettings = !showSettings">&amp;</a>
+      <a class="charm" title="Next item" href="javascript:;" ng-click="next()">&#x2023;</a>
+      <a class="charm" title="Mark all as read" href="javascript:;" ng-click="markRefresh()">&#x2026;</a>
+      <a class="charm" title="Settings" href="javascript:;" ng-click="showSettings = !showSettings">&#x2261;</a>
     </div>
   </div>
 

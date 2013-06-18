@@ -32,13 +32,19 @@
     
     &.header {
       font-weight: normal;
+      color: @accent;
     }
     
     a {
-      font-weight: bold;
       display: block;
+      color: @accent;
     }
     
+  }
+  
+  .unread {
+    color: @accent;
+    font-weight: bold;
   }
 
   .alert {
@@ -46,6 +52,7 @@
     margin: 0px 8px;
     padding: 4px;
     border-radius: 4px;
+    z-index: 999;
 
     @media @mobile {
       position: fixed;
