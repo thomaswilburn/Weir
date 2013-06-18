@@ -82,12 +82,12 @@
             e.stopImmediatePropagation();
             var active = document.querySelector("li.active");
             var next = active.nextSibling;
-            console.log(next.querySelector(".header a").innerHTML);
             var current = document.documentElement.scrollTop || document.body.scrollTop;
             var distance = window.innerHeight * .8;
-            var nextOffset = next.getBoundingClientRect().top;
-            console.log(distance, nextOffset, nextOffset < distance, distance + current);
-            if (nextOffset < distance) distance = nextOffset;
+            if (next) {
+              var nextOffset = next.getBoundingClientRect().top;
+              if (nextOffset < distance) distance = nextOffset;
+            }
             document.documentElement.scrollTop = document.body.scrollTop = distance + current;
             if (window.scrollY == current) {
               $scope.markRefresh();
