@@ -27,9 +27,27 @@
   list-style-type: none;
   margin-bottom: 1em;
   padding: 0 2px;
+  position: relative;
 
   &.read .header, &.read .header a {
     color: lighten(@foreground, 50%);
+  }
+
+  &.active {
+    border-top: 3px solid @accent;
+    border-bottom: 3px solid @accent;
+  }
+
+  .tracking-pixel {
+    display: block;
+    width: 1px;
+    height: 1px;
+    position: absolute;
+    right: 0;
+
+    @media @mobile {
+      display: none;
+    }
   }
   
   .header {

@@ -16,8 +16,12 @@
         items: [],
         unread: 0,
         total: 0,
+        cursor: 0,
+        currentItem: null,
         updatedAt: new Date()
       };
+
+      window.stream = stream;
       
       var updateStatus = function(data) {
         stream.unread = data.unread || 0;
@@ -32,8 +36,9 @@
           item.content = Sanitize.prepare(item.content, item.site);
         });
         stream.items = data.items;
+        stream.cursor = 0;
         if (Settings.get().stream.startActive && stream.items.length) {
-          stream.items[0].active = true;
+          facade.activate(stream.items[0]);
         }
         Events.fire("refresh");
       };
@@ -41,6 +46,7 @@
       var facade = {
         stream: stream,
         markAsRead: function(item) {
+          if (item.read) return;
           ask({
             url: "stream/mark",
             params: {
@@ -91,11 +97,31 @@
             //mark previously active item as read
             if (post.active) {
               post.read = true;
-              //TODO: should mark as read on the server, too
             }
             post.active = false;
           }
           item.active = true;
+          facade.markAsRead(item);
+          stream.cursor = stream.items.indexOf(item);
+          stream.currentItem = item;
+          Events.fire("activated");
+          return item;
+        },
+        next: function() {
+          var index = stream.cursor + 1;
+          var item = stream.items[index];
+          if (item) {
+            return facade.activate(item);
+          }
+          return false;
+        },
+        previous: function() {
+          var index = stream.cursor - 1;
+          var item = stream.items[index];
+          if (item) {
+            return facade.activate(item);
+          }
+          return false;
         }
       }
       

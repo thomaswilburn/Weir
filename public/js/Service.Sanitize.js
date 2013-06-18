@@ -9,7 +9,7 @@
 
     //function to show deferred images on scroll or refresh
     var deferred = [];
-    var reveal = function() {
+    var revealScrolled = function() {
       //we lazy-filter the list, so that deferred images are never checked again
       deferred = deferred.filter(function(img) {
         var coords = img.getBoundingClientRect();
@@ -22,16 +22,33 @@
       });
     };
 
+    var revealElement = function(element) {
+      var deferred = element[0].querySelectorAll("[data-src]");
+      for (var i = 0; i < deferred.length; i++) {
+        var item = deferred[i];
+        item.src = item.getAttribute("data-src");
+        item.removeAttribute("data-src");
+      };
+    };
+
     //using the Events service means we don't have recursive dependencies
-    Events.on("scroll", reveal);
+    //we'll try doing this manually instead from now on
+    /*Events.on("scrollEnd", revealScrolled);
     Events.on("refresh", function() {
       setTimeout(function() {
         deferred = slice.call(document.querySelectorAll("[data-src]"));
         reveal();
       }, 50);
+    });*/
+    Events.on("activated", function() {
+      setTimeout(function() {
+        var active = angular.element(document.querySelector(".active"));
+        revealElement(active);
+      }, 100);
     });
 
     return {
+      reveal: revealElement,
       prepare: function(unclean, url) {
         var doc = document.implementation.createHTMLDocument("");
         doc.body.innerHTML = unclean;
@@ -58,7 +75,7 @@
         });
 
         //process images (defer loading, remove dimensions for CSS reasons)
-        var images = doc.querySelectorAll("img");
+        var images = doc.querySelectorAll("img, iframe");
         each.call(images, function(img) {
           var src = img.src
           if (relative.test(src)) {

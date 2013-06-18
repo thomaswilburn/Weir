@@ -12,15 +12,17 @@
 
       $scope.showSettings = false;
       $scope.stream = Server.stream;
+      
+      document.body.scrollTop = document.documentElement.scrollTop = 0;
 
-      $scope.activate = function(item) {
+      $scope.activate = function(item, fromScroll) {
         Server.activate(item);
-        Scroll.toID(item.id);
+        if (!fromScroll) Scroll.toID(item.id);
       };
 
       $scope.mark = function(item) {
         Server.markAsRead(item);
-      }
+      };
 
       $scope.markRefresh = function() {
         $scope.message = "Marking items as read, refreshing...";
@@ -39,21 +41,19 @@
       }
 
       $scope.next = function() {
-        var stream = Server.stream.items;
-        var current = stream.filter(function(i) { return i.active }).pop();
-        var currentIndex = stream.indexOf(current);
-        if (currentIndex == stream.length - 1) {
+        var item = Server.next();
+        if (item) {
+          Scroll.toID(item.id);
+        } else {
           return $scope.markRefresh();
         }
-        $scope.activate(stream[currentIndex + 1]);
       };
 
       $scope.previous = function() {
-        var stream = Server.stream.items;
-        var current = stream.filter(function(i) { return i.active }).pop();
-        var currentIndex = stream.indexOf(current);
-        if (currentIndex == 0) return;
-        $scope.activate(stream[currentIndex - 1]);
+        var item = Server.previous();
+        if (item) {
+          Scroll.toID(item.id);
+        }
       }
 
       angular.element($document).bind("keypress", function(e) {
@@ -79,6 +79,7 @@
             //adjust selection based on position
             break;
         }
+        $scope.$apply();
       });
 
       $scope.toggleSettings = function(state) {
