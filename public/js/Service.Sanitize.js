@@ -8,17 +8,12 @@
     var each = Array.prototype.forEach;
 
     //function to show deferred images on scroll or refresh
-    var throttled = false;
-    var rate = 100; //num of ms to wait before running again
     var deferred = [];
     var reveal = function() {
-      if (throttled) return;
-      throttled = true;
-      setTimeout(function() { throttled = false }, rate);
       //we lazy-filter the list, so that deferred images are never checked again
       deferred = deferred.filter(function(img) {
         var coords = img.getBoundingClientRect();
-        if (coords.top && coords.top < window.scrollY + window.innerHeight) {
+        if (coords.top && coords.top < window.innerHeight) {
           img.src = img.getAttribute("data-src");
           img.removeAttribute("data-src");
           return false;
@@ -27,8 +22,8 @@
       });
     };
 
-    window.addEventListener("scroll", reveal);
     //using the Events service means we don't have recursive dependencies
+    Events.on("scroll", reveal);
     Events.on("refresh", function() {
       setTimeout(function() {
         deferred = slice.call(document.querySelectorAll("[data-src]"));

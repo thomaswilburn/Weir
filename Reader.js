@@ -11,6 +11,10 @@ db.create();
 var Reader = function() {
 	Hound.setDB(db);
 	Hound.start();
+	console.log("\n\nWeir instance started on port " + cfg.port + "...");
+	if (!cfg.totp) {
+	  console.log("This installation is not secure: visit the options panel to set up TOTP passwords");
+	}
 };
 
 module.exports = Reader;

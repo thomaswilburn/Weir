@@ -7,27 +7,26 @@
     "$scope",
     "Weir.Server",
     "$document",
-    "$anchorScroll",
-    "$location",
-    function($scope, Server, $document, $anchorScroll, $location) {
+    "Weir.Scroll",
+    function($scope, Server, $document, Scroll) {
 
       $scope.showSettings = false;
       $scope.stream = Server.stream;
 
       $scope.activate = function(item) {
         Server.activate(item);
-        $location.replace();
-        $location.hash(item.id);
-        $anchorScroll();
+        Scroll.toID(item.id);
       };
+
+      $scope.mark = function(item) {
+        Server.markAsRead(item);
+      }
 
       $scope.markRefresh = function() {
         $scope.message = "Marking items as read, refreshing...";
         Server.markAll().then(function() {
           $scope.message = "";
-          $location.replace();
-          $location.hash("top");
-          $anchorScroll();
+          Scroll.toID("top");
         });
       };
 
@@ -35,9 +34,7 @@
         $scope.message = "Refreshing feeds...";
         Server.refresh().then(function() {
           $scope.message = "";
-          $location.replace();
-          $location.hash("top");
-          $anchorScroll();
+          Scroll.toID("top");
         });
       }
 

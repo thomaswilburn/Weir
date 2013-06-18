@@ -46,7 +46,7 @@
             to add it more easily to your device:
           
           <div class="secrets">
-            <img src="{{secretQR}}">
+            <img ng-src="{{secretQR}}">
             <div class="base32">{{secret}}</div>
           </div>
         </div>
@@ -82,6 +82,7 @@
     <div class="stream-container" id="top" ng-show="!showSettings">
       <ul class="stream">
         <li 
+          scroll-past="mark(item)"
           ng-repeat="item in stream.items" id="{{item.id}}" 
           ng-class="{'read':item.read == true, 'active':item.active == true}">
           <div class="header" ng-click="activate(item)" >
