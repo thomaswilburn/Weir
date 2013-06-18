@@ -15,12 +15,7 @@ Security - Manage sessions, TOTP authorization
 
 Notes (vaguely ordered):
 
- - Add a scroll handling service, remove logic from the StreamController
-  - activate on scroll
-  - scroll to top based on events
-  - trigger deferred processing
-  - automatically throttle scroll events
- - Mark as read on activation
+ - Mark as read on Activate, not Mark as Read on Scroll
  - Turn on error output for ask(), Stream
  - Use accent for various UI elements
   - Show unread items since last full refresh with a highlight

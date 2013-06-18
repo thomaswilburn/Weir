@@ -82,7 +82,6 @@
     <div class="stream-container" id="top" ng-show="!showSettings">
       <ul class="stream">
         <li 
-          scroll-past="mark(item)"
           ng-repeat="item in stream.items" id="{{item.id}}" 
           ng-class="{'read':item.read == true, 'active':item.active == true}">
           <div class="header" ng-click="activate(item)" >
@@ -94,7 +93,7 @@
           </div>
           <div class="content">
             <h3>Posted by {{item.author}} at {{item.published}}</h3>
-            <div class="text" ng-bind-html-unsafe="item.content"></div>
+            <div class="text" ng-bind-html-unsafe="item.content" scroll-past="mark(item)"></div>
             <a class="view-full" href="{{item.url}}" target="_blank">View full post</a>
           </div>
         </li>

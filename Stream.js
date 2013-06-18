@@ -32,13 +32,13 @@ server.route("/stream/unread", function(req) {
 });
 
 server.route("/stream/mark", function(req) {
-  var items = req.params.items;
+  var items = req.params.item;
   if (items) {
     items = items.split(",");
     items.forEach(function(item) {
       db.mark(item);
     });
-    req.reply({marked: items.length});
+    return req.reply({marked: items.length});
   }
   req.reply({marked: 0});
 });
@@ -67,5 +67,5 @@ server.route("/stream/markRefresh", function(req) {
     });
     return Manos.when.apply(null, items);
   }
-  req.reply({marked: 0});
+  req.reply({ marked: 0 });
 });
