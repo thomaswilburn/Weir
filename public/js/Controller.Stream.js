@@ -6,9 +6,8 @@
   Weir.controller("Weir.StreamController", [
     "$scope",
     "Weir.Server",
-    "$document",
     "Weir.Scroll",
-    function($scope, Server, $document, Scroll) {
+    function($scope, Server, Scroll) {
 
       $scope.showSettings = false;
       $scope.stream = Server.stream;
@@ -56,7 +55,7 @@
         }
       }
 
-      angular.element($document).bind("keypress", function(e) {
+      angular.element(document).bind("keypress keydown", function(e) {
         var key = e.charCode ? String.fromCharCode(e.charCode).toLowerCase() : e.keyCode;
         switch (key) {
           case "j":
@@ -84,13 +83,15 @@
             var next = active.nextSibling;
             var current = document.documentElement.scrollTop || document.body.scrollTop;
             var distance = window.innerHeight * .8;
-            if (next) {
+            if (next && next.tagName == "LI") {
               var nextOffset = next.getBoundingClientRect().top;
-              if (nextOffset < distance) distance = nextOffset;
+              if (nextOffset < distance) {
+                return $scope.next();
+              }
             }
             document.documentElement.scrollTop = document.body.scrollTop = distance + current;
             if (window.scrollY == current) {
-              $scope.markRefresh();
+              $scope.next();
             }
             break;
         }
