@@ -57,7 +57,7 @@
       }
 
       angular.element($document).bind("keypress", function(e) {
-        var key = String.fromCharCode(e.charCode).toLowerCase();
+        var key = e.charCode ? String.fromCharCode(e.charCode).toLowerCase() : e.keyCode;
         switch (key) {
           case "j":
             $scope.next();
@@ -76,7 +76,22 @@
             break;
 
           case " ":
-            //adjust selection based on position
+          case 34: //page down
+            //take over scrolling, unfortunately
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            var active = document.querySelector("li.active");
+            var next = active.nextSibling;
+            console.log(next.querySelector(".header a").innerHTML);
+            var current = document.documentElement.scrollTop || document.body.scrollTop;
+            var distance = window.innerHeight * .8;
+            var nextOffset = next.getBoundingClientRect().top;
+            console.log(distance, nextOffset, nextOffset < distance, distance + current);
+            if (nextOffset < distance) distance = nextOffset;
+            document.documentElement.scrollTop = document.body.scrollTop = distance + current;
+            if (window.scrollY == current) {
+              $scope.markRefresh();
+            }
             break;
         }
         $scope.$apply();
