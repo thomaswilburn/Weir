@@ -33,11 +33,6 @@
     color: lighten(@foreground, 50%);
   }
 
-  &.active {
-    border-top: 3px solid @accent;
-    border-bottom: 3px solid @accent;
-  }
-
   .tracking-pixel {
     display: block;
     width: 1px;
@@ -105,6 +100,10 @@
   .text {
     padding: 0 1em;
     border-left: 1px solid darken(@background, 20%);
+
+    .active & {
+      border-left: 2px solid @accent;
+    }
 
     @media @mobile {
       padding: 0;
