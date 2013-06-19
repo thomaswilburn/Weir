@@ -41,7 +41,8 @@ var mimeTypes = {
   ".css": "text/css",
   ".js": "application/javascript",
   ".json": "application/json",
-  ".txt": "text/plaintext"
+  ".txt": "text/plaintext",
+  ".ico": "image/x-icon"
 };
 
 var lessParser = new less.Parser({
@@ -106,7 +107,7 @@ var serveFile = function(file, req) {
 
   fs.exists(file, function(exists) {
     if (exists) {
-      fs.readFile(file, {encoding: "utf8"}, function(err, data) {
+      fs.readFile(file, {encoding: null}, function(err, data) {
         if (err) {
           req.writeHead(500);
           req.end();
