@@ -15,9 +15,10 @@ Security - Manage sessions, TOTP authorization
 
 Notes (vaguely ordered):
 
+ - Add a top-level display controller to toggle between views (options, feeds, stream)
+  * include real dialog service for TOTP entry, alerts
  - Add feed management (subscribing, at least, if not unsubscribing and renaming)
  - Turn on error output for ask(), Stream
- - invent real dialog service for TOTP entry, alerts
  - Change the Hound to fetch in numbered batches, instead of 1/10 portions
  - Remove CSS compilation from the Server?
  - Add ability to write cfg.json with .save();
@@ -25,7 +26,6 @@ Notes (vaguely ordered):
   * Allow Weir.Sanitize to resize elements if they would be too big (scale movies, etc)
   * Add rudimentary ad/social blocking
   * Show elements on scroll enter, not activate
- - reconsider general AJAX API, flow
  - Add to options service
   * key remapping or compatibility
   * list length
