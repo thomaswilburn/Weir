@@ -15,8 +15,7 @@ Security - Manage sessions, TOTP authorization
 
 Notes (vaguely ordered):
 
- - Add a top-level display controller to toggle between views (options, feeds, stream)
-  * include real dialog service for TOTP entry, alerts
+ - Set up Weir.DisplayStack.dialog()
  - Add feed management (subscribing, at least, if not unsubscribing and renaming)
  - Turn on error output for ask(), Stream
  - Change the Hound to fetch in numbered batches, instead of 1/10 portions
@@ -25,7 +24,6 @@ Notes (vaguely ordered):
  - Weir.Sanitize improvements
   * Allow Weir.Sanitize to resize elements if they would be too big (scale movies, etc)
   * Add rudimentary ad/social blocking
-  * Show elements on scroll enter, not activate
  - Add to options service
   * key remapping or compatibility
   * list length

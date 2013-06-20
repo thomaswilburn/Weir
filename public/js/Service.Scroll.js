@@ -60,4 +60,22 @@
     };
   }]);
 
+  //By contrast, scrollEnter fires only when an element enters the screen for the first time
+  Weir.directive("scrollEnter", ["Weir.Events", function(Events) {
+    return {
+      restrict: "A",
+      link: function(scope, element, attributes) {
+        var trigger = function() {
+          var offset = element[0].getBoundingClientRect();
+          if (offset.top && offset.top > 0 && offset.top < window.innerHeight) {
+            scope.$eval(attributes.scrollEnter);
+            scope.$apply();
+            Events.off("scroll", trigger);
+          }
+        };
+        Events.on("scroll", trigger);
+      }
+    }
+  }]);
+
 })();

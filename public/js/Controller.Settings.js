@@ -6,7 +6,8 @@
     "$scope",
     "Weir.LocalSettings",
     "Weir.Request",
-    function($scope, Settings, Request) {
+    "Weir.DisplayStack",
+    function($scope, Settings, Request, Stack) {
       var fileInput = document.querySelector(".inputOPML");
       fileInput.addEventListener("change", function() {
         var file = fileInput.files[0];
@@ -20,7 +21,7 @@
 
       $scope.saveSettings = function() {
         //use LocalSettings eventually
-        $scope.toggleSettings(false);
+        Stack.pop();
       }
       
       var totp = Request.ask({

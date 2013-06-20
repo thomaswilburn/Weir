@@ -7,12 +7,17 @@
     "$scope",
     "Weir.Server",
     "Weir.Scroll",
-    function($scope, Server, Scroll) {
+    "Weir.Sanitize",
+    "Weir.Events",
+    function($scope, Server, Scroll, Sanitize, Events) {
 
       $scope.showSettings = false;
       $scope.stream = Server.stream;
-      
+
       document.body.scrollTop = document.documentElement.scrollTop = 0;
+      Events.on("scroll", function() {
+        $scope.$apply();
+      })
 
       $scope.activate = function(item, fromScroll) {
         Server.activate(item);
@@ -98,9 +103,6 @@
         $scope.$apply();
       });
 
-      $scope.toggleSettings = function(state) {
-        $scope.showSettings = state;
-      }
     }]);
 
 })();

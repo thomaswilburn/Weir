@@ -8,7 +8,7 @@
   <link rel="icon" href="/favicon.ico">
   <style>[ng-cloak], .ng-cloak { display: none; }</style>
 </head>
-<body ng-cloak>
+<body ng-cloak ng-controller="Weir.DisplayController">
   <div class="root-container" ng-controller="Weir.StreamController">
     
     <ul class="menu">
@@ -22,7 +22,7 @@
       <li class="alert error" ng-show="error"> {{error}}
     </ul>
 
-    <div class="settings-container ui-panel" id="settings" ng-show="showSettings">
+    <div class="settings-container ui-panel" id="settings" ng-show="display.visible == 'settings'">
       <div ng-controller="Weir.SettingsController">
         <h2>Local Settings</h2>
         <p>
@@ -80,11 +80,12 @@
       </div>
     </div>
     
-    <div class="stream-container" id="top" ng-show="!showSettings">
+    <div class="stream-container" id="top" ng-show="display.visible == 'stream'">
       <ul class="stream">
         <li 
           ng-repeat="item in stream.items" id="{{item.id}}" 
-          ng-class="{'read':item.read == true, 'active':item.active == true}">
+          ng-class="{'read':item.read == true, 'active':item.active == true}"
+          scroll-reveal>
           <div class="header" ng-click="activate(item)" >
             <cite>{{item.feed}}</cite>
             <a href="{{item.url}}" prevent-default>
@@ -108,7 +109,7 @@
     <div class="charm-panel">
       <a class="charm" title="Next item" href="javascript:;" ng-click="next()">&raquo;</a>
       <a class="charm" title="Mark all as read" href="javascript:;" ng-click="markRefresh()">&#x2026;</a>
-      <a class="charm" title="Settings" href="javascript:;" ng-click="showSettings = !showSettings">&#x2261;</a>
+      <a class="charm" title="Settings" href="javascript:;" ng-click="display.push('settings')">&#x2261;</a>
     </div>
   </div>
 

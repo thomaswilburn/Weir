@@ -31,22 +31,6 @@
       };
     };
 
-    //using the Events service means we don't have recursive dependencies
-    //we'll try doing this manually instead from now on
-    /*Events.on("scrollEnd", revealScrolled);
-    Events.on("refresh", function() {
-      setTimeout(function() {
-        deferred = slice.call(document.querySelectorAll("[data-src]"));
-        reveal();
-      }, 50);
-    });*/
-    Events.on("activated", function() {
-      setTimeout(function() {
-        var active = angular.element(document.querySelector(".active"));
-        revealElement(active);
-      }, 100);
-    });
-
     return {
       reveal: revealElement,
       prepare: function(unclean, url) {
@@ -93,5 +77,21 @@
     }
 
   }]);
+
+  Weir.directive("scrollReveal", ["Weir.Events", "Weir.Sanitize", function(Events, Sanitize) {
+    return {
+      restrict: "A",
+      link: function(scope, element) {
+        var enter = function() {
+          var offset = element[0].getBoundingClientRect();
+          if (offset.top && offset.top > 0 && offset.top < window.innerHeight) {
+            Sanitize.reveal(element);
+            Events.off("scroll", enter);
+          }
+        }
+        Events.on("scroll", enter);
+      }
+    };
+  }])
 
 })();
