@@ -8,7 +8,7 @@
   <link rel="icon" href="/favicon.ico">
   <style>[ng-cloak], .ng-cloak { display: none; }</style>
 </head>
-<body ng-cloak ng-controller="Weir.DisplayController">
+<body ng-cloak>
   <div class="root-container" ng-controller="Weir.StreamController">
     
     <ul class="menu">
@@ -22,7 +22,7 @@
       <li class="alert error" ng-show="error"> {{error}}
     </ul>
 
-    <div class="settings-container ui-panel" id="settings" ng-show="display.visible == 'settings'">
+    <div class="settings-container ui-panel" id="settings" stack-id="settings">
       <div ng-controller="Weir.SettingsController">
         <h2>Local Settings</h2>
         <p>
@@ -53,7 +53,7 @@
         </div>
 
         <div class="verbs">
-          <!--<button ng-click="toggleSettings(false)">cancel</button>-->
+          <button ng-click="stack.pop()">cancel</button>
           <button ng-click="saveSettings()">done</button>
         </div>
 
@@ -80,7 +80,7 @@
       </div>
     </div>
     
-    <div class="stream-container" id="top" ng-show="display.visible == 'stream'">
+    <div class="stream-container" id="top" stack-id="stream">
       <ul class="stream">
         <li 
           ng-repeat="item in stream.items" id="{{item.id}}" 
@@ -109,7 +109,7 @@
     <div class="charm-panel">
       <a class="charm" title="Next item" href="javascript:;" ng-click="next()">&raquo;</a>
       <a class="charm" title="Mark all as read" href="javascript:;" ng-click="markRefresh()">&#x2026;</a>
-      <a class="charm" title="Settings" href="javascript:;" ng-click="display.push('settings')">&#x2261;</a>
+      <a class="charm" title="Settings" href="javascript:;" ng-click="stack.push('settings')">&#x2261;</a>
     </div>
   </div>
 

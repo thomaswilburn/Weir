@@ -8,6 +8,7 @@
     var stack = [];
     var facade = {
       visible: "",
+      top: function() { return stack[0] || "" },
       push: function(panel) {
         stack = stack.filter(function(item) { return item != panel });
         stack.unshift(panel);
@@ -25,20 +26,15 @@
 
   }]);
 
-//DisplayController serves as our root-level controller to manage views
-//It sets up the first of our display stack, "stream"
-Weir.controller("Weir.DisplayController", ["$scope", "Weir.DisplayStack", function($scope, Display) {
-
-  $scope.display = Display;
-
-  /*
-  Available stack IDs: 
-    stream
-    settings
-    feeds
-  */
-  Display.push("stream");
-
-}]);
+  Weir.directive("stackId", ["Weir.DisplayStack", function(Stack) {
+    return {
+      restrict: "A",
+      link: function(scope, element, attr) {
+        scope.$watch(Stack.top, function(now, then) {
+          element.css("display", now == attr.stackId ? "inherit" : "none");
+        });
+      }
+    };
+  }]);
 
 })();

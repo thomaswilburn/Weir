@@ -19,6 +19,8 @@ Notes (vaguely ordered):
  - Add feed management (subscribing, at least, if not unsubscribing and renaming)
  - Turn on error output for ask(), Stream
  - Change the Hound to fetch in numbered batches, instead of 1/10 portions
+ - Disable timed fetch on mobile
+ - Disable top activation by default, more like Google Reader
  - Remove CSS compilation from the Server?
  - Add ability to write cfg.json with .save();
  - Weir.Sanitize improvements

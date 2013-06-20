@@ -9,10 +9,13 @@
     "Weir.Scroll",
     "Weir.Sanitize",
     "Weir.Events",
-    function($scope, Server, Scroll, Sanitize, Events) {
+    "Weir.DisplayStack",
+    function($scope, Server, Scroll, Sanitize, Events, Stack) {
 
-      $scope.showSettings = false;
       $scope.stream = Server.stream;
+      Stack.push("stream");
+      //I would really like the base application to provide this instead...
+      $scope.stack = Stack;
 
       document.body.scrollTop = document.documentElement.scrollTop = 0;
       Events.on("scroll", function() {
