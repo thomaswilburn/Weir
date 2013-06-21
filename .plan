@@ -13,6 +13,18 @@ Manos - utility functions for async without importing all of caolan's library
 Freedom - import/export, starting with OPML
 Security - Manage sessions, TOTP authorization
 
+Client components (all namespaced as "Weir.*"):
+StreamController - handle stream display and UI, plus some app-level UI
+SettingsController - handle showing and saving settings, plus showing security warning
+DisplayStack - manage major component visibility, dialogs, errors, warnings
+Events - service for pubsub events, useful for scrolling and service notification
+LocalSettings - Client-side preferences
+Request - Wraps requests to handle security authorization and errors
+Sanitize - Removes scripts, unwanted styles, defers images
+Scroll - Throttles scroll events, provides scroll visibility directives
+Server - Handles AJAX API and primary stream model
+Main - contains primary app seed, random directives
+
 Notes (vaguely ordered):
 
  - Set up Weir.DisplayStack.dialog()
