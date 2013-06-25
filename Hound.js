@@ -2,7 +2,8 @@ var FeedParser = require('feedparser');
 var request = require('request');
 var pg = require('pg');
 var EventEmitter = require('events').EventEmitter;
-var cfg = require("./Config.js");
+var cfg = require("./Config");
+var Manos = require("./Manos");
 
 var noop = function() {};
 
@@ -12,67 +13,106 @@ var setDB = function(db) {
   database = db;
 };
 
-var feedSlice = 0;
+var feedsPerFetch = 4;
 
 var fetch = function() {
   if (Hound.busy) return;
   Hound.busy = true;
   Hound.emit("fetch:start");
+  console.log("Starting fetch...", new Date());
   database.getFeeds(function(err, rows) {
     //awkward
     if (rows.length == 0) {
       Hound.busy = false;
       return;
     }
-    //trim feeds down to 1/10, so as not to request everything at once
-    rows = rows.filter(function(row, i) {
-      return i.toString().split("").pop() == feedSlice;
-    });
-    feedSlice = (feedSlice + 1) % 10;
-    rows.forEach(function(row) {
-    
-      var r = request({
-        url: row.url,
-        headers: {
-          "If-Modified-Since": row.pulled && row.pulled.toGMTString(),
-          "Connection": "close"
-        },
-        jar: false
-      });
-      
-      r.on("error", function(err) {
-        if (r.response && r.response.statusCode == 304) {
-          //some servers send 304 badly
-          database.setFeedResult(row.id, 304);
-          return;
-        }
-        console.log("Request error:", row.url, err.code);
-        database.setFeedResult(row.id, 0);
-      });
-      
-      r.on("response", function(response) {
-        if (response.statusCode !== 200) {
-          //Not Modified isn't an error
-          if (response.statusCode !== 304) {
-            console.log("Unsuccessful request:", row.url);
-          }
-          database.setFeedResult(row.id, response.statusCode);
-          return;
-        };
-        var parser = new FeedParser();
-        parser.on('complete', function(meta, articles) {
-          Hound.busy = false;
-          database.setFeedResult(row.id, 200);
-          saveItems(row.id, meta, articles);
+
+    var done = function() {
+      Hound.busy = false;
+      Hound.emit("fetch:end");
+      console.log("All done!", new Date());
+      var interval = (cfg.updateInterval || 15) * 60 * 1000;
+      setTimeout(fetch, interval);
+    }
+
+    var pull = function() {
+
+      var chunk = rows.slice(0, feedsPerFetch);
+      rows = rows.slice(feedsPerFetch);
+
+      if (!chunk.length) {
+        return done();
+      }
+
+      var schedule = [];
+
+      chunk.forEach(function(row) {
+        schedule.push(function(c) {
+
+          var r = request({
+            url: row.url,
+            headers: {
+              "If-Modified-Since": row.pulled && row.pulled.toGMTString(),
+              "Connection": "close"
+            },
+            jar: false,
+            timeout: cfg.requestTimeout * 1000 || 30
+          });
+          
+          r.on("error", function(err) {
+            if (r.response && r.response.statusCode == 304) {
+              //some servers send 304 badly
+              database.setFeedResult(row.id, 304);
+              return c();
+            }
+            console.log("Request error:", row.url, err.code);
+            database.setFeedResult(row.id, 0);
+            c();
+          });
+          
+          r.on("response", function(response) {
+
+            if (response.statusCode !== 200) {
+              //Not Modified isn't an error
+              if (response.statusCode !== 304) {
+                console.log("Unsuccessful request:", row.url);
+              }
+              database.setFeedResult(row.id, response.statusCode);
+              return c();
+            };
+
+            var parser = new FeedParser();
+
+            parser.on('complete', function(meta, articles) {
+              Hound.busy = false;
+              database.setFeedResult(row.id, 200);
+              saveItems(row.id, meta, articles);
+              c();
+            });
+
+            parser.on("error", function() {
+              console.log("Broken feed:", row.url);
+              database.setFeedResult(row.id, 0);
+              c();
+            });
+
+            r.pipe(parser);
+
+          });
+
         });
-        parser.on("error", function() {
-          console.log("Broken feed:", row.url);
-          database.setFeedResult(row.id, 0);
-        });
-        r.pipe(parser);
+
       });
-      
-    });
+
+      //at the end, call back again for more feeds
+      schedule.push(pull);
+
+      Manos.when.apply(null, schedule);
+
+    };
+
+    pull();
+
   });
 };
 
@@ -104,15 +144,9 @@ var saveItems = function(feed, meta, articles) {
   });
 };
 
-var auto = function() {
-  fetch();
-	var interval = (cfg.updateInterval || 15) * 60 * 1000;
-  setTimeout(auto, interval);
-}
-
 var Hound = new EventEmitter();
 Hound.fetch = fetch;
 Hound.setDB = setDB;
-Hound.start = auto;
+Hound.start = fetch;
 
 module.exports = Hound;

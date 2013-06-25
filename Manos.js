@@ -3,6 +3,9 @@
 var slice = Array.prototype.slice;
 var each = Array.prototype.forEach;
 
+//call a series of functions, with the last being called when all others
+//finish arguments can be passed in by embedding the function in an array with
+//them: [f, arg1, arg2]
 var when = function() {
   var calls = slice.call(arguments);
   var finished = 0;
@@ -23,6 +26,8 @@ var when = function() {
   });
 };
 
+//call one function after another, passing the arguments from each to the
+//following function
 var chain = function() {
   var tasks = slice.call(arguments);
   var args = [];
