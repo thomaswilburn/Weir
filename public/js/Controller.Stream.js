@@ -18,9 +18,6 @@
       $scope.stack = Stack;
 
       Scroll.top();
-      Events.on("scroll", function() {
-        $scope.$apply();
-      })
 
       $scope.activate = function(item, fromScroll) {
         Server.activate(item);
@@ -62,6 +59,10 @@
           Scroll.toID(item.id);
         }
       }
+      
+      Events.on("refresh", function() {
+        Scroll.top();
+      });
 
       angular.element(document).bind("keypress keydown", function(e) {
       

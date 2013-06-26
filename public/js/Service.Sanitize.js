@@ -6,7 +6,7 @@
   Weir.service("Weir.Sanitize", ["$document", "Weir.Events", function($document, Events) {
     var slice = Array.prototype.slice;
     var each = Array.prototype.forEach;
-
+    
     //function to show deferred images on scroll or refresh
     var deferred = [];
     var revealScrolled = function() {
@@ -90,6 +90,7 @@
           }
         }
         Events.on("scroll", enter);
+        setTimeout(enter, 200);
       }
     };
   }])
