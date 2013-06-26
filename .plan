@@ -28,12 +28,16 @@ Main - contains primary app seed, random directives
 Notes (vaguely ordered):
 
  - Set up Weir.DisplayStack.dialog()
+ - Change Mobile menu items:
+  * Top: Refresh, Settings, Manage Feeds (hide on mobile?)
+  * Charms: Mark All, Next Item, Open Current in New Tab
+  * Add close button to all items
  - Add feed management (subscribing, at least, if not unsubscribing and renaming)
-  * Add close button styles for top of feeds window
-  * Style unsubscribe buttons
+  * Enable (un)subscribe from client
   * Add a Feeds server component for subscribing, grabbing feed metadata first
-  * Enable display of last result
   * Enable sorting of feeds by result, name, tag (eventually)
+ - Enable date stamps, log levels in console.log
+ - Feed log to file, not stdout
  - Turn on error output for ask(), Stream
  - Disable timed fetch on mobile
  - Disable top activation by default, more like Google Reader
