@@ -39,7 +39,6 @@
         toID: scrollToHash,
         top: function() {
           document.body.scrollTop = document.documentElement.scrollTop = 0;
-          Events.fire("scroll");
         }
       };
 

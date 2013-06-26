@@ -64,10 +64,10 @@
         Scroll.top();
       });
 
+      //Should really move this to its own service...      
       angular.element(document).bind("keypress keydown", function(e) {
-      
-        //really need a better key handler than this.
-        if (Stack.visible !== "stream") return;
+
+        if (e.target !== document.body) return;
       
         var key = e.charCode ? String.fromCharCode(e.charCode).toLowerCase() : e.keyCode;
         switch (key) {

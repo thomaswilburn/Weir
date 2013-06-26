@@ -61,12 +61,12 @@
         //process images (defer loading, remove dimensions for CSS reasons)
         var images = doc.querySelectorAll("img, iframe");
         each.call(images, function(img) {
-          var src = img.src
+          var src = img.getAttribute("src");
           if (relative.test(src)) {
             src = url + src;
           }
           img.setAttribute("data-src", src);
-          img.src = "";
+          img.removeAttribute("src");
           
           img.removeAttribute("height");
           img.removeAttribute("width");
