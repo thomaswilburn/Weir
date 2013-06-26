@@ -36,7 +36,10 @@
 
       //API facade
       return {
-        toID: scrollToHash
+        toID: scrollToHash,
+        top: function() {
+          document.body.scrollTop = document.documentElement.scrollTop = 0;
+        }
       };
 
     }

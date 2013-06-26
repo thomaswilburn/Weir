@@ -12,10 +12,13 @@
       
       Events.on("stack:activate", function(panel) {
         if (panel !== "feeds") return;
+
+        $scope.loading = true;
         
         Request.ask({
           url: "feeds"
         }).then(function(data) {
+          $scope.loading = false;
           if (data.feeds) {
             $scope.feeds = data.feeds;
           }

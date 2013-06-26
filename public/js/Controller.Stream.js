@@ -17,7 +17,7 @@
       //I would really like the base application to provide this instead...
       $scope.stack = Stack;
 
-      document.body.scrollTop = document.documentElement.scrollTop = 0;
+      Scroll.top();
       Events.on("scroll", function() {
         $scope.$apply();
       })
@@ -35,7 +35,7 @@
         $scope.message = "Marking items as read, refreshing...";
         Server.markAll().then(function() {
           $scope.message = "";
-          Scroll.toID("top");
+          Scroll.top();
         });
       };
 
@@ -43,7 +43,7 @@
         $scope.message = "Refreshing feeds...";
         Server.refresh().then(function() {
           $scope.message = "";
-          Scroll.toID("top");
+          Scroll.top();
         });
       }
 

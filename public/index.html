@@ -25,6 +25,7 @@
     </ul>
 
     <div class="settings-container ui-panel" id="settings" stack-id="settings">
+      <a class="close" ng-click="stack.pop()">&times;</a>
       <div ng-controller="Weir.SettingsController">
         <h2>Local Settings</h2>
         <p>
@@ -109,6 +110,7 @@
     </div>
     
     <div class="feed-management ui-panel" stack-id="feeds">
+      <a class="close" ng-click="stack.pop()">&times;</a>
       <div ng-controller="Weir.FeedController">
         <h2>Manage Feeds</h2>
         
@@ -117,10 +119,12 @@
         
         <input ng-model="subscribeURL"> <a href="javascript:;" ng-click="subscribe()">Subscribe</a>
         
+
+        <label>Current Subscriptions</label>
         <p ng-show="loading">Loading...</p>
         
-        <ul ng-hide="loading">
-          <li ng-repeat="feed in feeds">
+        <ul ng-hide="loading" class="feed-list">
+          <li ng-repeat="feed in feeds | orderBy:'title'">
             {{feed.title}} <a href="javascript:;" class="unsubscribe" ng-click="unsubscribe(feed.id)">&times;</a>
           </li>
         </ul>
