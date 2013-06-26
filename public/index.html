@@ -117,17 +117,25 @@
         <p>
           To subscribe to a feed, enter the RSS URL in the box below and press subscribe. The feed contents will not pulled as part of the next fetch.
         
-        <input ng-model="subscribeURL"> <a href="javascript:;" ng-click="subscribe()">Subscribe</a>
-        
+        <div>
+          <input ng-model="subscribeURL">
+          <button class="subscribe-button" href="javascript:;" ng-click="subscribe()">Subscribe</button>
+        </div>
 
         <label>Current Subscriptions</label>
         <p ng-show="loading">Loading...</p>
         
-        <ul ng-hide="loading" class="feed-list">
-          <li ng-repeat="feed in feeds | orderBy:'title'">
-            {{feed.title}} <a href="javascript:;" class="unsubscribe" ng-click="unsubscribe(feed.id)">&times;</a>
-          </li>
-        </ul>
+        <table ng-hide="loading" class="feed-list">
+          <tr>
+            <th> Title
+            <th> Health
+            <th>
+          <tr ng-repeat="feed in feeds | orderBy:'title'" class="feed">
+            <td> <a title="{{feed.url}}">{{feed.title}}</a>
+            <td class="health-{{feed.health}}"> {{feed.health}}
+            <td>
+              <a href="javascript:;" class="unsubscribe" ng-click="unsubscribe(feed.id)">&times;</a>
+        </table>
         <div class="verbs">
           <button ng-click="stack.pop()">Done</button>
         </div>

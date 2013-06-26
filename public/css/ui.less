@@ -86,22 +86,50 @@
     }
     
   }
+  
+  &.feed-management {
+  
+    input {
+      display: inline-block;
+      padding: 4px;
+    }
+  
+    .subscribe-button {
+      display: inline-block;
+    }
+  
+  }
 
-  ul.feed-list {
+  .feed-list {
 
     list-style: none;
     margin: 0;
     padding: 0;
+    
+    th {
+      text-align: left;
+    }
 
-    li {
+    .feed {
 
       border-top: 1px solid darken(@background, 20%);
       max-width: 400px;
-      display: block;
       padding: 4px 8px;
 
       &:nth-child(2n + 1) {
         background: lighten(@foreground, 20%);
+      }
+      
+      .health-ok, .health-error {
+        text-align: center;
+      }
+      
+      .health-ok { background: #004400; }
+      .health-error { background: #440000; }
+      
+      a { 
+        text-decoration: none;
+        font-weight: bold;
       }
     }
 
@@ -112,7 +140,7 @@
     text-decoration: none;
     font-weight: bold;
     color: @background;
-    background: @accent;
+    background: @foreground;
     padding: 0 5px;
     border-radius: 2px;
   }
