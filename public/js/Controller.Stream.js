@@ -64,6 +64,10 @@
       }
 
       angular.element(document).bind("keypress keydown", function(e) {
+      
+        //really need a better key handler than this.
+        if (Stack.visible !== "stream") return;
+      
         var key = e.charCode ? String.fromCharCode(e.charCode).toLowerCase() : e.keyCode;
         switch (key) {
           case "j":

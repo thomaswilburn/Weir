@@ -4,7 +4,7 @@
 
   //Weir.DisplayStack provides an interface for choosing which panel is exclusively shown
   //TODO: It also provides a handy dialog creator
-  Weir.service("Weir.DisplayStack", [function() {
+  Weir.service("Weir.DisplayStack", ["Weir.Events", function(Events) {
     var stack = [];
     var facade = {
       visible: "",
@@ -13,13 +13,16 @@
         stack = stack.filter(function(item) { return item != panel });
         stack.unshift(panel);
         facade.visible = stack[0];
+        Events.fire("stack:activate", facade.visible);
       },
       pop: function(panel) {
         stack = stack.filter(function(item) { return item != panel });
         stack.shift(panel);
         facade.visible = stack[0];
+        Events.fire("stack:activate", facade.visible);
       },
-      dialog: function(content, callback) {}
+      dialog: function(content, callback) {},
+      alert: function(content, duration) {}
     }
 
     return facade;

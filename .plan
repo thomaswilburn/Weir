@@ -29,6 +29,11 @@ Notes (vaguely ordered):
 
  - Set up Weir.DisplayStack.dialog()
  - Add feed management (subscribing, at least, if not unsubscribing and renaming)
+  * Add close button styles for top of feeds window
+  * Style unsubscribe buttons
+  * Add a Feeds server component for subscribing, grabbing feed metadata first
+  * Enable display of last result
+  * Enable sorting of feeds by result, name, tag (eventually)
  - Turn on error output for ask(), Stream
  - Disable timed fetch on mobile
  - Disable top activation by default, more like Google Reader

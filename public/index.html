@@ -9,13 +9,15 @@
   <style>[ng-cloak], .ng-cloak { display: none; }</style>
 </head>
 <body ng-cloak>
-  <div class="root-container" ng-controller="Weir.StreamController">
+  <div class="root-container" ng-controller="Weir.StreamController" id="top">
     
     <ul class="menu">
       <li class="header">Weir
       <li> Last update: {{stream.updatedAt.toLocaleTimeString()}}
       <li> Remaining: <span class="unread">{{stream.unread}}</span> / {{stream.total}}
       <li> <a href="javascript:;" ng-click="refresh()">Refresh stream</a>
+      <li> <a href="javascript:;" ng-click="stack.push('settings')">Settings</a>
+      <li> <a href="javascript:;" ng-click="stack.push('feeds')">Manage Feeds</a>
 
       <li class="alert message" ng-show="message"> {{message}}
       <li class="alert warning" ng-show="warning"> {{warning}}
@@ -80,7 +82,7 @@
       </div>
     </div>
     
-    <div class="stream-container" id="top" stack-id="stream">
+    <div class="stream-container" stack-id="stream">
       <ul class="stream">
         <li 
           ng-repeat="item in stream.items" id="{{item.id}}" 
@@ -103,6 +105,28 @@
       </ul>
       <div class="no-items" ng-show="stream.items.length == 0">
         <h2>You have no unread items.</h2>
+      </div>
+    </div>
+    
+    <div class="feed-management ui-panel" stack-id="feeds">
+      <div ng-controller="Weir.FeedController">
+        <h2>Manage Feeds</h2>
+        
+        <p>
+          To subscribe to a feed, enter the RSS URL in the box below and press subscribe. The feed contents will not pulled as part of the next fetch.
+        
+        <input ng-model="subscribeURL"> <a href="javascript:;" ng-click="subscribe()">Subscribe</a>
+        
+        <p ng-show="loading">Loading...</p>
+        
+        <ul ng-hide="loading">
+          <li ng-repeat="feed in feeds">
+            {{feed.title}} <a href="javascript:;" class="unsubscribe" ng-click="unsubscribe(feed.id)">&times;</a>
+          </li>
+        </ul>
+        <div class="verbs">
+          <button ng-click="stack.pop()">Done</button>
+        </div>
       </div>
     </div>
 
