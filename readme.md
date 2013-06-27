@@ -33,9 +33,7 @@ At this stage, Weir is sufficient, but not fully fleshed out. There are still pl
 the following features:
 
 * Multiple database support
-* Subscription management
 * Display options for local machines
-* TOTP password support
 * Visual coloring based on tags
 
 Also, a number of the features are intentionally built with the minimum degree of 
@@ -81,8 +79,7 @@ have NPM, so navigate to the Weir directory and type the following command:
 4. Copy the cfg-example.json file to cfg.json, and edit it to fill in your database 
 information (type should be "postgres"), as well as some other configuration options. I 
 recommend having an <var>updateInterval</var> of 15 (it's in minutes) and a 
-<var>expirationDate</var> of 30 (it's in days). You'll also need to turn on LESS 
-compilation, unless you want to generate the rss.css file yourself.
+<var>expirationDate</var> of 30 (it's in days). 
 
 5. Kick off the Weir process with the following command, which will build the client-side 
 files and start the HTTP server. Just leave it running--you may want to do this from a tmux 
