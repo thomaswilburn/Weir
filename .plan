@@ -16,6 +16,7 @@ Security - Manage sessions, TOTP authorization
 Client components (all namespaced as "Weir.*"):
 StreamController - handle stream display and UI, plus some app-level UI
 SettingsController - handle showing and saving settings, plus showing security warning
+FeedController - handle (un)subscribing, tagging
 DisplayStack - manage major component visibility, dialogs, errors, warnings
 Events - service for pubsub events, useful for scrolling and service notification
 LocalSettings - Client-side preferences
@@ -38,6 +39,8 @@ Notes (vaguely ordered):
   * Enable sorting of feeds by result, name, tag (eventually)
  - Enable date stamps, log levels in console.log
  - Feed log to file, not stdout
+ - Update favicon when there are new unread stream items
+ - Create an actual App module, rewrite other modules more Angular-like
  - Turn on error output for ask(), Stream
  - Disable timed fetch on mobile
  - Disable top activation by default, more like Google Reader
@@ -52,7 +55,6 @@ Notes (vaguely ordered):
   * infinite scroll?
   * visual theme colors? (from a palette)
   * refresh rate
-  * should buttons mark all or just refresh?
   * buttons on sidebar
  - Add tags
  - Configure router to support REST params
