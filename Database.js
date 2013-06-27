@@ -2,6 +2,7 @@
 
 var cfg = require("./Config");
 var Manos = require("./Manos");
+var console = require("./DevConsole");
 
 var pg = require("pg");
 var psql = new pg.Client({

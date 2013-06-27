@@ -35,7 +35,7 @@
         });
         stream.items = data.items;
         stream.cursor = 0;
-        if (Settings.get().stream.startActive && stream.items.length) {
+        if (Settings().stream.startActive && stream.items.length) {
           facade.activate(stream.items[0]);
         }
         Events.fire("refresh");
@@ -124,8 +124,9 @@
       }
       
       var auto = function() {
-        facade.stats();
-        //this should be set from local settings
+        if (Settings().stream.autoRefresh) {
+          facade.stats();
+        }
         setTimeout(auto, 60 * 1000);
       };
       

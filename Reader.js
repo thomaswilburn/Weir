@@ -9,7 +9,7 @@ var console = require("./DevConsole");
 db.create();
 
 var Reader = function() {
-    console.log("\n\nWeir instance started on port " + cfg.port + "...");
+  console.log("Weir instance started on port " + cfg.port + "...");
 	Hound.setDB(db);
 	Hound.start();
 	if (!cfg.totp) {

@@ -4,6 +4,7 @@ var pg = require('pg');
 var EventEmitter = require('events').EventEmitter;
 var cfg = require("./Config");
 var Manos = require("./Manos");
+var console = require("./DevConsole");
 
 var noop = function() {};
 
@@ -19,7 +20,7 @@ var fetch = function() {
   if (Hound.busy) return;
   Hound.busy = true;
   Hound.emit("fetch:start");
-  console.log("Starting fetch...", new Date());
+  console.log("Starting fetch...");
   database.getFeeds(function(err, rows) {
     //awkward
     if (rows.length == 0) {
@@ -30,7 +31,7 @@ var fetch = function() {
     var done = function() {
       Hound.busy = false;
       Hound.emit("fetch:end");
-      console.log("All done!", new Date());
+      console.log("All done!");
       var interval = (cfg.updateInterval || 15) * 60 * 1000;
       setTimeout(fetch, interval);
     }

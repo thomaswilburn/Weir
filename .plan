@@ -28,33 +28,44 @@ Main - contains primary app seed, random directives
 
 Notes (vaguely ordered):
 
- - Set up Weir.DisplayStack.dialog()
+ - Set up Weir.DisplayStack.dialog() and confirm()
+
  - Change Mobile menu items:
   * Top: Refresh, Settings, Manage Feeds (hide on mobile?)
   * Charms: Mark All, Next Item, Open Current in New Tab
   * Add close button to all items
+
  - Add feed management (subscribing, at least, if not unsubscribing and renaming)
   * Enable (un)subscribe from client
   * Add a Feeds server component for subscribing, grabbing feed metadata first
   * Enable sorting of feeds by result, name, tag (eventually)
- - Enable date stamps, log levels in console.log
- - Feed log to file, not stdout
- - Update favicon when there are new unread stream items
- - Create an actual App module, rewrite other modules more Angular-like
+
  - Turn on error output for ask(), Stream
- - Disable timed fetch on mobile
+
+ - Logging:
+  * Add different log levels and tagging
+  * Feed log to file in addition to stdOut (allows running as job)
+
+ - Update favicon to reflect unread status
+
+ - Create an actual App module, rewrite other modules more Angular-like
+
  - Disable top activation by default, more like Google Reader
- - Remove CSS compilation from the Server?
+
+ - Remove CSS compilation from the Server, consider other handlers
+
  - Add ability to write cfg.json with .save();
+
  - Weir.Sanitize improvements
   * Allow Weir.Sanitize to resize elements if they would be too big (scale movies, etc)
   * Add rudimentary ad/social blocking
+
  - Add to options service
-  * key remapping or compatibility
-  * list length
-  * infinite scroll?
-  * visual theme colors? (from a palette)
   * refresh rate
+  * key map - character/code to verb, then teach Stream to understand those
+  * list length
   * buttons on sidebar
+
  - Add tags
+
  - Configure router to support REST params

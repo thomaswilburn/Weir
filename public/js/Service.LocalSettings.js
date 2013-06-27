@@ -22,10 +22,11 @@
       stream: {
         startActive: form == "large",
         length: 10,
-        infinite: false
+        infinite: false,
+        autoRefresh: form == "large"
       }
     };
-
+    
     var revive = function() {
       var settings = localStorage.getItem(storageKey);
       if (!settings) {
@@ -41,14 +42,13 @@
       }
       return settings;
     };
-
-    return {
-      get: revive,
-      reset: function() {
-        localStorage.removeItem(storageKey);
-      }
+    
+    revive.reset = function() {
+      localStorage.removeItem(storageKey);
     }
 
+    return revive;
+    
   }]);
 
 })();

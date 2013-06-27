@@ -1,5 +1,7 @@
 module.exports = {
   log: function() {
-    console.log.apply(console, arguments);
+    var args = Array.prototype.slice.call(arguments);
+    args.unshift(new Date().toGMTString() + " - ");
+    console.log.apply(console, args);
   }
 }
