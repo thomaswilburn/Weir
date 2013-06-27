@@ -49,7 +49,7 @@ var fetch = function() {
 
       chunk.forEach(function(row) {
         schedule.push(function(c) {
-
+       
           var r = request({
             url: row.url,
             headers: {
@@ -85,7 +85,6 @@ var fetch = function() {
             var parser = new FeedParser();
 
             parser.on('complete', function(meta, articles) {
-              Hound.busy = false;
               database.setFeedResult(row.id, 200);
               saveItems(row.id, meta, articles);
               c();

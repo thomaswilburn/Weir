@@ -39,6 +39,7 @@ Notes (vaguely ordered):
   * Enable (un)subscribe from client
   * Add a Feeds server component for subscribing, grabbing feed metadata first
   * Enable sorting of feeds by result, name, tag (eventually)
+  * Add current story count to feeds, display
 
  - Turn on error output for ask(), Stream
 
