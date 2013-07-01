@@ -69,13 +69,3 @@ server.route("/stream/markRefresh", function(req) {
   }
   req.reply({ marked: 0 });
 });
-
-//this should probably move elsewhere
-server.route("/feeds", function(req) {
-  db.getFeeds(function(err, rows) {
-    if (err) {
-      return req.reply({ feeds: [] });
-    }
-    return req.reply({ feeds: rows });
-  });
-});

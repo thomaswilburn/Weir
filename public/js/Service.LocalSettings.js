@@ -47,7 +47,10 @@
       localStorage.removeItem(storageKey);
     }
 
-    return revive;
+    return {
+      get: revive,
+      reset: revive.reset
+    }
     
   }]);
 

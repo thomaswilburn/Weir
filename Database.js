@@ -85,13 +85,16 @@ var db = {
   },
   
   //subscribe to a URL
-  subscribe: function(url, c) {
-  
+  subscribe: function(metadata, c) {
+    psql.query("INSERT INTO feeds (title, url, site_url) VALUES ($1, $2, $3) RETURNING id;", [metadata.title, metadata.url, metadata.site_url], 
+      function(err, data) {
+        c(err, data ? data.rows[0] : {});
+    });
   },
   
   //unsubscribe from a feed
-  unsubscribe: function(feed, c) {
-  
+  unsubscribe: function(id, c) {
+    psql.query("DELETE FROM feeds WHERE id = $1", [id], c);
   },
   
   //mark item as read or unread (default read)

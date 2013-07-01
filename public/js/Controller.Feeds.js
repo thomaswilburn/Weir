@@ -35,7 +35,18 @@
       });
       
       $scope.subscribe = function() {
-        console.log($scope.subscribeURL);
+        Request.ask({
+          url: "feeds/subscribe",
+          params: {
+            url: $scope.subscribeURL
+          }
+        }).then(function(data) {
+          if (data.error) {
+            //yet another place to add error messaging
+            return;
+          }
+          $scope.feeds.push(data);
+        });
       };
     
     }]);

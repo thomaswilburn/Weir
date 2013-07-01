@@ -1,6 +1,7 @@
 var cfg = require("./Config");
 var Server = require("./Server");
 var stream = require("./Stream");
+var feeds = require("./Feeds");
 var db = require("./Database");
 var Hound = require("./Hound");
 var console = require("./DevConsole");

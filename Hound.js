@@ -144,9 +144,48 @@ var saveItems = function(feed, meta, articles) {
   });
 };
 
+var getMeta = function(url, c) {
+  var r;
+  
+  try {
+    r = request({
+      url: url
+    });
+  } catch (e) {
+    c({error: "Invalid URL"});
+    return; 
+  };
+  
+  r.on("error", c);
+  
+  r.on("response", function(data) {
+    if (data.statusCode !== 200) {
+      return c({error: "Invalid response"});
+    }
+    
+    var parser = new FeedParser();
+    
+    parser.on("error", function() {
+      c({error: "Couldn't parse feed."});
+    });
+    
+    parser.on("complete", function(meta) {
+      c(null, {
+        title: meta.title,
+        site_url: meta.link,
+        url: url
+      });
+    });
+    
+    r.pipe(parser);
+    
+  });
+};
+
 var Hound = new EventEmitter();
 Hound.fetch = fetch;
 Hound.setDB = setDB;
 Hound.start = fetch;
+Hound.getMeta = getMeta;
 
 module.exports = Hound;

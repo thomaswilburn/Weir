@@ -35,8 +35,9 @@
         });
         stream.items = data.items;
         stream.cursor = 0;
-        if (Settings().stream.startActive && stream.items.length) {
-          facade.activate(stream.items[0]);
+        if (Settings.get().stream.startActive && stream.items.length) {
+          //hold off on doing this for a while... at least while still testing
+          //facade.activate(stream.items[0]);
         }
         Events.fire("refresh");
       };
@@ -124,7 +125,7 @@
       }
       
       var auto = function() {
-        if (Settings().stream.autoRefresh) {
+        if (Settings.get().stream.autoRefresh) {
           facade.stats();
         }
         setTimeout(auto, 60 * 1000);
