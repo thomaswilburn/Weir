@@ -39,7 +39,7 @@
 
         //remove trailing slashes
         url = url.replace(/\/$/, "");
-        var relative = /^\/[^\\]/;
+        var relative = /^\/[^\/]/;
 
         //change targets on all links, map to site URL if relative
         var links = doc.querySelectorAll('a');
