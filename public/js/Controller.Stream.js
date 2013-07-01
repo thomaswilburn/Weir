@@ -79,11 +79,12 @@
             $scope.previous();
             break;
 
-          case ".":
+          case "m":
             $scope.markRefresh();
             break;
 
           case "r":
+          case ".":
             $scope.refresh();
             break;
 

@@ -23,7 +23,7 @@
         startActive: form == "large",
         length: 10,
         infinite: false,
-        autoRefresh: form == "large"
+        autoRefresh: form == "large" ? 2 : 0
       }
     };
     

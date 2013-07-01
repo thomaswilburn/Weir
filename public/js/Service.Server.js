@@ -36,8 +36,7 @@
         stream.items = data.items;
         stream.cursor = 0;
         if (Settings.get().stream.startActive && stream.items.length) {
-          //hold off on doing this for a while... at least while still testing
-          //facade.activate(stream.items[0]);
+          facade.activate(stream.items[0]);
         }
         Events.fire("refresh");
       };
@@ -125,10 +124,12 @@
       }
       
       var auto = function() {
-        if (Settings.get().stream.autoRefresh) {
+        var interval = Settings.get().stream.autoRefresh;
+        if (interval) {
           facade.stats();
+          //this won't work correctly yet without a refresh if it's changed
+          setTimeout(auto, interval * 60 * 1000);
         }
-        setTimeout(auto, 60 * 1000);
       };
       
       facade.refresh().then(function() {
