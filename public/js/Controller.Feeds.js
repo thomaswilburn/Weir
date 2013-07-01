@@ -48,6 +48,23 @@
           $scope.feeds.push(data);
         });
       };
+      
+      $scope.unsubscribe = function(item) {
+        Request.ask({
+          url: "feeds/unsubscribe",
+          params: {
+            id: item.id
+          }
+        }).then(function(data) {
+          if (data.error) {
+            //show error!
+            return;
+          }
+          $scope.feeds = $scope.feeds.filter(function(feed) {
+            return item !== feed;
+          });
+        });
+      };
     
     }]);
 

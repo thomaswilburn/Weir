@@ -22,3 +22,9 @@ server.route("/feeds/subscribe", function(req) {
     });
   });
 });
+
+server.route("/feeds/unsubscribe", function(req) {
+  db.unsubscribe(req.params.id, function(err) {
+    req.reply(err || { result: "success" });
+  });
+});

@@ -134,7 +134,7 @@
             <td> <a title="{{feed.url}}">{{feed.title}}</a>
             <td class="health-{{feed.health}}"> {{feed.health}}
             <td>
-              <a href="javascript:;" class="unsubscribe" ng-click="unsubscribe(feed.id)">&times;</a>
+              <a href="javascript:;" class="unsubscribe" ng-click="unsubscribe(feed)">&times;</a>
         </table>
         <div class="verbs">
           <button ng-click="stack.pop()">Done</button>
@@ -145,7 +145,6 @@
     <div class="charm-panel">
       <a class="charm" title="Next item" href="javascript:;" ng-click="next()">&raquo;</a>
       <a class="charm" title="Mark all as read" href="javascript:;" ng-click="markRefresh()">&#x2026;</a>
-      <a class="charm" title="Settings" href="javascript:;" ng-click="stack.push('settings')">&#x2261;</a>
     </div>
   </div>
 

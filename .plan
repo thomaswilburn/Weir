@@ -8,7 +8,8 @@ Database.js - tech-specific database layer, start with pgsql
 Console - logs out to a file (eventually) or to stdout (currently)
 Config - key/value store loaded from JSON
 Server - HTTP requests and AJAX calls
-Stream - Registers routes and passes on to the database
+Stream - Registers stream-related routes/logic
+Feeds - Registers feed-related routes/logic
 Manos - utility functions for async without importing all of caolan's library
 Freedom - import/export, starting with OPML
 Security - Manage sessions, TOTP authorization
@@ -28,36 +29,33 @@ Main - contains primary app seed, random directives
 
 Notes (vaguely ordered):
 
- - Set up Weir.DisplayStack.dialog() and confirm()
+ - Create an actual App module, rewrite other modules more Angular-like
+  * Allows unified favicon, title updating based on item count
+  * Bring the display stack service up to this level
+  * Manage keys at the app level, dispatch events in response
+
+ - DisplayStack improvements
+  * Real error/status messages
+  * DisplayStack.dialog(), DisplayStack.confirm()
+  * Hook ask(), Stream, Feed errors and confirmations into DisplayStack
 
  - Change Mobile menu items:
-  * Top: Refresh, Settings, Manage Feeds (hide on mobile?)
-  * Charms: Mark All, Next Item, Open Current in New Tab
+  * Add "open current in new tab" button
   * Add close button to all items
 
- - Add feed management (subscribing, at least, if not unsubscribing and renaming)
-  * Allow unsubscribe
+ - Feed management impreovements
   * Enable sorting of feeds by result, name, tag (eventually)
   * Add current story count to feeds, display
 
- - Turn on error output for ask(), Stream
- 
  - Allow non-activation of top item, keyboard shouldn't freak out.
 
  - Logging:
   * Add different log levels and tagging
   * Feed log to file in addition to stdOut (allows running as job)
 
- - Create an actual App module, rewrite other modules more Angular-like
-  * Allows unified favicon, title updating based on item count
-  * Bring the display stack service up to this level
-  * Manage keys at the app level, dispatch events in response
-
- - Disable top activation by default, more like Google Reader
-
  - Remove CSS compilation from the Server, consider other handlers
 
- - Add ability to write cfg.json with .save();
+ - Add ability to write server cfg.json with .save();
 
  - Weir.Sanitize improvements
   * Allow Weir.Sanitize to resize elements if they would be too big (scale movies, etc)
