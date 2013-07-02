@@ -25,8 +25,7 @@
         stream.unread = data.unread || 0;
         stream.total = data.total || stream.total;
         stream.updatedAt = new Date();
-        //can't set the title from the template
-        document.title = "Weir" + (stream.unread ? " (" + stream.unread + ")" : "");
+        Events.fire("status");
       };
       
       var updateItems = function(data) {
@@ -52,6 +51,7 @@
             }
           }).then(function() {
             stream.unread--;
+            Events.fire("status");
           });
         },
         markAll: function() {

@@ -1,5 +1,5 @@
 <!doctype html>
-<html ng-app="Weir">
+<html ng-app="Weir" ng-controller="Weir.Application">
 <head>
   <title>Weir</title>
   <meta charset="utf-8">
@@ -84,7 +84,7 @@
     </div>
     
     <div class="stream-container" stack-id="stream">
-      
+
       <ul class="stream">
         <li 
           ng-repeat="item in stream.items" id="{{item.id}}" 

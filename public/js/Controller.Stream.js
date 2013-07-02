@@ -9,13 +9,9 @@
     "Weir.Scroll",
     "Weir.Sanitize",
     "Weir.Events",
-    "Weir.DisplayStack",
-    function($scope, Server, Scroll, Sanitize, Events, Stack) {
+    function($scope, Server, Scroll, Sanitize, Events) {
 
       $scope.stream = Server.stream;
-      Stack.push("stream");
-      //I would really like the base application to provide this instead...
-      $scope.stack = Stack;
 
       Scroll.top();
 
@@ -67,7 +63,7 @@
       //Should really move this to its own service...      
       angular.element(document).bind("keypress keydown", function(e) {
 
-        if (e.target !== document.body) return;
+        if (["INPUT", "TEXTAREA"].indexOf(e.target.tagName) > -1) return;
       
         var key = e.charCode ? String.fromCharCode(e.charCode).toLowerCase() : e.keyCode;
         switch (key) {
@@ -91,9 +87,10 @@
           case " ":
           case 34: //page down
             //take over scrolling, unfortunately
+            var active = document.querySelector("li.active");
+            if (!active) return;
             e.preventDefault();
             e.stopImmediatePropagation();
-            var active = document.querySelector("li.active");
             var next = active.nextSibling;
             var current = document.documentElement.scrollTop || document.body.scrollTop;
             var distance = window.innerHeight * .8;
