@@ -18,7 +18,7 @@
         var count = Server.stream.unread;
         var favicon = document.querySelector("head link[rel=icon]");
         if (count != lastCount) {
-          document.title = Weir + (count ? "(" + count + ")" : "");
+          document.title = "Weir " + (count ? "(" + count + ")" : "");
           favicon.parentElement.removeChild(favicon);
           favicon = document.createElement("link");
           favicon.rel = "icon";
