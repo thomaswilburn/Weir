@@ -94,7 +94,7 @@ var db = {
   
   //unsubscribe from a feed
   unsubscribe: function(id, c) {
-    psql.query("DELETE FROM feeds WHERE id = $1", [id], c);
+    psql.query("DELETE FROM feeds WHERE id = $1; DELETE FROM stories WHERE feed = $1;", [id], c);
   },
   
   //mark item as read or unread (default read)
