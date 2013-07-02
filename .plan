@@ -29,6 +29,13 @@ Main - contains primary app seed, random directives
 
 Notes (vaguely ordered):
 
+ - UX
+  * make all buttons bigger on mobile
+  * add "open current in new tab" button on mobile
+  * add close button to hide activated items
+  * Allow non-activation of top item, keyboard shouldn't freak out.
+
+
  - Create an actual App module, rewrite other modules more Angular-like
   * Allows unified favicon, title updating based on item count
   * Bring the display stack service up to this level
@@ -39,15 +46,9 @@ Notes (vaguely ordered):
   * DisplayStack.dialog(), DisplayStack.confirm()
   * Hook ask(), Stream, Feed errors and confirmations into DisplayStack
 
- - Change Mobile menu items:
-  * Add "open current in new tab" button
-  * Add close button to all items
-
- - Feed management impreovements
+ - Feed management improvements
   * Enable sorting of feeds by result, name, tag (eventually)
   * Add current story count to feeds, display
-
- - Allow non-activation of top item, keyboard shouldn't freak out.
 
  - Logging:
   * Add different log levels and tagging

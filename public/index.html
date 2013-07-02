@@ -84,6 +84,7 @@
     </div>
     
     <div class="stream-container" stack-id="stream">
+      
       <ul class="stream">
         <li 
           ng-repeat="item in stream.items" id="{{item.id}}" 
@@ -104,9 +105,16 @@
           </div>
         </li>
       </ul>
+
       <div class="no-items" ng-show="stream.items.length == 0">
         <h2>You have no unread items.</h2>
       </div>
+
+      <div class="charm-panel">
+        <a class="charm" title="Next item" href="javascript:;" ng-click="next()">&raquo;</a>
+        <a class="charm" title="Mark all as read" href="javascript:;" ng-click="markRefresh()">&#x2026;</a>
+      </div>
+
     </div>
     
     <div class="feed-management ui-panel" stack-id="feeds">
@@ -142,10 +150,6 @@
       </div>
     </div>
 
-    <div class="charm-panel">
-      <a class="charm" title="Next item" href="javascript:;" ng-click="next()">&raquo;</a>
-      <a class="charm" title="Mark all as read" href="javascript:;" ng-click="markRefresh()">&#x2026;</a>
-    </div>
   </div>
 
   <script src="/js/weir.js"></script>
