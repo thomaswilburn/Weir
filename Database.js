@@ -94,7 +94,24 @@ var db = {
   
   //unsubscribe from a feed
   unsubscribe: function(id, c) {
-    psql.query("DELETE FROM feeds WHERE id = $1; DELETE FROM stories WHERE feed = $1;", [id], c);
+    Manos.when(
+      function(done) {
+        psql.query("DELETE FROM feeds WHERE id = $1;", [id], done);
+      },
+      function(done) {
+        psql.query("DELETE FROM stories WHERE feed = $1;", [id], done);
+      },
+      function(feeds, stories) {
+        if (!feeds[0] && !stories[0]) {
+          return c(null, {
+            result: "success",
+            removedFeeds: feeds[1].rowCount,
+            removedStories: stories[1].rowCount
+          });
+        }
+        c({err: feeds[0] || stories[0]});
+      }
+    );
   },
   
   //mark item as read or unread (default read)
