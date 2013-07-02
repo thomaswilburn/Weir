@@ -36,8 +36,6 @@ Notes (vaguely ordered):
   * Allow non-activation of top item, keyboard shouldn't freak out.
 
  - Create an actual App module, rewrite other modules more Angular-like
-  * Allows unified favicon, title updating based on item count
-  * Bring the display stack service up to this level
   * Manage keys at the app level, dispatch events in response
 
  - DisplayStack improvements
@@ -70,3 +68,5 @@ Notes (vaguely ordered):
  - Add tags
 
  - Configure router to support REST params
+ 
+ - Add SQLite support
