@@ -35,7 +35,7 @@
         var element = document.getElementById(id);
         if (!element) return;
         var top = element.offsetTop;
-        element.scrollIntoView();        
+        element.scrollIntoView();
       }
 
       //API facade
