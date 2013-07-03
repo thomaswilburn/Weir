@@ -59,55 +59,11 @@
       Events.on("refresh", function() {
         Scroll.top();
       });
-
-      //Should really move this to its own service...      
-      angular.element(document).bind("keypress keydown", function(e) {
-
-        if (["INPUT", "TEXTAREA"].indexOf(e.target.tagName) > -1) return;
       
-        var key = e.charCode ? String.fromCharCode(e.charCode).toLowerCase() : e.keyCode;
-        switch (key) {
-          case "j":
-            $scope.next();
-            break;
-
-          case "k":
-            $scope.previous();
-            break;
-
-          case "m":
-            $scope.markRefresh();
-            break;
-
-          case "r":
-          case ".":
-            $scope.refresh();
-            break;
-
-          case " ":
-          case 34: //page down
-            //take over scrolling, unfortunately
-            var active = document.querySelector("li.active");
-            if (!active) return;
-            e.preventDefault();
-            e.stopImmediatePropagation();
-            var next = active.nextSibling;
-            var current = document.documentElement.scrollTop || document.body.scrollTop;
-            var distance = window.innerHeight * .8;
-            if (next && next.tagName == "LI") {
-              var nextOffset = next.getBoundingClientRect().top;
-              if (nextOffset < distance) {
-                return $scope.next();
-              }
-            }
-            document.documentElement.scrollTop = document.body.scrollTop = distance + current;
-            if (window.scrollY == current) {
-              $scope.next();
-            }
-            break;
-        }
-        $scope.$apply();
-      });
+      Events.on("key:next", $scope.next);
+      Events.on("key:previous", $scope.previous);
+      Events.on("key:refresh", $scope.refresh);
+      Events.on("key:markRefresh", $scope.markRefresh);
 
     }]);
 

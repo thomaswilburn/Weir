@@ -34,9 +34,52 @@
 
       Events.on("status", updateStatus);
       Events.on("activated", updateStatus);
+      
+      var keyMapping = {
+        "j": "next",
+        "k": "previous",
+        "m": "markRefresh",
+        "r": "refresh",
+        ".": "refresh",
+        " ": "pagedown",
+        34 : "pagedown"
+      }
+
+      //Should really move this to its own service...      
+      angular.element(document).bind("keypress keydown", function(e) {
+
+        if (["INPUT", "TEXTAREA"].indexOf(e.target.tagName) > -1) return;
+      
+        var key = e.charCode ? String.fromCharCode(e.charCode).toLowerCase() : e.keyCode;
+        var action = keyMapping[key];
+        
+        if (action == "pagedown") {
+          //take over scrolling, unfortunately
+          var active = document.querySelector("li.active");
+          if (!active) return;
+          e.preventDefault();
+          e.stopImmediatePropagation();
+          var next = active.nextSibling;
+          var current = document.documentElement.scrollTop || document.body.scrollTop;
+          var distance = window.innerHeight * .8;
+          if (next && next.tagName == "LI") {
+            var nextOffset = next.getBoundingClientRect().top;
+            if (nextOffset < distance) {
+              return $scope.next();
+            }
+          }
+          document.documentElement.scrollTop = document.body.scrollTop = distance + current;
+          if (window.scrollY == current) {
+            $scope.next();
+          }
+          $scope.$apply();
+        } else if (action) {
+          Events.fire("key:" + action);
+        }
+        
+      });
 
       //TODO: 
-      // - set up keyboard handler
       // - register for app-wide events
       
     }

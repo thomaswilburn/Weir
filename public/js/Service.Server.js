@@ -29,6 +29,7 @@
       };
       
       var updateItems = function(data) {
+        if (!data.items) return;
         data.items.forEach(function(item) {
           item.content = Sanitize.prepare(item.content, item.site);
         });
