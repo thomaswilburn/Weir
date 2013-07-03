@@ -49,13 +49,15 @@ var fetch = function() {
 
       chunk.forEach(function(row) {
         schedule.push(function(c) {
+        
+          var headers = {
+            "If-Modified-Since": (row.pulled && row.pulled.toUTCString()) || new Date(0).toUTCString(),
+            "Connection": "close"
+          };
        
           var r = request({
             url: row.url,
-            headers: {
-              "If-Modified-Since": row.pulled && row.pulled.toGMTString(),
-              "Connection": "close"
-            },
+            headers: headers,
             jar: false,
             timeout: cfg.requestTimeout * 1000 || 30
           });
@@ -71,7 +73,7 @@ var fetch = function() {
             c();
           });
           
-          r.on("response", function(response) {
+          r.on("response", function(response, body) {
 
             if (response.statusCode !== 200) {
               //Not Modified isn't an error

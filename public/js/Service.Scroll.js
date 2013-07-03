@@ -57,7 +57,7 @@
       link: function(scope, element, attributes) {
         var trigger = function() {
           var offset = element[0].getBoundingClientRect();
-          if (offset.top && offset.top > 0 && offset.top < window.innerHeight * .25) {
+          if (offset.top && offset.top > -10 && offset.top < window.innerHeight * .25) {
             scope.$eval(attributes.scrollFocus);
             scope.$apply();
           }
@@ -74,7 +74,7 @@
       link: function(scope, element, attributes) {
         var trigger = function() {
           var offset = element[0].getBoundingClientRect();
-          if (offset.top && offset.top > 0 && offset.top < window.innerHeight) {
+          if (offset.top && offset.top < window.innerHeight) {
             scope.$eval(attributes.scrollEnter);
             scope.$apply();
             Events.off("scroll", trigger);

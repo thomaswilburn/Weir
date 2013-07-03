@@ -33,7 +33,7 @@ var db = {
 
   //get all feeds for listing with unread counts, etc.
   getFeeds: function(c) {
-    psql.query("SELECT * FROM feeds", function(err, data) {
+    psql.query("SELECT * FROM feeds;", function(err, data) {
       if (c) c(err, data ? data.rows : []);
     });
   },
@@ -47,7 +47,8 @@ var db = {
 
   //update a feed with its last fetch result code
   setFeedResult: function(id, status) {
-    psql.query("UPDATE feeds SET last_result = $1, pulled = now() WHERE id = $2;", [status, id]);
+    psql.query("UPDATE feeds SET last_result = $1, pulled = $2 WHERE id = $3;", 
+      [status, new Date(), id]);
   },
   
   //get story GUID and dates

@@ -34,6 +34,7 @@ Notes (vaguely ordered):
   * add "open current in new tab" button on mobile
   * add close button to hide activated items
   * Allow non-activation of top item, keyboard shouldn't freak out.
+  * On paging past the end, remove items so that I don't keep hammering space
   
  - Add OPML export, now that I've got my feed list down
 

@@ -111,7 +111,7 @@
           </div>
           <div class="tracking-pixel" scroll-focus="activate(item, true)"></div>
           <div class="content">
-            <h3>Posted by {{item.author}} at {{item.published}}</h3>
+            <h3>Posted by {{item.author}} at {{item.published | date: 'h:mm a MMM d, yyyy' }}</h3>
             <div class="text" ng-bind-html-unsafe="item.content"></div>
             <a class="view-full" href="{{item.url}}" target="_blank">View full post</a>
           </div>
