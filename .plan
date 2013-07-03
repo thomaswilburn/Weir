@@ -37,9 +37,6 @@ Notes (vaguely ordered):
   
  - Add OPML export, now that I've got my feed list down
 
- - Create an actual App module, rewrite other modules more Angular-like
-  * Manage keys at the app level, dispatch events in response
-
  - DisplayStack improvements
   * Real error/status messages
   * DisplayStack.dialog(), DisplayStack.confirm()
@@ -62,7 +59,6 @@ Notes (vaguely ordered):
   * Add rudimentary ad/social blocking
 
  - Add to options service
-  * refresh rate
   * key map - character/code to verb, then teach Stream to understand those
   * list length
   * buttons on sidebar
