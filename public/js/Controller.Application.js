@@ -75,6 +75,7 @@
           $scope.$apply();
         } else if (action) {
           Events.fire("key:" + action);
+          $scope.$apply();
         }
         
       });

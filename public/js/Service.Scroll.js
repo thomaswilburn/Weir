@@ -7,8 +7,8 @@
 
   //Weir.Scroll is meant to handle all scrolling functionality--
   //both reacting to them, and instigating them.
-  Weir.service("Weir.Scroll", ["$document", "$location", "$anchorScroll", "Weir.Events",
-    function($document, $location, $anchorScroll, Events) {
+  Weir.service("Weir.Scroll", ["Weir.Events",
+    function(Events) {
 
       //register scroll listener, dispatch throttled events
       var guard = false;
@@ -29,9 +29,13 @@
 
       //expose a method for scrolling to a specific item, basically wrapping location/anchorScroll
       var scrollToHash = function(id) {
-        $location.replace();
+        /*$location.replace();
         $location.hash(id);
-        $anchorScroll();
+        $anchorScroll();*/
+        var element = document.getElementById(id);
+        if (!element) return;
+        var top = element.offsetTop;
+        element.scrollIntoView();        
       }
 
       //API facade
