@@ -18,8 +18,8 @@ var db = {
   create: function(c) {
     psql.query("SELECT * FROM pg_catalog.pg_tables WHERE tablename = 'feeds';", function(err, data) {
       if (err || !data.rows.length) {
-        psql.query("CREATE TABLE feeds (id SERIAL, title TEXT, url TEXT, site_url TEXT, pulled TIMESTAMP, last_result INTEGER);");
-        psql.query("CREATE TABLE stories (id SERIAL, feed INTEGER, title TEXT, url TEXT, author TEXT, content TEXT, guid TEXT, read BOOLEAN DEFAULT false, published TIMESTAMP DEFAULT now());");
+        psql.query("CREATE TABLE feeds (id SERIAL, title TEXT, url TEXT, site_url TEXT, pulled TIMESTAMPTZ, last_result INTEGER);");
+        psql.query("CREATE TABLE stories (id SERIAL, feed INTEGER, title TEXT, url TEXT, author TEXT, content TEXT, guid TEXT, read BOOLEAN DEFAULT false, published TIMESTAMPTZ DEFAULT now());");
         
         //We don't use the database for server-side options yet (possibly ever)
         //psql.query("CREATE TABLE options (name TEXT, value TEXT);");
