@@ -30,6 +30,18 @@
         <h2>Local Settings</h2>
         <p>
           These settings will be applied only to your local client. For server-side settings, edit the <var>cfg.json</var> file in your Weir installation directory.
+          
+        <div class="ajax">
+          <label>Client Prefs</label>
+          
+          <input type="text" ng-model="settings.stream.autoRefresh" class="inline">
+          <label class="inline">Status Refresh Interval (in minutes)</label>
+
+          <br>
+          
+          <input type="checkbox" ng-model="settings.stream.startActive" class="inline">
+          <label class="inline">Activate First Item</label>
+        </div>
 
         <div class="opml">
           <label>Import OPML</label>

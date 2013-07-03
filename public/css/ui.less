@@ -34,6 +34,14 @@
     text-decoration: underline;
     margin-top: .5em;
     font-size: 20px;
+    
+    &.inline {
+      font-size: 14px;
+      margin-top: 0;
+      text-decoration: none;
+      display: inline-block;
+      width: auto;
+    }
   }
 
   input, select, textarea {
@@ -43,6 +51,14 @@
     padding: 4px 1em;
     border: 1px solid @background;
     display: block;
+    
+    &.inline {
+      display: inline-block;
+      width: 3em;
+      padding: 4px;
+      margin-right: 1em;
+      text-align: center;
+    }
   }
   
   .verbs {

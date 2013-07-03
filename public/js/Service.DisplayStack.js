@@ -13,14 +13,14 @@
         stack = stack.filter(function(item) { return item != panel });
         stack.unshift(panel);
         facade.visible = stack[0];
-        Events.fire("stack:activate", facade.visible);
+        Events.fire("stack:activate", {panel: facade.visible});
         Scroll.top();
       },
       pop: function(panel) {
         stack = stack.filter(function(item) { return item != panel });
         stack.shift(panel);
         facade.visible = stack[0];
-        Events.fire("stack:activate", facade.visible);
+        Events.fire("stack:activate", {panel: facade.visible});
         Scroll.top();
       },
       dialog: function(content, callback) {},

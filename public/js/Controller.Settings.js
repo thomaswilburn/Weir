@@ -7,7 +7,8 @@
     "Weir.LocalSettings",
     "Weir.Request",
     "Weir.DisplayStack",
-    function($scope, Settings, Request, Stack) {
+    "Weir.Events",
+    function($scope, Settings, Request, Stack, Events) {
       var fileInput = document.querySelector(".inputOPML");
       fileInput.addEventListener("change", function() {
         var file = fileInput.files[0];
@@ -18,9 +19,17 @@
           xhr.send(file);
         }
       });
+      
+      Events.on("stack:activate", function(e) {
+        if (e.panel !== "settings") {
+          return;
+        }
+        
+        $scope.settings = Settings.get();
+      });
 
       $scope.saveSettings = function() {
-        //use LocalSettings eventually
+        $scope.settings.save();
         Stack.pop();
       }
       

@@ -16,8 +16,8 @@
         0: "error"
       }
       
-      Events.on("stack:activate", function(panel) {
-        if (panel !== "feeds") return;
+      Events.on("stack:activate", function(e) {
+        if (e.panel !== "feeds") return;
 
         $scope.loading = true;
         

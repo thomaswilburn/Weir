@@ -9,7 +9,7 @@
     var storageKey = "WeirOptions";
     var settings;
 
-    var fill = function(src, dest) {
+    var fill = function(dest, src) {
       for (var key in src) {
         if (!dest[key]) {
           dest[key] = src[key];
@@ -22,7 +22,6 @@
       stream: {
         startActive: form == "large",
         length: 10,
-        infinite: false,
         autoRefresh: form == "large" ? 2 : 0
       }
     };
@@ -35,10 +34,10 @@
       } else {
         //otherwise, parse and augment with any new properties
         settings = JSON.parse(settings);
-        settings = fill(defaults, settings);
-        settings.save = function() {
-          localStorage.setItem(storageKey, JSON.stringify(this));
-        }
+        fill(settings, defaults);
+      }
+      settings.save = function() {
+        localStorage.setItem(storageKey, JSON.stringify(this));
       }
       return settings;
     };
