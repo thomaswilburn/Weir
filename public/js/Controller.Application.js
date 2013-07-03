@@ -65,12 +65,12 @@
           if (next && next.tagName == "LI") {
             var nextOffset = next.getBoundingClientRect().top;
             if (nextOffset < distance) {
-              return $scope.next();
+              return Events.fire("key:next");
             }
           }
           document.documentElement.scrollTop = document.body.scrollTop = distance + current;
           if (window.scrollY == current) {
-            $scope.next();
+            return Events.fire("key:next");
           }
           $scope.$apply();
         } else if (action) {
