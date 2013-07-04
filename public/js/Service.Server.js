@@ -59,8 +59,7 @@
           var ids = stream.items.map(function(item) {
             return item.id;
           });
-          var deferred = $q.defer();
-          ask({
+          var promise = ask({
             url: "stream/markRefresh",
             params: {
               items: ids.join(",")
@@ -68,20 +67,17 @@
           }).then(function(data) {
             updateItems(data);
             updateStatus(data);
-            deferred.resolve();
           });
-          return deferred.promise;
+          return promise;
         },
         refresh: function() {
-          var deferred = $q.defer();
-          ask({
+          var promise = ask({
             url: "stream/unread"
           }).then(function(data) {
             updateStatus(data);
             updateItems(data);
-            deferred.resolve();
           });
-          return deferred.promise;
+          return promise;
         },
         stats: function() {
           ask({

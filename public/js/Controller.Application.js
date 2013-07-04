@@ -84,8 +84,28 @@
         
       });
 
-      //TODO: 
-      // - register for app-wide events
+      var alertFactory = function(property) {
+        var timeout = null;
+        var show = "show" + property[0].toUpperCase() + property.substr(1);
+        var hide = "hide" + property[0].toUpperCase() + property.substr(1);
+        $scope[show] = function(message, duration) {
+          duration = duration || 3;
+          if (timeout) clearTimeout(timeout);
+          $scope[property] = message;
+          timeout = setTimeout(function() {
+            $scope[property] = "";
+            $scope.$apply();
+            timeout = null;
+          }, duration * 1000);
+        };
+        $scope[hide] = function() {
+          $scope[property] = "";
+        };
+      };
+      
+      alertFactory("message");
+      alertFactory("warning");
+      alertFactory("error");
       
     }
   ]);

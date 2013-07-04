@@ -14,6 +14,11 @@
       $scope.stream = Server.stream;
 
       Scroll.top();
+      
+      var onError = function() {
+        $scope.hideMessage();
+        $scope.showError("Oh no! Something went wrong...");
+      };
 
       $scope.activate = function(item, fromScroll) {
         Server.activate(item);
@@ -25,20 +30,18 @@
       };
 
       $scope.markRefresh = function() {
-        $scope.message = "Marking items as read, refreshing...";
+        $scope.showMessage("Marking items as read, refreshing...");
         Server.markAll().then(function() {
-          $scope.message = "";
           Scroll.top();
-        });
+        }, onError);
       };
 
       $scope.refresh = function() {
-        $scope.message = "Refreshing feeds...";
+        $scope.showMessage("Refreshing feeds...");
         Server.refresh().then(function() {
-          $scope.message = "";
           Scroll.top();
-        });
-      }
+        }, onError);
+      };
 
       $scope.next = function() {
         var item = Server.next();
