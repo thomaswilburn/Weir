@@ -34,7 +34,7 @@ Notes (vaguely ordered):
   * add "open current in new tab" button on mobile
   * add close button to hide activated items
   * Allow non-activation of top item, keyboard shouldn't freak out.
-  * On paging past the end, remove items so that I don't keep hammering space
+  * On paging past the end, remove items during refresh so that I don't keep hammering space
   
  - Add OPML export, now that I've got my feed list down
 
@@ -58,6 +58,7 @@ Notes (vaguely ordered):
  - Weir.Sanitize improvements
   * Allow Weir.Sanitize to resize elements if they would be too big (scale movies, etc)
   * Add rudimentary ad/social blocking
+  * Figure out why Dinosaur Comics isn't working correctly.
 
  - Add to options service
   * key map - character/code to verb, then teach Stream to understand those
