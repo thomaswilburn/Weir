@@ -14,7 +14,7 @@ var setDB = function(db) {
   database = db;
 };
 
-var feedsPerFetch = 4;
+var feedsPerFetch = cfg.feedsPerFetch || 4;
 
 var fetch = function() {
   if (Hound.busy) return;
