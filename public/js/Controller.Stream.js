@@ -30,8 +30,9 @@
       };
 
       $scope.markRefresh = function() {
-        $scope.showMessage("Marking items as read, refreshing...");
+        $scope.showMessage("Marking items as read, refreshing...", 0);
         Server.markAll().then(function() {
+          $scope.hideMessage();
           Scroll.top();
         }, onError);
       };
@@ -39,6 +40,7 @@
       $scope.refresh = function() {
         $scope.showMessage("Refreshing feeds...");
         Server.refresh().then(function() {
+          $scope.hideMessage();
           Scroll.top();
         }, onError);
       };

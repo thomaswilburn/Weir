@@ -18,7 +18,8 @@
         total: 0,
         cursor: 0,
         currentItem: null,
-        updatedAt: new Date()
+        updatedAt: new Date(),
+        loading: false
       };
 
       var updateStatus = function(data) {
@@ -59,21 +60,25 @@
           var ids = stream.items.map(function(item) {
             return item.id;
           });
+          stream.loading = true;
           var promise = ask({
             url: "stream/markRefresh",
             params: {
               items: ids.join(",")
             }
           }).then(function(data) {
+            stream.loading = false;
             updateItems(data);
             updateStatus(data);
           });
           return promise;
         },
         refresh: function() {
+          stream.loading = true;
           var promise = ask({
             url: "stream/unread"
           }).then(function(data) {
+            stream.loading = false;
             updateStatus(data);
             updateItems(data);
           });

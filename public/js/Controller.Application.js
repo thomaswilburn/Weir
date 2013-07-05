@@ -45,7 +45,6 @@
         34 : "pagedown"
       }
 
-      //Should really move this to its own service...      
       angular.element(document).bind("keypress keydown", function(e) {
 
         if (["INPUT", "TEXTAREA"].indexOf(e.target.tagName) > -1) return;
@@ -89,10 +88,13 @@
         var show = "show" + property[0].toUpperCase() + property.substr(1);
         var hide = "hide" + property[0].toUpperCase() + property.substr(1);
         $scope[show] = function(message, duration) {
-          duration = duration || 3;
+          if (typeof duration == "undefined") {
+            duration = 5;
+          }
           if (timeout) clearTimeout(timeout);
           $scope[property] = message;
-          timeout = setTimeout(function() {
+          // duration 0 means keep message until hidden
+          if (duration) timeout = setTimeout(function() {
             $scope[property] = "";
             $scope.$apply();
             timeout = null;
