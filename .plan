@@ -34,14 +34,12 @@ Notes (vaguely ordered):
   * add "open current in new tab" button on mobile
   * add close button to hide activated items
   * Allow non-activation of top item, keyboard shouldn't freak out.
-  * On paging past the end, remove items during refresh so that I don't keep hammering space
+  * Add 3D transformations to make things interesting once Angular.animate lands in stable
   
  - Add OPML export, now that I've got my feed list down
 
  - DisplayStack improvements
-  * Real error/status messages
   * DisplayStack.dialog(), DisplayStack.confirm()
-  * Hook ask(), Stream, Feed errors and confirmations into DisplayStack
 
  - Feed management improvements
   * Enable sorting of feeds by result, name, tag (eventually)
@@ -56,16 +54,12 @@ Notes (vaguely ordered):
  - Add ability to write server cfg.json with .save();
 
  - Weir.Sanitize improvements
-  * Allow Weir.Sanitize to resize elements if they would be too big (scale movies, etc)
   * Add rudimentary ad/social blocking
-  * Figure out why Dinosaur Comics isn't working correctly.
 
  - Add to options service
   * key map - character/code to verb, then teach Stream to understand those
   * list length
   * buttons on sidebar
-
- - Add tags
 
  - Configure router to support REST params
  

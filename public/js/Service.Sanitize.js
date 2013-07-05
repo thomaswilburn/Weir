@@ -36,6 +36,7 @@
       prepare: function(unclean, url) {
         var doc = document.implementation.createHTMLDocument("");
         doc.body.innerHTML = unclean;
+        var streamWidth = document.querySelector(".stream-container").offsetWidth;
 
         //remove trailing slashes
         url = url.replace(/\/$/, "");
@@ -56,6 +57,22 @@
         var scripts = doc.querySelectorAll("script");
         each.call(scripts, function(script) {
           script.parentElement.removeChild(script);
+        });
+
+        //Remove oversized widths (Dinosaur Comics, weird embeds)
+        var oversized = doc.querySelectorAll("[width]");
+        each.call(oversized, function(element) {
+          var width = element.getAttribute("width") * 1;
+          if (width > streamWidth) {
+            var height = element.getAttribute("height") * 1;
+            if (height) {
+              //scale
+              element.setAttribute("height", height * (streamWidth / width));
+              element.setAttribute("width", streamWidth);
+            } else {
+              element.removeAttribute("width");
+            }
+          }
         });
 
         //process images (defer loading, remove dimensions for CSS reasons)
