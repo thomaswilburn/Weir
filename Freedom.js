@@ -1,6 +1,7 @@
 var xml2js = require("xml2js");
 var server = require("./Server");
-var pg = require("./Database").raw;
+var db = require("./Database");
+var pg = db.raw;
 var Hound = require("./Hound");
 
 var add = function(outline, tags) {
@@ -41,5 +42,36 @@ server.route("/meta/import/opml", function(req) {
     Hound.fetch();
     
     req.reply({status: "Import in progress"});
+  });
+});
+
+server.route("/meta/export/opml", function(req) {
+  //this is a terrible way to handle things, should either template or add a real XML builder
+  var output = "";
+  output += '<?xml version="1.0" encoding="UTF-8"?>';
+  output += '<opml version="1.0">';
+  output += '<head><title>Subscriptions from Weir</title></head>';
+  output += '<body>';
+  db.getFeeds(function(err, feeds) {
+    for (var i = 0; i < feeds.length; i++) {
+      var feed = feeds[i];
+      var escape = function(str) {
+        return str
+          .replace(/"/g, "&quot;")
+          .replace(/&/g, "&amp;")
+          .replace(/'/g, "&apos;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;");
+      };
+      output += '<outline text="' + escape(feed.title) + '" type="rss" xmlUrl="' + escape(feed.url) + '" htmlUrl="' + escape(feed.site_url) + '"/>\n';
+    }
+    output += '</body>';
+    output += '</opml>';
+    req.replyDirect({
+      headers: {
+        "Content-Type": "application/xml"
+      },
+      body: output
+    });
   });
 });

@@ -36,8 +36,6 @@ Notes (vaguely ordered):
   * Allow non-activation of top item, keyboard shouldn't freak out.
   * Add 3D transformations to make things interesting once Angular.animate lands in stable
   
- - Add OPML export, now that I've got my feed list down
-
  - DisplayStack improvements
   * DisplayStack.dialog(), DisplayStack.confirm()
 

@@ -221,6 +221,15 @@ Server.http.on("request", function(incoming, response) {
     reply: function(data) {
       respond(response, data);
     },
+    replyDirect: function(args) {
+      args.headers = args.headers || {};
+      for (var key in args.headers) {
+        response.setHeader(key, args.headers[key]);
+      }
+      response.writeHead(200);
+      response.write(args.body);
+      response.end();
+    },
     setHeader: response.setHeader.bind(response)
   };
   incoming.on("data", function(bytes) {
