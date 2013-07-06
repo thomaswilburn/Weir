@@ -31,7 +31,7 @@ var iterate = function(node, tags) {
   }
 };
 
-server.route("/meta/import/opml", function(req) {
+server.route("/meta/import", function(req) {
   xml2js.parseString(req.body, function(err, data) {
     if (err) {
       return req.reply({error: "Couldn't parse XML"});
@@ -45,7 +45,7 @@ server.route("/meta/import/opml", function(req) {
   });
 });
 
-server.route("/meta/export/opml", function(req) {
+server.route("/meta/export", function(req) {
   //this is a terrible way to handle things, should either template or add a real XML builder
   var output = "";
   output += '<?xml version="1.0" encoding="UTF-8"?>';

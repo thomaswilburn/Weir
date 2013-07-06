@@ -9,16 +9,6 @@
     "Weir.DisplayStack",
     "Weir.Events",
     function($scope, Settings, Request, Stack, Events) {
-      var fileInput = document.querySelector(".inputOPML");
-      fileInput.addEventListener("change", function() {
-        var file = fileInput.files[0];
-        if (file) {
-          var xhr = new XMLHttpRequest();
-          xhr.onload = function() { Stack.pop(); $scope.refresh(); };
-          xhr.open("POST", "meta/import/opml");
-          xhr.send(file);
-        }
-      });
       
       Events.on("stack:activate", function(e) {
         if (e.panel !== "settings") {

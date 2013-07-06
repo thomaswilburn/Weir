@@ -43,13 +43,6 @@
           <label class="inline">Activate First Item</label>
         </div>
 
-        <div class="opml">
-          <label>Import OPML</label>
-          <p>
-            OPML is a standard form of feed list, which you can use to import your subscriptions from another RSS reader. If you've been using Google Reader, visit <a target="_blank" href="https://www.google.com/takeout/">Takeout</a> to get a subscriptions.xml file, then upload it here. Once imported, subscriptions will take a little while to fully load.
-          <input type="file" class="inputOPML">
-        </div>
-        
         <div class="totp" ng-show="secret">
           <label>Security</label>
           <p>
@@ -138,30 +131,45 @@
       <div ng-controller="Weir.FeedController">
         <h2>Manage Feeds</h2>
         
-        <p>
-          To subscribe to a feed, enter the RSS URL in the box below and press subscribe. The feed contents will not pulled as part of the next fetch.
+        <div class="opml" ng-show="batchMode">
+          <a href="javascript:;" ng-click="batchMode = false">Switch to Current Subscriptions</a>
         
-        <div>
-          <input ng-model="subscribeURL">
-          <button class="subscribe-button" href="javascript:;" ng-click="subscribe()">Subscribe</button>
+          <label>Import OPML</label>
+          <p>
+            OPML is a standard form of feed list, which you can use to import your subscriptions from another RSS reader. If you've been using Google Reader, visit <a target="_blank" href="https://www.google.com/takeout/">Takeout</a> to get a subscriptions.xml file, then upload it here. Once imported, subscriptions will be pulled in the next fetch cycle.
+          <input type="file" class="inputOPML">
+          <p>
+            You can get an OPML export of feeds currently loaded into Weir by clicking <a target="_blank" href="meta/export">this link</a>
         </div>
-
-        <label>Current Subscriptions</label>
-        <p ng-show="loading">Loading...</p>
         
-        <table ng-hide="loading" class="feed-list">
-          <tr>
-            <th> Title
-            <th> Health
-            <th>
-          <tr ng-repeat="feed in feeds | orderBy:'title'" class="feed">
-            <td> <a title="{{feed.url}}">{{feed.title}}</a>
-            <td class="health-{{feed.health}}"> {{feed.health}}
-            <td>
-              <a href="javascript:;" class="unsubscribe" ng-click="unsubscribe(feed)">&times;</a>
-        </table>
-        <div class="verbs">
-          <button ng-click="stack.pop()">Done</button>
+        <div class="individual" ng-show="!batchMode">
+          <a href="javascript:;" ng-click="batchMode = true">Switch to OPML Import/Export</a>
+        
+          <label>Current Subscriptions</label>
+          <p>
+            To subscribe to a feed, enter the RSS URL in the box below and press subscribe. The feed contents will not pulled as part of the next fetch.
+        
+          <div>
+            <input ng-model="subscribeURL">
+            <button class="subscribe-button" href="javascript:;" ng-click="subscribe()">Subscribe</button>
+          </div>
+
+          <p ng-show="loading">Loading...</p>
+        
+          <table ng-hide="loading" class="feed-list">
+            <tr>
+              <th> Title
+              <th> Health
+              <th>
+            <tr ng-repeat="feed in feeds | orderBy:'title'" class="feed">
+              <td> <a title="{{feed.url}}">{{feed.title}}</a>
+              <td class="health-{{feed.health}}"> {{feed.health}}
+              <td>
+                <a href="javascript:;" class="unsubscribe" ng-click="unsubscribe(feed)">&times;</a>
+          </table>
+          <div class="verbs">
+            <button ng-click="stack.pop()">Done</button>
+          </div>
         </div>
       </div>
     </div>

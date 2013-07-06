@@ -9,6 +9,7 @@
     function($scope, Request, Events) {
     
       $scope.feeds = [];
+      $scope.batchMode = false;
       
       var results = {
         200: "ok",
@@ -65,6 +66,18 @@
           });
         });
       };
+      
+      var fileInput = document.querySelector(".inputOPML");
+      fileInput.addEventListener("change", function() {
+        var file = fileInput.files[0];
+        if (file) {
+          var xhr = new XMLHttpRequest();
+          xhr.onload = function() { Stack.pop(); $scope.refresh(); };
+          xhr.open("POST", "meta/import");
+          xhr.send(file);
+        }
+      });
+
     
     }]);
 
