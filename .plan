@@ -41,7 +41,6 @@ Notes (vaguely ordered):
 
  - Feed management improvements
   * Enable sorting of feeds by result, name, tag (eventually)
-  * Add current story count to feeds, display
 
  - Logging:
   * Add different log levels and tagging
