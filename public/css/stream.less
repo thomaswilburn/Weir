@@ -14,6 +14,13 @@
 
 }
 
+.no-items {
+  .force-scroll {
+    position: absolute;
+    bottom: -20px;
+  }
+}
+
 //inner container
 .stream {
   list-style-type: none;
@@ -72,7 +79,12 @@
     width: 99%;
     overflow: hidden;
     font-size: 18px;
-    font-weight: normal;
+    font-weight: normal;    
+  }
+  
+  .active h2 {
+    overflow: normal;
+    text-overflow: normal;
   }
   
   h3 {
