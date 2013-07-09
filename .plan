@@ -45,7 +45,6 @@ Notes (vaguely ordered):
 
  - Logging:
   * Add different log levels and tagging
-  * Feed log to file in addition to stdOut (allows running as job)
 
  - Remove CSS compilation from the Server, consider other handlers
 
