@@ -15,10 +15,17 @@
 }
 
 .no-items {
-  .force-scroll {
+
+  &:after {
+    content: ".";
+    display: block;
     position: absolute;
     bottom: -20px;
+    visibility: hidden;
+    color: transparent;
+    font-size: 1px;
   }
+
 }
 
 //inner container
