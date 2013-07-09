@@ -158,12 +158,16 @@
         
           <table ng-hide="loading" class="feed-list">
             <tr>
+              <th> 
               <th> Title
               <th> Health
+              <th> Count
               <th>
             <tr ng-repeat="feed in feeds | orderBy:'title'" class="feed">
+              <td> <a href="{{feed.site_url}}" title="View Site" target="_blank">&raquo;</a>
               <td> <a title="{{feed.url}}">{{feed.title}}</a>
               <td class="health-{{feed.health}}"> {{feed.health}}
+              <td class="count">{{feed.count || 0}}
               <td>
                 <a href="javascript:;" class="unsubscribe" ng-click="unsubscribe(feed)">&times;</a>
           </table>

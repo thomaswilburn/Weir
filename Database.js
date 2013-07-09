@@ -37,6 +37,16 @@ var db = {
       if (c) c(err, data ? data.rows : []);
     });
   },
+  
+  //get feeds with extra data (unread count, etc)
+  getFeedsDetailed: function(c) {
+    var q = "select f.id, f.title, f.url, f.site_url, f.last_result, f.pulled, s.count " +
+      "from feeds as f left outer join " +
+      "(select count(id), feed from stories group by feed) as s on s.feed = f.id;";
+    psql.query(q, function(err, data) {
+      c(err, data ? data.rows : []);
+    });
+  },
 
   //get a single feed item
   getFeed: function(id, c) {

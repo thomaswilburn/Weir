@@ -3,7 +3,7 @@ var db = require("./Database");
 var Hound = require("./Hound");
 
 server.route("/feeds", function(req) {
-  db.getFeeds(function(err, rows) {
+  db.getFeedsDetailed(function(err, rows) {
     if (err) {
       return req.reply({ feeds: [] });
     }
