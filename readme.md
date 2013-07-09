@@ -33,7 +33,6 @@ At this stage, Weir is sufficient, but not fully fleshed out. There are still pl
 the following features:
 
 * Multiple database support
-* Display options for local machines
 * Visual coloring based on tags
 
 Also, a number of the features are intentionally built with the minimum degree of 
@@ -45,17 +44,11 @@ model is a wasteland lacking named groups and I haven't gotten around to copying
 routing code from Grue.
 * The Database layer executes SQL directly, instead of going through a builder like it 
 probably should.
-* The only status messages are the number of unread items. There are some primitive 
-messages, but useful notes like Hound status or errors are not exposed yet
-* The Hound is not very efficient with memory, and has a pretty brutish method of dividing 
-feeds into smaller chunks instead of making all requests simultaneously.
-* The database tables themselves are almost certainly missing information we'd like to 
-capture, or give things names that don't match good RSS practice.
 * There is no migration plan, because Weir stores almost nothing that's not ephemeral or 
 able to be recreated given fifteen minutes and a decent Internet connection.
 * Everything gets hosted at the root of the server, using a user-selected port to keep from 
 colliding with regular web services. This is because I personally run all my sites from a 
-single VM, but it's not exactly scalable.
+single VM. You may need to reverse-proxy Weir in production.
 
 Requirements
 ------------

@@ -29,6 +29,8 @@ Main - contains primary app seed, random directives
 
 Notes (vaguely ordered):
 
+ - Convert components to directives with templates to make index.html a bit more readable
+
  - UX
   * make all buttons bigger on mobile
   * add "open current in new tab" button on mobile
@@ -41,13 +43,14 @@ Notes (vaguely ordered):
 
  - Feed management improvements
   * Enable sorting of feeds by result, name, tag (eventually)
-  * Be able to set update frequencies
+  * Be able to set update frequencies per feed
 
  - Logging:
   * Add different log levels and tagging
   * Feed log to file in addition to stdOut (allows running as job)
 
  - Remove CSS compilation from the Server, consider other handlers
+  * maybe just move handlers into a separate module.
 
  - Add ability to write server cfg.json with .save();
 
