@@ -29,13 +29,9 @@ Main - contains primary app seed, random directives
 
 Notes (vaguely ordered):
 
- - Convert components to directives with templates to make index.html a bit more readable
-
  - UX
   * make all buttons bigger on mobile
-  * add "open current in new tab" button on mobile
   * add close button to hide activated items
-  * Allow non-activation of top item, keyboard shouldn't freak out.
   * Add 3D transformations to make things interesting once Angular.animate lands in stable
   * Consider moving CSS to something like TopCoat for a more polished look
   
@@ -58,7 +54,7 @@ Notes (vaguely ordered):
   * Add rudimentary ad/social blocking
 
  - Add to options service
-  * key map - character/code to verb, then teach Stream to understand those
+  * key map - character/code to verb, will need to work out UI for that
   * list length
   * buttons on sidebar
 

@@ -60,6 +60,11 @@
           Scroll.toID(item.id);
         }
       }
+
+      $scope.openCurrent = function() {
+        if (!Server.stream.currentItem || !Server.stream.currentItem.url) return;
+        window.open(Server.stream.currentItem.url, "_blank");
+      }
       
       Events.on("refresh", function() {
         Scroll.top();
@@ -69,6 +74,7 @@
       Events.on("key:previous", $scope.previous);
       Events.on("key:refresh", $scope.refresh);
       Events.on("key:markRefresh", $scope.markRefresh);
+      Events.on("key:open", $scope.openCurrent);
 
     }]);
 

@@ -42,7 +42,8 @@
         "r": "refresh",
         ".": "refresh",
         " ": "pagedown",
-        34 : "pagedown"
+        34 : "pagedown",
+        13 : "open"
       }
 
       angular.element(document).bind("keypress keydown", function(e) {

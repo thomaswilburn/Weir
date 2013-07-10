@@ -35,7 +35,7 @@
           item.content = Sanitize.prepare(item.content, item.site);
         });
         stream.items = data.items;
-        stream.cursor = 0;
+        stream.cursor = null;
         if (Settings.get().stream.startActive && stream.items.length) {
           facade.activate(stream.items[0]);
         }
@@ -108,6 +108,7 @@
           return item;
         },
         next: function() {
+          if (stream.cursor === null) stream.cursor = -1;
           var index = stream.cursor + 1;
           var item = stream.items[index];
           if (item) {
