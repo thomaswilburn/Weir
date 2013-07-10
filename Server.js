@@ -20,7 +20,6 @@ var fs = require("fs");
 var path = require("path");
 var Manos = require("./Manos");
 var Security = require("./Security");
-var handlers = require("./ServerHandlers")
 
 var routes = [];
 var pub = "./public/";
@@ -106,7 +105,7 @@ var makeRequest = function(request, response) {
       response.writeHead(200);
       response.write(args.body);
       response.end();
-    }
+    },
     setHeader: response.setHeader.bind(response)
   };
   return request;

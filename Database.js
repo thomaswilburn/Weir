@@ -163,7 +163,10 @@ var db = {
   reapStories: function(c) {
     var q = "DELETE FROM stories WHERE published IS NOT null AND published < now() - INTERVAL '$1 DAYS'";
     psql.query(q, [cfg.expirationDate || 30], function(err, data) {
-      if (c) c(err, data && data.rows);
+      if (data && data.rowCount) {
+        console.log("Deleted " + data.rowCount + " old stories.");
+      }
+      if (c) c(err, data && data.rowCount);
     });
   },
   
@@ -190,7 +193,7 @@ var db = {
   reapSessions: function(c) {
     var q = "DELETE FROM auth WHERE expires < now()";
     psql.query(q, function(err, data) {
-      if (c) c(err, data && data.rows);
+      if (c) c(err, data && data.rowCount);
     });
   }
   
