@@ -60,11 +60,18 @@
         });
 
         //Remove oversized widths (Dinosaur Comics, weird embeds)
-        var oversized = doc.querySelectorAll("[width]");
+        var oversized = doc.querySelectorAll("[width],[style]");
         each.call(oversized, function(element) {
-          var width = element.getAttribute("width") * 1;
+          var width = element.getAttribute("width") || element.style.width;
+          if (typeof width == "string") {
+            width = width.replace(/[a-z]/gi, "") * 1;
+          }
+          if (!width) return;
           if (width > streamWidth) {
-            var height = element.getAttribute("height") * 1;
+            var height = element.getAttribute("height") || element.style.height;
+            if (typeof height == "string") {
+              height = height.replace(/[a-z]/gi, "") * 1;
+            }
             if (height) {
               //scale
               element.setAttribute("height", height * (streamWidth / width));
@@ -72,6 +79,8 @@
             } else {
               element.removeAttribute("width");
             }
+            element.style.width = null;
+            element.style.height = null;
           }
         });
 
