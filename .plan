@@ -37,6 +37,7 @@ Notes (vaguely ordered):
   * add close button to hide activated items
   * Allow non-activation of top item, keyboard shouldn't freak out.
   * Add 3D transformations to make things interesting once Angular.animate lands in stable
+  * Consider moving CSS to something like TopCoat for a more polished look
   
  - DisplayStack improvements
   * DisplayStack.dialog(), DisplayStack.confirm()
