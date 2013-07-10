@@ -1,3 +1,16 @@
+/*
+
+Process of handling a request:
+1. Parse the cookies, construct a friendly request object
+2. If this is the checkpoint, provide security status directly and exit
+3. Attempt to match routes
+4. If a route isn't matched, try to serve the file (first from cache, then from disk)
+5. If a route is matched, check security with authorize()
+6. authorize() will return a challenge if insecure, otherwise calls its continuation
+7. The continuation calls the route's function, passing in the request from step 1
+
+*/
+
 var cfg = require("./Config.js");
 var console = require("./DevConsole.js");
 
@@ -5,36 +18,11 @@ var http = require("http");
 var url = require("url");
 var fs = require("fs");
 var path = require("path");
-var less = require("less");
 var Manos = require("./Manos");
 var Security = require("./Security");
+var handlers = require("./ServerHandlers")
 
 var routes = [];
-var files = {
-  has: function(path) {
-    return typeof this[path] == "object";
-  },
-  cache: function(path, type, contents) {
-    if (typeof this[path] == "function") return;
-    if (!contents) {
-      contents = type;
-      type = "text/html";
-    }
-    /*
-      this[path] = {
-        mime: type,
-        data: contents
-      };
-    */
-  },
-  send: function(path, req) {
-    var cached = this[path];
-    req.setHeader("Content-Type", cached.mime);
-    req.writeHead(200);
-    req.write(cached.data);
-    req.end();
-  }
-};
 var pub = "./public/";
 
 var mimeTypes = {
@@ -45,53 +33,6 @@ var mimeTypes = {
   ".ico": "image/x-icon"
 };
 
-var lessParser = new less.Parser({
-  paths: ["./public/css"]
-});
-
-var handlers = {
-  //handler to build LESS - probably not necessary now that we have a Gruntfile
-  ".css": function(pathname, req) {
-    req.setHeader("Content-Type", mimeTypes[".css"]);
-    //skip if LESS building is turned off
-    //should probably change to only build if CSS doesn't exist
-    if (!cfg.build.less) {
-      serveFile(pathname, req);
-      return;
-    }
-    var filePath = path.join(pub, pathname);
-    var lessPath = filePath.replace(/css$/, "less");
-    fs.exists(lessPath, function(does) {
-      if (does) {
-        Manos.chain(
-          function(c) {
-            fs.readFile(lessPath, {encoding: "utf8"}, c);
-          },
-          function(err, data, c) {
-            lessParser.parse(data, c);
-          },
-          function(err, tree) {
-            if (err) {
-              req.write("Error parsing LESS");
-            } else {
-              try {
-                var css = tree.toCSS();
-              } catch (e) {
-                css = e.message;
-              }
-              req.write(css);
-              files.cache(css);
-            }
-            req.end();
-          }
-        );
-      } else {
-        serveFile(filePath, req);
-      }
-    });
-  }
-}
-
 var respond = function(request, data) {
   var json = JSON.stringify(data);
   request.setHeader("Content-Type", "application/json");
@@ -101,7 +42,7 @@ var respond = function(request, data) {
   request.end();
 };
 
-var serveFile = function(file, req) {
+var serve = function(file, req) {
   file = path.join(pub, file);
   if (file.slice(-1) == "/") file += "index.html";
 
@@ -126,20 +67,6 @@ var serveFile = function(file, req) {
   });
 };
 
-var serve = function(pathname, req) {
-  if (files.has(pathname)) {
-    files.send(pathname, req);
-  }
-  
-  //handle special extension processing
-  var ext = path.extname(pathname);
-  if (handlers[ext]) {
-    return handlers[ext](pathname, req);
-  }
-  
-  serveFile(pathname, req);
-};
-
 var Server = {
   http: http.createServer(),
   route: function(pattern, callback) {
@@ -159,6 +86,30 @@ var parseCookies = function(request) {
     cookie[pair[0]] = pair[1];
   }
   request.cookie = cookie;
+};
+
+var makeRequest = function(request, response) {
+  var parsed = url.parse(request.url, true, true);
+  var request = {
+    url: parsed.pathname,
+    cookies: request.cookie,
+    params: parsed.query,
+    body: "",
+    reply: function(data) {
+      respond(response, data);
+    },
+    replyDirect: function(args) {
+      args.headers = args.headers || {};
+      for (var key in args.headers) {
+        response.setHeader(key, args.headers[key]);
+      }
+      response.writeHead(200);
+      response.write(args.body);
+      response.end();
+    }
+    setHeader: response.setHeader.bind(response)
+  };
+  return request;
 };
 
 //checkpoint() is a pseudo-route that's immune to authorization
@@ -213,37 +164,19 @@ var authorize = function(req, response, c) {
 //process requests, checking for routes before serving static files
 Server.http.on("request", function(incoming, response) {
   parseCookies(incoming);
-  var parsed = url.parse(incoming.url, true, true);
-  var request = {
-    url: parsed.pathname,
-    params: parsed.query,
-    body: "",
-    reply: function(data) {
-      respond(response, data);
-    },
-    replyDirect: function(args) {
-      args.headers = args.headers || {};
-      for (var key in args.headers) {
-        response.setHeader(key, args.headers[key]);
-      }
-      response.writeHead(200);
-      response.write(args.body);
-      response.end();
-    },
-    setHeader: response.setHeader.bind(response)
-  };
+  var request = makeRequest(incoming, response);
   incoming.on("data", function(bytes) {
     request.body += bytes;
   });
   incoming.on("end", function() {
     //special case for the checkpoint
-    if (parsed.pathname == "/checkpoint") {
+    if (request.url == "/checkpoint") {
       return checkpoint(request);
     }
     //check for matching routes
     for (var i = 0; i < routes.length; i++) {
       var route = routes[i];
-      if (route.p.test(parsed.pathname)) {
+      if (route.p.test(request.url)) {
         authorize(incoming, response, function() {
           //if auth passes, call the route function
           route.c(request);
@@ -252,7 +185,7 @@ Server.http.on("request", function(incoming, response) {
       }
     }
     //static assets do not require auth
-    serve(parsed.pathname, response);
+    serve(request.url, response);
   });
   
 });
