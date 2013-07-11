@@ -7,7 +7,8 @@
     "Weir.DisplayStack",
     "Weir.Events",
     "Weir.Server",
-    function($scope, Stack, Events, Server) {
+    "Weir.LocalSettings",
+    function($scope, Stack, Events, Server, Settings) {
 
       Stack.push("stream");
       $scope.stack = Stack;
@@ -15,6 +16,10 @@
       var lastCount = 0;
 
       var updateStatus = function() {
+        var enabled = Settings.get().application.flash;
+        if (!enabled) {
+          return;
+        }
         var count = Server.stream.unread;
         var favicon = document.querySelector("head link[rel=icon]");
         if (count != lastCount) {

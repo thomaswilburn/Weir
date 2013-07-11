@@ -109,7 +109,7 @@ var fetch = function() {
               unzipper.pipe(parser);
               r.pipe(unzipper);
               return;
-            }            
+            }
 
             r.pipe(parser);
 

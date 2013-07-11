@@ -23,6 +23,11 @@
         startActive: form == "large",
         length: 10,
         autoRefresh: form == "large" ? 2 : 0
+      },
+      application: {
+        flash: true
+        //key mapping
+        //overall visual theme?
       }
     };
     
