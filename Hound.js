@@ -5,6 +5,8 @@ var EventEmitter = require('events').EventEmitter;
 var cfg = require("./Config");
 var Manos = require("./Manos");
 var console = require("./DevConsole");
+var zlib = require("zlib");
+var stream = require("stream");
 
 var noop = function() {};
 
@@ -52,14 +54,16 @@ var fetch = function() {
         
           var headers = {
             "If-Modified-Since": (row.pulled && row.pulled.toUTCString()) || new Date(0).toUTCString(),
-            "Connection": "close"
+            "Connection": "close",
+            "Accept-Encoding": "gzip"
           };
        
           var r = request({
             url: row.url,
             headers: headers,
             jar: false,
-            timeout: cfg.requestTimeout * 1000 || 30
+            timeout: cfg.requestTimeout * 1000 || 30,
+            encoding: null
           });
           
           r.on("error", function(err) {
@@ -97,6 +101,15 @@ var fetch = function() {
               database.setFeedResult(row.id, 0);
               c();
             });
+
+            var encoding = response.headers["content-encoding"];
+            if (encoding && encoding.indexOf("gzip") > -1) {
+            
+              var unzipper = zlib.createGunzip();
+              unzipper.pipe(parser);
+              r.pipe(unzipper);
+              return;
+            }            
 
             r.pipe(parser);
 
