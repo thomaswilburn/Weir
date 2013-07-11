@@ -14,6 +14,7 @@ Process of handling a request:
 var cfg = require("./Config.js");
 var console = require("./DevConsole.js");
 
+var zlib = require("zlib");
 var http = require("http");
 var url = require("url");
 var fs = require("fs");
@@ -35,10 +36,13 @@ var mimeTypes = {
 var respond = function(request, data) {
   var json = JSON.stringify(data);
   request.setHeader("Content-Type", "application/json");
+  request.setHeader("Content-Encoding", "gzip");
   request.setHeader("Access-Control-Allow-Origin", "*");
   request.writeHead(200);
-  request.write(json);
-  request.end();
+  zlib.gzip(json, function(err, zipped) {
+    request.write(zipped);
+    request.end();
+  });
 };
 
 var serve = function(file, req) {
@@ -54,9 +58,12 @@ var serve = function(file, req) {
         } else {
           var ext = path.extname(file);
           req.setHeader("Content-Type", mimeTypes[ext] || "text/html");
+          req.setHeader("Content-Encoding", "gzip");
           req.writeHead(200);
-          req.write(data);
-          req.end();
+          zlib.gzip(data, function(err, zipped) {
+            req.write(zipped);
+            req.end();
+          });
         }
       });
     } else {
