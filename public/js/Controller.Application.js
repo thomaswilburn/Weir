@@ -17,13 +17,12 @@
 
       var updateStatus = function() {
         var enabled = Settings.get().application.flash;
-        if (!enabled) {
-          return;
-        }
         var count = Server.stream.unread;
         var favicon = document.querySelector("head link[rel=icon]");
         if (count != lastCount) {
-          document.title = "Weir " + (count ? "(" + count + ")" : "");
+          if (enabled) {
+            document.title = "Weir " + (count ? "(" + count + ")" : "");
+          }
           favicon.parentElement.removeChild(favicon);
           favicon = document.createElement("link");
           favicon.rel = "icon";
