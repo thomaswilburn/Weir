@@ -44,6 +44,7 @@ Notes (vaguely ordered):
 
  - Logging:
   * Add different log levels and tagging
+  * Teach Hound to log the number of stories added per fetch (from all feeds)
 
  - Remove CSS compilation from the Server, consider other handlers
   * maybe just move handlers into a separate module.
