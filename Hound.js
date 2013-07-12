@@ -25,10 +25,6 @@ var fetch = function() {
   console.log("Starting fetch...");
   database.getFeeds(function(err, rows) {
     //awkward
-    if (rows.length == 0) {
-      Hound.busy = false;
-      return;
-    }
 
     var done = function() {
       Hound.busy = false;
@@ -37,6 +33,11 @@ var fetch = function() {
       var interval = (cfg.updateInterval || 15) * 60 * 1000;
       setTimeout(fetch, interval);
     }
+    
+    if (rows.length == 0) {
+      return done();
+    }
+
 
     var pull = function() {
 
