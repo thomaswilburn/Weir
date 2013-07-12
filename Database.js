@@ -161,7 +161,7 @@ var db = {
   
   //cull old database items
   reapStories: function(c) {
-    var q = "DELETE FROM stories WHERE published IS NOT null AND published < now() - $1::INTERVAL;";
+    var q = "DELETE FROM stories WHERE published IS NOT null AND published < now() - (CAST $1 AS INTERVAL);";
     psql.query(q, [cfg.expirationDate || 30 + " days"], function(err, data) {
       if (data && data.rowCount) {
         console.log("Deleted " + data.rowCount + " old stories.");
