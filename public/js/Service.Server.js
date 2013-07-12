@@ -64,7 +64,8 @@
           var promise = ask({
             url: "stream/markRefresh",
             params: {
-              items: ids.join(",")
+              items: ids.join(","),
+              limit: Settings.get().stream.length
             }
           }).then(function(data) {
             stream.loading = false;
@@ -76,7 +77,10 @@
         refresh: function() {
           stream.loading = true;
           var promise = ask({
-            url: "stream/unread"
+            url: "stream/unread",
+            params: {
+              limit: Settings.get().stream.length
+            }
           }).then(function(data) {
             stream.loading = false;
             updateStatus(data);

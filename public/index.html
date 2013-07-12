@@ -35,12 +35,17 @@
           <label>Client Prefs</label>
           
           <input type="text" ng-model="settings.stream.autoRefresh" class="inline">
-          <label class="inline">Status Refresh Interval (in minutes)</label>
+          <label class="inline">Status refresh interval (in minutes)</label>
 
           <br>
           
+          <input type="text" ng-model="settings.stream.length" class="inline">
+          <label class="inline">Items per page</label>
+          
+          <br>
+          
           <input type="checkbox" ng-model="settings.stream.startActive" class="inline">
-          <label class="inline">Activate First Item</label>
+          <label class="inline">Activate first item automatically</label>
           
           <br>
           

@@ -55,7 +55,6 @@ Notes (vaguely ordered):
 
  - Add to options service
   * key map - character/code to verb, will need to work out UI for that
-  * list length
   * buttons on sidebar
 
  - Configure router to support REST params

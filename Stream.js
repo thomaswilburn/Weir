@@ -1,6 +1,7 @@
 var server = require("./Server");
 var db = require("./Database");
 var Manos = require("./Manos");
+var cfg = require("./Config");
 
 //load import/export routes
 require("./Freedom");
@@ -13,7 +14,13 @@ server.route("/stream/status", function(req) {
 
 server.route("/stream/unread", function(req) {
   Manos.when(
-    db.getUnread,
+    function(done) {
+      var limit = cfg.displayLimit || 15;
+      if (req.params.limit) {
+        limit = req.params.limit;
+      }
+      db.getUnread(limit, done);
+    },
     db.getStatus,
     function(unread, status) {
       if (!unread[0] && !status[0]) {
@@ -54,7 +61,13 @@ server.route("/stream/markRefresh", function(req) {
     });
     items.push(function() {
       Manos.when(
-        db.getUnread,
+        function(done) {
+          var limit = cfg.displayLimit || 15;
+          if (req.params.limit) {
+            limit = req.params.limit;
+          }
+          db.getUnread(limit, done);
+        },
         db.getStatus,
         function(unread, status) {
           req.reply({
