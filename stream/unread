@@ -1,10 +1,50 @@
 {
-  "unread": 0,
-  "total": 4,
-  "items": [{
-    "title": "This space intentionally left blank.",
-    "author": "Thomas",
-    "feed": "Weir Demonstration",
-    "content": "test"
-  }]
+    "unread": 4,
+    "total": 8,
+    "items": [
+        {
+            "title": "Welcome to Weir!",
+            "content": "This is a test page for Weir, allowing you to try out the basic UX for the service. You can mouse through these stories, but also use keyboard navigation, such as 'j' to move forward a story and 'k' to move back. Pressing '.' will mark all stories as read. Since this is a static page, just refresh to get them back.",
+            "id": 1,
+            "feed": "Github Pages: Weir",
+            "url": "http://github.com/thomaswilburn/Weir",
+            "guid": 0,
+            "published": "2013-07-12T20:50:00.000Z",
+            "author": "Thomas Wilburn",
+            "site": "http://thomaswilburn.github.io/Weir"
+        },
+        {
+            "title": "What Weir is",
+            "content": "Weir is a stream-based reader. It does not do tags, or filtering, or social sharing, or extensive archives. It is meant to do one thing, and do it well: collect RSS, combine it into a constant stream of material, and make it easy to read through efficiently.",
+            "id": 1,
+            "feed": "Github Pages: Weir",
+            "url": "http://github.com/thomaswilburn/Weir",
+            "guid": 0,
+            "published": "2013-07-12T20:50:00.000Z",
+            "author": "Thomas Wilburn",
+            "site": "http://thomaswilburn.github.io/Weir"
+        },
+        {
+            "title": "Priorities",
+            "content": "Weir is designed to: <ul> <li> Work well on both mobile and desktop. <li> Be fast and easy to maintain. <li> Run completely self-hosted--no external shutdowns or privacy concerns.",
+            "id": 1,
+            "feed": "Github Pages: Weir",
+            "url": "http://github.com/thomaswilburn/Weir",
+            "guid": 0,
+            "published": "2013-07-12T20:50:00.000Z",
+            "author": "Thomas Wilburn",
+            "site": "http://thomaswilburn.github.io/Weir"
+        },
+        {
+            "title": "Want to know more?",
+            "content": "To find out more, visit the source repo on <a href=\"https://github.com/thomaswilburn/Weir\">GitHub</a> to find the readme, all the GPL-licensed code, and a place to submit bugs and patches.",
+            "id": 1,
+            "feed": "Github Pages: Weir",
+            "url": "http://github.com/thomaswilburn/Weir",
+            "guid": 0,
+            "published": "2013-07-12T20:50:00.000Z",
+            "author": "Thomas Wilburn",
+            "site": "http://thomaswilburn.github.io/Weir"
+        }
+    ]
 }

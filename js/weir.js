@@ -161,3 +161,931 @@ c;g?a.$watch(g,function(a,c){e.$set("value",a);a!==c&&k.removeOption(c);k.addOpt
 identity:ma,isUndefined:w,isDefined:y,isString:B,isFunction:H,isObject:L,isNumber:Qa,isElement:gc,isArray:E,version:jd,isDate:na,lowercase:z,uppercase:la,callbacks:{counter:0}});sa=lc(P);try{sa("ngLocale")}catch(c){sa("ngLocale",[]).provider("$locale",$c)}sa("ng",["ngLocale"],["$provide",function(a){a.provider("$compile",Db).directive({a:kd,input:cc,textarea:cc,form:ld,script:Td,select:Vd,style:Xd,option:Wd,ngBind:wd,ngBindHtmlUnsafe:yd,ngBindTemplate:xd,ngClass:zd,ngClassEven:Bd,ngClassOdd:Ad,ngCsp:Ed,
 ngCloak:Cd,ngController:Dd,ngForm:md,ngHide:Md,ngInclude:Gd,ngInit:Hd,ngNonBindable:Id,ngPluralize:Jd,ngRepeat:Kd,ngShow:Ld,ngSubmit:Fd,ngStyle:Nd,ngSwitch:Od,ngSwitchWhen:Pd,ngSwitchDefault:Qd,ngOptions:Ud,ngView:Sd,ngTransclude:Rd,ngModel:rd,ngList:td,ngChange:sd,required:dc,ngRequired:dc,ngValue:vd}).directive(lb).directive(ec);a.provider({$anchorScroll:uc,$browser:wc,$cacheFactory:xc,$controller:Cc,$document:Dc,$exceptionHandler:Ec,$filter:Rb,$interpolate:Fc,$http:Wc,$httpBackend:Xc,$location:Jc,
 $log:Kc,$parse:Oc,$route:Rc,$routeParams:Sc,$rootScope:Tc,$q:Pc,$sniffer:Uc,$templateCache:yc,$timeout:ad,$window:Vc})}])})(Ya);u(T).ready(function(){jc(T,rb)})})(window,document);angular.element(document).find("head").append('<style type="text/css">@charset "UTF-8";[ng\\:cloak],[ng-cloak],[data-ng-cloak],[x-ng-cloak],.ng-cloak,.x-ng-cloak{display:none;}ng\\:form{display:block;}</style>');
+
+(function() {
+
+  var Weir = angular.module("Weir", []);
+
+  //DIRECTIVES
+  Weir.directive("preventDefault", function() {
+    return {
+      restrict: "A",
+      link: function(scope, element) {
+        element.bind("click", function(e) {
+          if (e.which == 1) e.preventDefault();
+        });
+      }
+    }
+  });
+
+})();
+
+(function() {
+
+  var Weir = angular.module("Weir");
+
+  Weir.controller("Weir.Application", [
+    "$scope",
+    "Weir.DisplayStack",
+    "Weir.Events",
+    "Weir.Server",
+    "Weir.LocalSettings",
+    function($scope, Stack, Events, Server, Settings) {
+
+      Stack.push("stream");
+      $scope.stack = Stack;
+
+      var lastCount = 0;
+
+      var updateStatus = function() {
+        var enabled = Settings.get().application.flash;
+        var count = Server.stream.unread;
+        var favicon = document.querySelector("head link[rel=icon]");
+        if (count != lastCount) {
+          if (enabled) {
+            document.title = "Weir " + (count ? "(" + count + ")" : "");
+          }
+          favicon.parentElement.removeChild(favicon);
+          favicon = document.createElement("link");
+          favicon.rel = "icon";
+          if (count > lastCount) {
+            favicon.href = "/favicon-alert.ico";
+          } else {
+            favicon.href = "/favicon.ico";
+          }
+          document.head.appendChild(favicon);
+        }
+        lastCount = count;
+      };
+
+      Events.on("status", updateStatus);
+      Events.on("activated", updateStatus);
+      
+      var keyMapping = {
+        "j": "next",
+        "k": "previous",
+        "m": "markRefresh",
+        "r": "refresh",
+        ".": "refresh",
+        " ": "pagedown",
+        34 : "pagedown",
+        13 : "open"
+      }
+
+      angular.element(document).bind("keypress keydown", function(e) {
+
+        if (["INPUT", "TEXTAREA"].indexOf(e.target.tagName) > -1) return;
+      
+        var key = e.charCode ? String.fromCharCode(e.charCode).toLowerCase() : e.keyCode;
+        var action = keyMapping[key];
+        
+        if (action == "pagedown") {
+          //take over scrolling, unfortunately
+          var active = document.querySelector("li.active");
+          if (!active) return;
+          e.preventDefault();
+          e.stopImmediatePropagation();
+          var next = active.nextSibling;
+          var current = document.documentElement.scrollTop || document.body.scrollTop;
+          var distance = window.innerHeight * .8;
+          if (next && next.tagName == "LI") {
+            var nextOffset = next.getBoundingClientRect().top;
+            if (nextOffset < distance) {
+              Events.fire("key:next");
+              $scope.$apply();
+              return;
+            }
+          }
+          document.documentElement.scrollTop = document.body.scrollTop = distance + current;
+          if (window.scrollY == current) {
+            Events.fire("key:next");
+            $scope.$apply();
+            return;
+          }
+          $scope.$apply();
+        } else if (action) {
+          Events.fire("key:" + action);
+          $scope.$apply();
+        }
+        
+      });
+
+      var alertFactory = function(property) {
+        var timeout = null;
+        var show = "show" + property[0].toUpperCase() + property.substr(1);
+        var hide = "hide" + property[0].toUpperCase() + property.substr(1);
+        $scope[show] = function(message, duration) {
+          if (typeof duration == "undefined") {
+            duration = 5;
+          }
+          if (timeout) clearTimeout(timeout);
+          $scope[property] = message;
+          // duration 0 means keep message until hidden
+          if (duration) timeout = setTimeout(function() {
+            $scope[property] = "";
+            $scope.$apply();
+            timeout = null;
+          }, duration * 1000);
+        };
+        $scope[hide] = function() {
+          $scope[property] = "";
+        };
+      };
+      
+      alertFactory("message");
+      alertFactory("warning");
+      alertFactory("error");
+      
+    }
+  ]);
+
+})();
+
+
+(function() {
+
+  var Weir = angular.module("Weir");
+  
+  Weir.controller("Weir.FeedController", [
+    "$scope",
+    "Weir.Request",
+    "Weir.Events",
+    function($scope, Request, Events) {
+    
+      $scope.feeds = [];
+      $scope.batchMode = false;
+      
+      var results = {
+        200: "ok",
+        304: "ok",
+        0: "error"
+      }
+      
+      Events.on("stack:activate", function(e) {
+        if (e.panel !== "feeds") return;
+
+        $scope.loading = true;
+        
+        Request.ask({
+          url: "feeds"
+        }).then(function(data) {
+          $scope.loading = false;
+          if (data.feeds) {
+            data.feeds.forEach(function(feed) {
+              feed.health = results[feed.last_result] || "error";
+            });
+            $scope.feeds = data.feeds;
+          }
+        });
+      });
+      
+      $scope.subscribe = function() {
+        Request.ask({
+          url: "feeds/subscribe",
+          params: {
+            url: $scope.subscribeURL
+          }
+        }).then(function(data) {
+          if (data.error) {
+            //yet another place to add error messaging
+            return;
+          }
+          $scope.feeds.push(data);
+        });
+      };
+      
+      $scope.unsubscribe = function(item) {
+        Request.ask({
+          url: "feeds/unsubscribe",
+          params: {
+            id: item.id
+          }
+        }).then(function(data) {
+          if (data.error) {
+            //show error!
+            return;
+          }
+          $scope.feeds = $scope.feeds.filter(function(feed) {
+            return item !== feed;
+          });
+        });
+      };
+      
+      var fileInput = document.querySelector(".inputOPML");
+      fileInput.addEventListener("change", function() {
+        var file = fileInput.files[0];
+        if (file) {
+          var xhr = new XMLHttpRequest();
+          xhr.onload = function() { Stack.pop(); $scope.refresh(); };
+          xhr.open("POST", "meta/import");
+          xhr.send(file);
+        }
+      });
+
+    
+    }]);
+
+})();
+
+(function() {
+
+  var Weir = angular.module("Weir");
+
+  Weir.controller("Weir.SettingsController", [
+    "$scope",
+    "Weir.LocalSettings",
+    "Weir.Request",
+    "Weir.DisplayStack",
+    "Weir.Events",
+    function($scope, Settings, Request, Stack, Events) {
+      
+      Events.on("stack:activate", function(e) {
+        if (e.panel !== "settings") {
+          return;
+        }
+        
+        $scope.settings = Settings.get();
+      });
+
+      $scope.saveSettings = function() {
+        $scope.settings.save();
+        Stack.pop();
+      }
+      
+      var totp = Request.ask({
+        url: "checkpoint"
+      });
+      
+      totp.then(function(data) {
+        $scope.secret = data.secret;
+        $scope.secretQR = data.secretQR;
+      });
+      
+    }]);
+  
+})();
+
+  
+
+(function() {
+
+  var Weir = angular.module("Weir");
+
+  //stream controller handles UI for the stream and status
+  Weir.controller("Weir.StreamController", [
+    "$scope",
+    "Weir.Server",
+    "Weir.Scroll",
+    "Weir.Sanitize",
+    "Weir.Events",
+    function($scope, Server, Scroll, Sanitize, Events) {
+
+      $scope.stream = Server.stream;
+
+      Scroll.top();
+      
+      var onError = function() {
+        $scope.hideMessage();
+        $scope.showError("Oh no! Something went wrong...");
+      };
+
+      $scope.activate = function(item, fromScroll) {
+        Server.activate(item);
+        if (!fromScroll) Scroll.toID(item.id);
+      };
+
+      $scope.mark = function(item) {
+        Server.markAsRead(item);
+      };
+
+      $scope.markRefresh = function() {
+        $scope.showMessage("Marking items as read, refreshing...", 0);
+        Server.markAll().then(function() {
+          $scope.hideMessage();
+          Scroll.top();
+        }, onError);
+      };
+
+      $scope.refresh = function() {
+        $scope.showMessage("Refreshing feeds...");
+        Server.refresh().then(function() {
+          $scope.hideMessage();
+          Scroll.top();
+        }, onError);
+      };
+
+      $scope.next = function() {
+        var item = Server.next();
+        if (item) {
+          Scroll.toID(item.id);
+        } else {
+          return $scope.markRefresh();
+        }
+      };
+
+      $scope.previous = function() {
+        var item = Server.previous();
+        if (item) {
+          Scroll.toID(item.id);
+        }
+      }
+
+      $scope.openCurrent = function() {
+        if (!Server.stream.currentItem || !Server.stream.currentItem.url) return;
+        window.open(Server.stream.currentItem.url, "_blank");
+      }
+      
+      Events.on("refresh", function() {
+        Scroll.top();
+      });
+      
+      Events.on("key:next", $scope.next);
+      Events.on("key:previous", $scope.previous);
+      Events.on("key:refresh", $scope.refresh);
+      Events.on("key:markRefresh", $scope.markRefresh);
+      Events.on("key:open", $scope.openCurrent);
+
+    }]);
+
+})();
+
+
+(function() {
+
+  var Weir = angular.module("Weir");
+
+  //Weir.DisplayStack provides an interface for choosing which panel is exclusively shown
+  //TODO: It also provides a handy dialog creator
+  Weir.service("Weir.DisplayStack", ["Weir.Events", "Weir.Scroll", function(Events, Scroll) {
+    var stack = [];
+    var facade = {
+      visible: "",
+      top: function() { return stack[0] || "" },
+      push: function(panel) {
+        stack = stack.filter(function(item) { return item != panel });
+        stack.unshift(panel);
+        facade.visible = stack[0];
+        Events.fire("stack:activate", {panel: facade.visible});
+        Scroll.top();
+      },
+      pop: function(panel) {
+        stack = stack.filter(function(item) { return item != panel });
+        stack.shift(panel);
+        facade.visible = stack[0];
+        Events.fire("stack:activate", {panel: facade.visible});
+        Scroll.top();
+      },
+      dialog: function(content, callback) {},
+      alert: function(content, duration) {}
+    }
+
+    return facade;
+
+  }]);
+
+  Weir.directive("stackId", ["Weir.DisplayStack", function(Stack) {
+    return {
+      restrict: "A",
+      link: function(scope, element, attr) {
+        scope.$watch(Stack.top, function(now, then) {
+          element.css("display", now == attr.stackId ? "inherit" : "none");
+        });
+      }
+    };
+  }]);
+
+})();
+
+(function() {
+  var Weir = angular.module("Weir");
+
+  //Weir.Events makes it easy for services to couple loosely--like, say, Sanitize and StreamController
+  Weir.service("Weir.Events", [function() {
+    var registry = {};
+
+    return {
+      on: function(event, listener) {
+        if (!registry[event]) {
+          registry[event] = [];
+        }
+        registry[event].push(listener);
+      },
+      off: function(event, listener) {
+        if (!registry[event]) return;
+        if (listener) {
+          registry[event] = registry[event].filter(function(f) {
+            return f !== listener;
+          });
+        } else {
+          registry[event] = [];
+        }
+      },
+      fire: function(event, data) {
+        if (!registry[event]) return;
+        //make a copy for immutability during this tick
+        var callbacks = registry[event].slice();
+        data = data || {};
+        data.type = data.type || event;
+        for (var i = 0; i < callbacks.length; i++) {
+          callbacks[i](data);
+        }
+      }
+    }
+
+  }]);
+
+})();
+(function() {
+
+  var Weir = angular.module("Weir");
+
+  //LocalSettings allows us to set various per-device options
+  //It provides defaults based on form factor
+  Weir.service("Weir.LocalSettings", [function() {
+
+    var storageKey = "WeirOptions";
+    var settings;
+
+    var fill = function(dest, src) {
+      for (var key in src) {
+        if (!dest[key]) {
+          dest[key] = src[key];
+        }
+      }
+    }
+
+    var form = matchMedia("(min-width: 800px)").matches ? "large" : "small"
+    var defaults = {
+      stream: {
+        startActive: form == "large",
+        length: 10,
+        autoRefresh: form == "large" ? 2 : 0
+      },
+      application: {
+        flash: true
+        //key mapping
+        //overall visual theme?
+      }
+    };
+    
+    var revive = function() {
+      var settings = localStorage.getItem(storageKey);
+      if (!settings) {
+        //if never used, install
+        settings = defaults;
+      } else {
+        //otherwise, parse and augment with any new properties
+        settings = JSON.parse(settings);
+        fill(settings, defaults);
+      }
+      settings.save = function() {
+        localStorage.setItem(storageKey, JSON.stringify(this));
+      }
+      return settings;
+    };
+    
+    revive.reset = function() {
+      localStorage.removeItem(storageKey);
+    }
+
+    return {
+      get: revive,
+      reset: revive.reset
+    }
+    
+  }]);
+
+})();
+
+(function() {
+
+  var Weir = angular.module("Weir");
+
+  //Weir.Request handles making requests with TOTP auth (eventually)
+  Weir.service("Weir.Request", ["$http", "$q", function($http, $q) {
+    var halted = false;
+
+    var authFactory = function(original, deferred) {
+      //authorize loops on itself, until it gets a success
+      var authorize = function(data) {
+        if (data && data.success) {
+          halted = false;
+          ajax(original).then(deferred.resolve);
+          return;
+        }
+        var password = prompt("Please enter your TOTP key");
+        var request = $http({
+          url: "checkpoint",
+          method: "POST",
+          data: {
+            totp: password
+          }
+        });
+        request.success(authorize);
+        request.error(authorize);
+      };
+
+      halted = true;
+      authorize();
+    };
+
+    var ajax = function(options) {
+      var defaults = {
+        url: "",
+        method: "GET"
+      };
+      var params = angular.extend(defaults, options);
+      var deferred = $q.defer();
+      if (halted) {
+        deferred.reject();
+        return deferred.promise;
+      }
+      var request = $http(params);
+      request.success(function(data) {
+        //totp is not authorized?
+        if (data.challenge) {
+          authFactory(params, deferred);
+          return;
+        }
+        //otherwise, the request was good
+        deferred.resolve(data);
+      });
+      request.error(deferred.reject);
+      return deferred.promise;
+    };
+
+    return {
+      ask: ajax
+    }
+
+  }]);
+
+})();
+(function() {
+
+  var Weir = angular.module("Weir");
+
+  //Weir.Sanitize cleans up HTML for malicious elements, changes link targets, and defers images
+  Weir.service("Weir.Sanitize", ["$document", "Weir.Events", function($document, Events) {
+    var slice = Array.prototype.slice;
+    var each = Array.prototype.forEach;
+    
+    //function to show deferred images on scroll or refresh
+    var deferred = [];
+    var revealScrolled = function() {
+      //we lazy-filter the list, so that deferred images are never checked again
+      deferred = deferred.filter(function(img) {
+        var coords = img.getBoundingClientRect();
+        if (coords.top && coords.top < window.innerHeight) {
+          img.src = img.getAttribute("data-src");
+          img.removeAttribute("data-src");
+          return false;
+        }
+        return true;
+      });
+    };
+
+    var revealElement = function(element) {
+      var deferred = element[0].querySelectorAll("[data-src]");
+      for (var i = 0; i < deferred.length; i++) {
+        var item = deferred[i];
+        item.src = item.getAttribute("data-src");
+        item.removeAttribute("data-src");
+      };
+    };
+
+    return {
+      reveal: revealElement,
+      prepare: function(unclean, url) {
+        var doc = document.implementation.createHTMLDocument("");
+        doc.body.innerHTML = unclean;
+        var streamWidth = document.querySelector(".stream-container").offsetWidth;
+
+        //remove trailing slashes
+        url = url.replace(/\/$/, "");
+        var relative = /^\/[^\/]/;
+
+        //change targets on all links, map to site URL if relative
+        var links = doc.querySelectorAll('a');
+        for (var i = 0; i < links.length; i++) {
+          var link = links[i];
+          link.target = "_blank";
+          var href = link.href;
+          if (relative.test(href)) {
+            link.href = url + href;
+          }
+        }
+
+        //remove scripts and other malicious elements (add to selector)
+        var scripts = doc.querySelectorAll("script");
+        each.call(scripts, function(script) {
+          script.parentElement.removeChild(script);
+        });
+
+        //Remove oversized widths (Dinosaur Comics, weird embeds)
+        var oversized = doc.querySelectorAll("[width],[style]");
+        each.call(oversized, function(element) {
+          var width = element.getAttribute("width") || element.style.width;
+          if (typeof width == "string") {
+            width = width.replace(/[a-z]/gi, "") * 1;
+          }
+          if (!width) return;
+          if (width > streamWidth) {
+            var height = element.getAttribute("height") || element.style.height;
+            if (typeof height == "string") {
+              height = height.replace(/[a-z]/gi, "") * 1;
+            }
+            if (height) {
+              //scale
+              element.setAttribute("height", height * (streamWidth / width));
+              element.setAttribute("width", streamWidth);
+            } else {
+              element.removeAttribute("width");
+            }
+            element.style.width = null;
+            element.style.height = null;
+          }
+        });
+
+        //process images (defer loading, remove dimensions for CSS reasons)
+        var images = doc.querySelectorAll("img, iframe");
+        each.call(images, function(img) {
+          var src = img.getAttribute("src");
+          if (relative.test(src)) {
+            src = url + src;
+          }
+          img.setAttribute("data-src", src);
+          img.removeAttribute("src");
+          
+          img.removeAttribute("height");
+          img.removeAttribute("width");
+        });
+
+        return doc.body.innerHTML;
+      }
+    }
+
+  }]);
+
+  Weir.directive("scrollReveal", ["Weir.Events", "Weir.Sanitize", function(Events, Sanitize) {
+    return {
+      restrict: "A",
+      link: function(scope, element) {
+        var enter = function() {
+          var offset = element[0].getBoundingClientRect();
+          if (typeof offset.top != "undefined" && offset.top < window.innerHeight) {
+            Sanitize.reveal(element);
+            Events.off("scroll", enter);
+          }
+        }
+        Events.on("scroll", enter);
+        setTimeout(enter, 200);
+      }
+    };
+  }])
+
+})();
+
+(function() {
+
+  //jump to top
+  window.scroll(0, 0);
+
+  var Weir = angular.module("Weir");
+
+  //Weir.Scroll is meant to handle all scrolling functionality--
+  //both reacting to them, and instigating them.
+  Weir.service("Weir.Scroll", ["Weir.Events",
+    function(Events) {
+
+      //register scroll listener, dispatch throttled events
+      var guard = false;
+      var endTimeout = null;
+      var onScroll = function() {
+        if (guard) return;
+        guard = true;
+        setTimeout(function() { guard = false }, 50);
+        Events.fire("scroll");
+        //also trigger scroll-end events, which are cheaper
+        clearTimeout(endTimeout);
+        endTimeout = setTimeout(function() {
+          Events.fire("scrollEnd");
+        }, 300)
+      }
+
+      window.addEventListener("scroll", onScroll);
+
+      //expose a method for scrolling to a specific item, basically wrapping location/anchorScroll
+      var scrollToHash = function(id) {
+        /*$location.replace();
+        $location.hash(id);
+        $anchorScroll();*/
+        var element = document.getElementById(id);
+        if (!element) return;
+        var top = element.offsetTop;
+        setTimeout(function() {
+          element.scrollIntoView();
+        }, 100);
+      }
+
+      //API facade
+      return {
+        toID: scrollToHash,
+        top: function() {
+          document.body.scrollTop = document.documentElement.scrollTop = 0;
+        }
+      };
+
+    }
+  ]);
+
+
+  //Add a directive to allow actions when scrolling past (i.e. activate on scroll)
+  Weir.directive("scrollFocus", ["Weir.Events", function(Events) {
+    return {
+      restrict: "A",
+      link: function(scope, element, attributes) {
+        var trigger = function() {
+          var offset = element[0].getBoundingClientRect();
+          if (offset.top && offset.top > -10 && offset.top < window.innerHeight * .25) {
+            scope.$eval(attributes.scrollFocus);
+            scope.$apply();
+          }
+        };
+        Events.on("scroll", trigger);
+      }
+    };
+  }]);
+
+  //By contrast, scrollEnter fires only when an element enters the screen for the first time
+  Weir.directive("scrollEnter", ["Weir.Events", function(Events) {
+    return {
+      restrict: "A",
+      link: function(scope, element, attributes) {
+        var trigger = function() {
+          var offset = element[0].getBoundingClientRect();
+          if (offset.top && offset.top < window.innerHeight) {
+            scope.$eval(attributes.scrollEnter);
+            scope.$apply();
+            Events.off("scroll", trigger);
+          }
+        };
+        Events.on("scroll", trigger);
+      }
+    }
+  }]);
+
+})();
+
+(function() {
+
+  var Weir = angular.module("Weir");
+
+  //Weir.Server talks to the DB and gets stream updates
+  Weir.service("Weir.Server", [
+    "Weir.Request",
+    "Weir.Sanitize",
+    "Weir.LocalSettings",
+    "$q",
+    "Weir.Events",
+    function(Request, Sanitize, Settings, $q, Events) {
+      var ask = Request.ask;
+
+      var stream = {
+        items: [],
+        unread: 0,
+        total: 0,
+        cursor: 0,
+        currentItem: null,
+        updatedAt: new Date(),
+        loading: false
+      };
+
+      var updateStatus = function(data) {
+        stream.unread = data.unread || 0;
+        stream.total = data.total || stream.total;
+        stream.updatedAt = new Date();
+        Events.fire("status");
+      };
+      
+      var updateItems = function(data) {
+        if (!data.items) return;
+        data.items.forEach(function(item) {
+          item.content = Sanitize.prepare(item.content, item.site);
+        });
+        stream.items = data.items;
+        stream.cursor = null;
+        if (Settings.get().stream.startActive && stream.items.length) {
+          facade.activate(stream.items[0]);
+        }
+        Events.fire("refresh");
+      };
+
+      var facade = {
+        stream: stream,
+        markAsRead: function(item) {
+          if (item.read) return;
+          ask({
+            url: "stream/mark",
+            params: {
+              item: item.id
+            }
+          }).then(function() {
+            stream.unread--;
+            Events.fire("status");
+          });
+        },
+        markAll: function() {
+          var ids = stream.items.map(function(item) {
+            return item.id;
+          });
+          stream.loading = true;
+          var promise = ask({
+            url: "stream/markRefresh",
+            params: {
+              items: ids.join(","),
+              limit: Settings.get().stream.length
+            }
+          }).then(function(data) {
+            stream.loading = false;
+            updateItems(data);
+            updateStatus(data);
+          });
+          return promise;
+        },
+        refresh: function() {
+          stream.loading = true;
+          var promise = ask({
+            url: "stream/unread",
+            params: {
+              limit: Settings.get().stream.length
+            }
+          }).then(function(data) {
+            stream.loading = false;
+            updateStatus(data);
+            updateItems(data);
+          });
+          return promise;
+        },
+        stats: function() {
+          ask({
+            url: "stream/status"
+          }).then(function(data) {
+            updateStatus(data);
+          });
+        },
+        activate: function(item) {
+          for (var i = 0; i < stream.items.length; i++) {
+            var post = stream.items[i];
+            //mark previously active item as read
+            if (post.active) {
+              post.read = true;
+            }
+            post.active = false;
+          }
+          item.active = true;
+          facade.markAsRead(item);
+          stream.cursor = stream.items.indexOf(item);
+          stream.currentItem = item;
+          Events.fire("activated");
+          return item;
+        },
+        next: function() {
+          if (stream.cursor === null) stream.cursor = -1;
+          var index = stream.cursor + 1;
+          var item = stream.items[index];
+          if (item) {
+            return facade.activate(item);
+          }
+          return false;
+        },
+        previous: function() {
+          var index = stream.cursor - 1;
+          var item = stream.items[index];
+          if (item) {
+            return facade.activate(item);
+          }
+          return false;
+        }
+      }
+      
+      var auto = function() {
+        var interval = Settings.get().stream.autoRefresh;
+        if (interval) {
+          facade.stats();
+          //this won't work correctly yet without a refresh if it's changed
+          setTimeout(auto, interval * 60 * 1000);
+        }
+      };
+      
+      facade.refresh().then(function() {
+        //only kick off polling after first request
+        //in case TOTP is in effect
+        auto();
+      });
+
+      return facade;
+
+  }]);
+
+})();
