@@ -31,25 +31,21 @@ Notes (vaguely ordered):
 
  - UX
   * make all buttons bigger on mobile
+  * add classes that make things desktop/mobile only
   * add close button to hide activated items
   * Add 3D transformations to make things interesting once Angular.animate lands in stable
-  * Consider moving CSS to something like TopCoat for a more polished look
   
  - DisplayStack improvements
   * DisplayStack.dialog(), DisplayStack.confirm()
+  * Let escape key trigger stack pop
 
  - Feed management improvements
-  * Enable sorting of feeds by result, name, tag (eventually)
+  * Enable filtering of feeds by health, count
   * Be able to set update frequencies per feed
 
  - Logging:
   * Add different log levels and tagging
   * Teach Hound to log the number of stories added per fetch (from all feeds)
-
- - Remove CSS compilation from the Server, consider other handlers
-  * maybe just move handlers into a separate module.
-
- - Add ability to write server cfg.json with .save();
 
  - Weir.Sanitize improvements
   * Add rudimentary ad/social blocking
@@ -60,5 +56,5 @@ Notes (vaguely ordered):
 
  - Configure router to support REST params
  
- - Add SQLite support
+ - Add SQLite support, switchable databases based on config
 
