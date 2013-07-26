@@ -16,6 +16,7 @@
       Scroll.top();
       
       var onError = function() {
+        Server.stream.loading = false;
         $scope.hideMessage();
         $scope.showError("Oh no! Something went wrong...");
       };

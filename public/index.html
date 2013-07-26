@@ -125,15 +125,15 @@
         <h2 class="banner">You have no unread items.</h2>
       </div>
       
-      <div class="loading" ng-show="stream.loading">
+      <div class="no-items" ng-show="stream.loading">
         <h2 class="banner">Loading items...</h2>
       </div>
 
       <div class="charm-panel">
         <a class="charm" title="Next item" href="javascript:;" ng-click="next()">&raquo;</a>
         <a class="charm" title="Open in new window" href="javascript:;" ng-click="openCurrent()">&#x21F2;</a>
-        <a class="charm" title="Mark all as read" href="javascript:;" ng-click="markRefresh()">&times;</a>
         <a class="charm" title="Refresh stream" href="javascript:;" ng-click="refresh()">&#x21BA;</a>
+        <a class="charm" title="Mark all as read" href="javascript:;" ng-click="markRefresh()">&times;</a>
       </div>
 
     </div>

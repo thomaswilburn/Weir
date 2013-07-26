@@ -51,7 +51,6 @@
     border: 1px solid black;
     margin: 0px 8px;
     padding: 4px;
-    border-radius: 4px;
     z-index: 999;
 
     @media @mobile {
@@ -75,15 +74,15 @@
   }
 
   .warning {
-    border-color: @warning;
-    background: lighten(@warning, 20%);
-    color: darken(@warning, 50%);
+    border-color: @foreground;
+    background: @warning;
+    color: @foreground;
   }
 
   .error {
-    border-color: @error;
-    background: lighten(@error, 20%);
-    color: darken(@error, 50%);
+    border-color: @background;
+    background: @error;
+    color: @background;
   }
   
 }
