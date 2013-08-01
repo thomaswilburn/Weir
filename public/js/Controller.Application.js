@@ -19,7 +19,9 @@
         var enabled = Settings.get().application.flash;
         var count = Server.stream.unread;
         var favicon = document.querySelector("head link[rel=icon]");
-        if (count != lastCount) {
+        if (count != lastCount || 
+          (count === 0 && document.title.indexOf("(")) //handle leftovers
+        ) {
           if (enabled) {
             document.title = "Weir " + (count ? "(" + count + ")" : "");
           }
