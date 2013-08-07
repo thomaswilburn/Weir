@@ -1,18 +1,15 @@
 {
-  "port": 0,
+  "port": 8080,
   "database": {
-    "type": "",
+    "type": "postgres",
     "user": "",
     "password": "",
     "db": ""
   },
-  "updateInterval": 0,
-  "requestTimeout": 0,
-  "feedMax": 0,
-  "expirationDate": 0,
-  "build": {
-    "less": false,
-    "js": false
-  },
-  "totp": ""
+  "updateInterval": 10,
+  "requestTimeout": 30,
+  "feedsPerFetch": 8,
+  "feedMax": 10,
+  "expirationDate": 30,
+  "totp": false
 }
