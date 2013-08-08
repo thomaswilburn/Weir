@@ -31,7 +31,6 @@ Main - contains primary app seed, random directives
 Notes (vaguely ordered):
 
  - UX
-  * make all buttons bigger on mobile
   * add classes that make things desktop/mobile only
   * Add 3D transformations to make things interesting once Angular.animate lands in stable
   
