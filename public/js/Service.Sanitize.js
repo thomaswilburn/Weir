@@ -7,25 +7,14 @@
     var slice = Array.prototype.slice;
     var each = Array.prototype.forEach;
     
-    //function to show deferred images on scroll or refresh
-    var deferred = [];
-    var revealScrolled = function() {
-      //we lazy-filter the list, so that deferred images are never checked again
-      deferred = deferred.filter(function(img) {
-        var coords = img.getBoundingClientRect();
-        if (coords.top && coords.top < window.innerHeight) {
-          img.src = img.getAttribute("data-src");
-          img.removeAttribute("data-src");
-          return false;
-        }
-        return true;
-      });
-    };
-
     var revealElement = function(element) {
       var deferred = element[0].querySelectorAll("[data-src]");
       for (var i = 0; i < deferred.length; i++) {
         var item = deferred[i];
+        item.style.opacity = 0;
+        item.onload = function() {
+          this.style.opacity = 1;
+        }
         item.src = item.getAttribute("data-src");
         item.removeAttribute("data-src");
       };

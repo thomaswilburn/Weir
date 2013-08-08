@@ -15,7 +15,8 @@ Freedom - import/export, starting with OPML
 Security - Manage sessions, TOTP authorization
 
 Client components (all namespaced as "Weir.*"):
-StreamController - handle stream display and UI, plus some app-level UI
+ApplicationController - high-level app interaction, such as key events and doc title
+StreamController - handle stream display and UI
 SettingsController - handle showing and saving settings, plus showing security warning
 FeedController - handle (un)subscribing, tagging
 DisplayStack - manage major component visibility, dialogs, errors, warnings
@@ -32,16 +33,11 @@ Notes (vaguely ordered):
  - UX
   * make all buttons bigger on mobile
   * add classes that make things desktop/mobile only
-  * add close button to hide activated items
   * Add 3D transformations to make things interesting once Angular.animate lands in stable
   
  - DisplayStack improvements
   * DisplayStack.dialog(), DisplayStack.confirm()
   * Let escape key trigger stack pop
-
- - Feed management improvements
-  * Enable filtering of feeds by health, count
-  * Be able to set update frequencies per feed
 
  - Logging:
   * Add different log levels and tagging
@@ -52,9 +48,12 @@ Notes (vaguely ordered):
 
  - Add to options service
   * key map - character/code to verb, will need to work out UI for that
-  * buttons on sidebar
+  * choice of buttons on sidebar
 
  - Configure router to support REST params
  
  - Add SQLite support, switchable databases based on config
+ 
+ - Set the client-side server to queue operations when backed up on security, instead of 
+ just failing them
 

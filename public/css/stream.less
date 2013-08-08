@@ -79,6 +79,10 @@
     a {
       display: block;
     }
+    
+    .close-item {
+      display: none;
+    }
   }
   
   h2 {
@@ -92,8 +96,30 @@
     font-weight: normal;    
   }
   
-  &.active h2 {
-    white-space: normal;
+  &.active {
+  
+    h2 {
+      white-space: normal;
+    }
+    
+    .close-item {
+      color: lighten(@foreground, 50%);
+      padding: 8px;
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      cursor: pointer;
+
+      &:hover {
+        color: @foreground;
+      }
+      
+      @media @mobile {
+        display: block;
+      }
+    
+    }
+  
   }
   
   h3 {
@@ -106,6 +132,10 @@
     margin-top: 8px;
     text-transform: lowercase;
     text-align: right;
+  }
+  
+  img {
+    transition: opacity .5s;
   }
 
 }

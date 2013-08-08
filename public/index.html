@@ -111,6 +111,7 @@
               <h2>{{item.title}}</h2>
             </a>
             <!-- tags go here -->
+            <a ng-click="deactivate($event, item)" class="close-item">&times;</a>
           </div>
           <div class="tracking-pixel" scroll-focus="activate(item, true)"></div>
           <div class="content">

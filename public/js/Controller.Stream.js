@@ -25,6 +25,11 @@
         Server.activate(item);
         if (!fromScroll) Scroll.toID(item.id);
       };
+      
+      $scope.deactivate = function($event, item) {
+        item.active = false;
+        $event.stopImmediatePropagation();
+      }
 
       $scope.mark = function(item) {
         Server.markAsRead(item);
