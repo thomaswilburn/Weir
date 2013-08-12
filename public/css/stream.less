@@ -14,8 +14,12 @@
 
 }
 
-.no-items {
-
+//inner container
+.stream {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  
   &:after {
   
     @media @mobile {
@@ -29,13 +33,8 @@
     }
   }
 
-}
 
-//inner container
-.stream {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
+  
 }
 
 .banner {
@@ -96,7 +95,7 @@
     font-weight: normal;
     
     @media @mobile {
-      width: 90%;
+      width: calc(~"100% - 32px");
     }
   }
   
@@ -111,8 +110,10 @@
       padding: 8px;
       position: absolute;
       top: 8px;
-      right: 8px;
+      right: 0px;
       cursor: pointer;
+      font-weight: bold;
+      font-size: 18px;
 
       &:hover {
         color: @foreground;
