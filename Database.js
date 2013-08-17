@@ -162,7 +162,7 @@ var db = {
   //cull old database items
   reapStories: function(c) {
     //this is ugly, but intervals do not work particularly well when parameterized
-    var days = (cfg.expirationDate || 30) + " days";
+    var days = (cfg.expirationDate + 2 || 33) + " days";
     var q = "DELETE FROM stories WHERE published IS NOT null AND published < now() - '" + days + "'::INTERVAL;";
     psql.query(q, function(err, data) {
       if (err) {
