@@ -24,3 +24,19 @@ code {
 
 figure { margin: 0; padding: 0 }
 
+//helpful utility classes
+
+.only-mobile {
+  display: none;
+  
+  @media @mobile {
+    display: inherit; //IE, old FF
+    display: initial;
+  }
+}
+
+.only-desktop {
+  @media @mobile {
+    display: none;
+  }
+}
