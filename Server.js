@@ -47,12 +47,12 @@ var respond = function(request, data) {
 
 var serve = function(file, req) {
   file = path.join(pub, file);
-  if (file.indexOf("public" == -1)) {
+  if (file.slice(-1) == "/") file += "index.html";
+  if (file.indexOf("public") == -1) {
     req.writeHead(403);
     req.end();
     return;
   }
-  if (file.slice(-1) == "/") file += "index.html";
 
   fs.exists(file, function(exists) {
     if (exists) {
