@@ -95,6 +95,11 @@ var db = {
     if (c) return c();
   },
   
+  updateItem: function(id, article) {
+    var q = psql.query("UPDATE stories SET content = $2, published = $3 WHERE id = $1",
+      [id, article.description, article.date], c);
+  },
+  
   //subscribe to a URL
   subscribe: function(metadata, c) {
     psql.query("INSERT INTO feeds (title, url, site_url) VALUES ($1, $2, $3) RETURNING id;", [metadata.title, metadata.url, metadata.site_url], 

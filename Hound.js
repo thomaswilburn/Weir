@@ -154,6 +154,9 @@ var saveItems = function(feed, meta, articles) {
       if (date && date < expires) {
         return;
       }
+      //we match on title and guid, which should be enough to prevent repeats
+      //but won't catch new content that someone adds later
+      //we still need to work out a call to update the text of an item if updated
       var unique = marks.every(function(item) {
         return item.title != article.title && item.guid != article.guid;
       });

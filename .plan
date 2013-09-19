@@ -52,6 +52,8 @@ Notes (vaguely ordered):
  
  - Add SQLite support, switchable databases based on config
  
+ - Update text if an item has a newer date than the one we store
+
  - Set the client-side server to queue operations when backed up on security, instead of 
  just failing them
 
