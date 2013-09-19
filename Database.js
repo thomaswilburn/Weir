@@ -63,7 +63,7 @@ var db = {
   
   //get story GUID and dates
   getIdentifiers: function(feed, c) {
-    psql.query("SELECT guid, published FROM stories WHERE feed = $1;", [feed], function(err, data) {
+    psql.query("SELECT guid, title FROM stories WHERE feed = $1;", [feed], function(err, data) {
       return c(err, data ? data.rows : []);
     });
   },
@@ -88,7 +88,7 @@ var db = {
   //add an item for a specific feed
   addItem: function(feed, article, c) {
     //if there's no pubdate, we use null 
-    var date = article.date || article.pubDate || null;
+    var date = article.pubDate || article.date || null;
     var q = psql.query("INSERT INTO stories (feed, title, url, author, content, guid, published) VALUES ($1, $2, $3, $4, $5, $6, $7)",
       [feed, article.title, article.link, article.author, article.description, article.guid, date]);
     q.on("error", console.log.bind(console, article.link, article.pubDate));

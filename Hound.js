@@ -23,17 +23,17 @@ var fetch = function() {
   Hound.busy = true;
   Hound.emit("fetch:start");
   console.log("Starting fetch...");
+  
+  var done = function() {
+    Hound.busy = false;
+    Hound.emit("fetch:end");
+    console.log("All done!");
+    var interval = (cfg.updateInterval || 15) * 60 * 1000;
+    setTimeout(fetch, interval);
+  }
+  
   database.getFeeds(function(err, rows) {
     //awkward
-
-    var done = function() {
-      Hound.busy = false;
-      Hound.emit("fetch:end");
-      console.log("All done!");
-      var interval = (cfg.updateInterval || 15) * 60 * 1000;
-      setTimeout(fetch, interval);
-    }
-    
     if (rows.length == 0) {
       return done();
     }
@@ -58,7 +58,7 @@ var fetch = function() {
             "Connection": "close",
             "Accept-Encoding": "gzip"
           };
-       
+          
           var r = request({
             url: row.url,
             headers: headers,
@@ -139,16 +139,23 @@ var saveItems = function(feed, meta, articles) {
     if (articles.length > max) {
       articles = articles.slice(0, max);
     }
+    var expires = Date.now() - (cfg.expirationDate * 1000 * 60 * 60 * 24);
     //console.log(feed, "markers", marks);
     articles.forEach(function(article) {
-      var date = article.pubDate instanceof Date ? article.pubDate.getTime() : null;
-      //don't add old articles, assuming a pubdate is available
-      if (date && date < Date.now() - (cfg.expirationDate * 1000 * 60 * 60 * 24)) {
+      var date;
+      //some feeds swap "pubDate" and "updated" which is stupid thanks guys
+      var published = article.pubDate < article.date ? article.pubDate : article.date;
+      if (published instanceof Date) {
+        date = published.getTime();
+      } else {
+        date = null;
+      }
+      //don't add old articles
+      if (date && date < expires) {
         return;
       }
       var unique = marks.every(function(item) {
-        var published = item.published instanceof Date ? item.published.getTime() : null;
-        return published != date && item.guid != article.guid;
+        return item.title != article.title && item.guid != article.guid;
       });
       if (unique) {
         //console.log("New story found:", article.title)
