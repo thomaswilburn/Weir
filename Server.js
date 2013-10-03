@@ -30,7 +30,8 @@ var mimeTypes = {
   ".js": "application/javascript",
   ".json": "application/json",
   ".txt": "text/plaintext",
-  ".ico": "image/x-icon"
+  ".ico": "image/x-icon",
+  ".png": "image/png"
 };
 
 var respond = function(request, data) {
