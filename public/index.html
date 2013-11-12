@@ -56,6 +56,11 @@
           
           <input type="checkbox" ng-model="settings.application.flash" class="inline">
           <label class="inline">Flash on updates when pinned</label>
+          
+          <br>
+          
+          <input type="checkbox" ng-model="settings.stream.deferImages" class="inline">
+          <label class="inline">Defer image loading</label>
         </div>
 
         <div class="totp" ng-show="secret">
@@ -108,8 +113,9 @@
       <ul class="stream" ng-show="!stream.loading">
         <li 
           ng-repeat="item in stream.items" id="{{item.id}}" 
-          ng-class="{'read':item.read == true, 'active':item.active == true}"
-          scroll-reveal>
+          ng-class="{'read':item.read == true, 'active':item.active == true}" 
+          scroll-reveal
+        >
           <div class="header" ng-click="activate(item)" >
             <cite>{{item.feed}}</cite>
             <a href="{{item.url}}" prevent-default>

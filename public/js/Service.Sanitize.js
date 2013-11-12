@@ -3,7 +3,11 @@
   var Weir = angular.module("Weir");
 
   //Weir.Sanitize cleans up HTML for malicious elements, changes link targets, and defers images
-  Weir.service("Weir.Sanitize", ["$document", "Weir.Events", function($document, Events) {
+  Weir.service("Weir.Sanitize", [
+    "$document", 
+    "Weir.Events", 
+    "Weir.LocalSettings",
+    function($document, Events, Settings) {
     var slice = Array.prototype.slice;
     var each = Array.prototype.forEach;
     
@@ -73,9 +77,9 @@
           }
         });
 
-        //process images (defer loading, remove dimensions for CSS reasons)
+        //process images (defer loading, remove dimensions for CSS reasons)  
         var images = doc.querySelectorAll("img, iframe");
-        each.call(images, function(img) {
+        if (Settings.get().stream.deferImages) each.call(images, function(img) {
           var src = img.getAttribute("src");
           if (relative.test(src)) {
             src = url + src;
@@ -85,7 +89,9 @@
           
           img.removeAttribute("height");
           img.removeAttribute("width");
+          img.style.opacity = 0;
         });
+        
 
         return doc.body.innerHTML;
       }
@@ -105,7 +111,7 @@
           }
         }
         Events.on("scroll", enter);
-        setTimeout(enter, 200);
+        setTimeout(enter);
       }
     };
   }])

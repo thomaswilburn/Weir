@@ -29,15 +29,10 @@
 
       //expose a method for scrolling to a specific item, basically wrapping location/anchorScroll
       var scrollToHash = function(id) {
-        /*$location.replace();
-        $location.hash(id);
-        $anchorScroll();*/
         var element = document.getElementById(id);
         if (!element) return;
         var top = element.offsetTop;
-        setTimeout(function() {
-          element.scrollIntoView();
-        }, 100);
+        element.scrollIntoView();
       }
 
       //API facade

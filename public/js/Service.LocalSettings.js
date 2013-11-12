@@ -22,7 +22,8 @@
       stream: {
         startActive: form == "large",
         length: 10,
-        autoRefresh: form == "large" ? 2 : 0
+        autoRefresh: form == "large" ? 2 : 0,
+        deferImages: true
       },
       application: {
         flash: true
