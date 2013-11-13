@@ -32,7 +32,10 @@
         var element = document.getElementById(id);
         if (!element) return;
         var top = element.offsetTop;
-        element.scrollIntoView();
+        //timeout is here for a reason, to wait until after digest completes
+        setTimeout(function() {
+          element.scrollIntoView();
+        }, 100);
       }
 
       //API facade
