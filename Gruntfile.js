@@ -43,6 +43,8 @@ module.exports = function(grunt) {
   
   grunt.initConfig(options);
   
+  grunt.registerTask("default", ["watch"]);
+  
   grunt.registerTask("build", "Create client-side files", ["concat", "less"]);
   
   grunt.registerTask("cleanConfig", "Create commitable config file and credits", function() {

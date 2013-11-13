@@ -11,7 +11,10 @@
 
     var fill = function(dest, src) {
       for (var key in src) {
-        if (!dest[key]) {
+        //awkward recursive merge that will work for this single use case
+        if (dest[key] && typeof dest[key] == "object" && !(dest[key] instanceof Array)) {
+          fill(dest[key], src[key]);
+        } else if (!dest[key]) {
           dest[key] = src[key];
         }
       }
