@@ -105,7 +105,7 @@
       link: function(scope, element) {
         var enter = function() {
           var offset = element[0].getBoundingClientRect();
-          if (typeof offset.top != "undefined" && offset.top < window.innerHeight) {
+          if (offset.height && offset.top < window.innerHeight) {
             Sanitize.reveal(element);
             Events.off("scroll", enter);
           }
