@@ -41,9 +41,6 @@ Notes (vaguely ordered):
   * Add different log levels and tagging
   * Teach Hound to log the number of stories added per fetch (from all feeds)
 
- - Weir.Sanitize improvements
-  * Add rudimentary ad/social blocking
-
  - Add to options service
   * key map - character/code to verb, will need to work out UI for that
   * choice of buttons on sidebar
@@ -54,6 +51,6 @@ Notes (vaguely ordered):
  
  - Update text if an item has a newer date than the one we store
 
- - Set the client-side server to queue operations when backed up on security, instead of 
+ - Set the Weir.Request to queue operations when backed up on security, instead of 
  just failing them
 

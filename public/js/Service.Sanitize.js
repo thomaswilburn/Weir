@@ -15,9 +15,9 @@
       var deferred = element[0].querySelectorAll("[data-src]");
       for (var i = 0; i < deferred.length; i++) {
         var item = deferred[i];
-        item.style.opacity = 0;
+        item.classList.add("hidden");
         item.onload = function() {
-          this.style.opacity = 1;
+          this.classList.remove("hidden");
         }
         item.src = item.getAttribute("data-src");
         item.removeAttribute("data-src");
@@ -46,10 +46,15 @@
           }
         }
 
-        //remove scripts and other malicious elements (add to selector)
+        //remove scripts and other malicious elements
         var scripts = doc.querySelectorAll("script");
         each.call(scripts, function(script) {
           script.parentElement.removeChild(script);
+        });
+        var spamblock = ".mf-viral, img[src*='feedsportal']";
+        var spam = doc.querySelectorAll(spamblock);
+        each.call(spam, function(s) {
+          s.parentElement.removeChild(s);
         });
 
         //Remove oversized widths (Dinosaur Comics, weird embeds)
@@ -89,7 +94,7 @@
           
           img.removeAttribute("height");
           img.removeAttribute("width");
-          img.style.opacity = 0;
+          img.classList.add("hidden");
         });
         
 
