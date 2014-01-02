@@ -96,6 +96,10 @@
           });
         },
         activate: function(item) {
+          //check to see if this is the current item
+          if (item == stream.currentItem) {
+            return;
+          }
           for (var i = 0; i < stream.items.length; i++) {
             var post = stream.items[i];
             //mark previously active item as read

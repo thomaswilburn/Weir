@@ -7,8 +7,11 @@
 
   //Weir.Scroll is meant to handle all scrolling functionality--
   //both reacting to them, and instigating them.
-  Weir.service("Weir.Scroll", ["Weir.Events",
-    function(Events) {
+  Weir.service("Weir.Scroll", [
+    "Weir.Events",
+    "$location",
+    "$anchorScroll",
+    function(Events, $location, $anchorScroll) {
 
       //register scroll listener, dispatch throttled events
       var guard = false;
@@ -29,13 +32,9 @@
 
       //expose a method for scrolling to a specific item, basically wrapping location/anchorScroll
       var scrollToHash = function(id) {
-        var element = document.getElementById(id);
-        if (!element) return;
-        var top = element.offsetTop;
-        //timeout is here for a reason, to wait until after digest completes
-        setTimeout(function() {
-          element.scrollIntoView();
-        }, 100);
+        //working around digest for scrollIntoView is failing, let's just use $anchorScroll
+        $location.hash(id);
+        $anchorScroll();
       }
 
       //API facade
