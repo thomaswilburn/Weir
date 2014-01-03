@@ -12,13 +12,16 @@
     var each = Array.prototype.forEach;
     
     var revealElement = function(element) {
-      var deferred = element[0].querySelectorAll("[data-src]");
+      if (element.html) element = element[0];
+      var deferred = element.querySelectorAll("[data-src]");
       for (var i = 0; i < deferred.length; i++) {
         var item = deferred[i];
-        item.classList.add("hidden");
-        item.onload = function() {
-          this.classList.remove("hidden");
-        }
+        //this is currently broken in Chrome for Android, not sure why.
+        //item.classList.add("hidden");
+        item.classList.remove("hidden");
+        var onload = item.onload = function() {
+          item.classList.remove("hidden");
+        };
         item.src = item.getAttribute("data-src");
         item.removeAttribute("data-src");
       };
@@ -119,6 +122,19 @@
         setTimeout(enter);
       }
     };
-  }])
+  }]);
+  
+  Weir.directive("clickReveal", ["Weir.Sanitize", function(Sanitize) {
+    return {
+      restrict: "A",
+      link: function(scope, element) {
+        var reveal = function() {
+          requestAnimationFrame(function() { Sanitize.reveal(element); });
+          element.unbind("click", reveal);
+        };
+        element.bind("click", reveal);
+      }
+    };
+  }]);
 
 })();
