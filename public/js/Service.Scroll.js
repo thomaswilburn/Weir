@@ -41,6 +41,7 @@
       return {
         toID: scrollToHash,
         top: function() {
+          $location.hash("");
           document.body.scrollTop = document.documentElement.scrollTop = 0;
         }
       };

@@ -49,8 +49,8 @@
           }
         }
 
-        //remove scripts and other malicious elements
-        var scripts = doc.querySelectorAll("script");
+        //remove scripts, stylesheets, and other malicious elements
+        var scripts = doc.querySelectorAll("script, link, style");
         each.call(scripts, function(script) {
           script.parentElement.removeChild(script);
         });
