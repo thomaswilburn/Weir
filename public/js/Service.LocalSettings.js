@@ -14,7 +14,7 @@
         //awkward recursive merge that will work for this single use case
         if (dest[key] && typeof dest[key] == "object" && !(dest[key] instanceof Array)) {
           fill(dest[key], src[key]);
-        } else if (!dest[key]) {
+        } else if (typeof dest[key] == "undefined") {
           dest[key] = src[key];
         }
       }
