@@ -16,7 +16,7 @@
         }
         var password = prompt("Please enter your TOTP key");
         var request = $http({
-          url: "checkpoint",
+          url: "./checkpoint",
           method: "POST",
           data: {
             totp: password

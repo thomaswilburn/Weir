@@ -19,6 +19,7 @@ module.exports = {
     for (var i = 0; i < 5; i++) {
       expected.push(speakeasy.totp({key: cfg.totp, encoding: "base32", time: start + i * 30}) * 1);
     }
+    console.log("Logged in with", pass, "Expected", expected);
     if (expected.indexOf(pass) >= 0) {
       //return a cookie value to be set, stored
       //using speakeasy keys as random tokens is silly, but will work

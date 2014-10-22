@@ -47,7 +47,7 @@
         markAsRead: function(item) {
           if (item.read) return;
           ask({
-            url: "stream/mark",
+            url: "./stream/mark",
             params: {
               item: item.id
             }
@@ -62,7 +62,7 @@
           });
           stream.loading = true;
           var promise = ask({
-            url: "stream/markRefresh",
+            url: "./stream/markRefresh",
             params: {
               items: ids.join(","),
               limit: Settings.get().stream.length
@@ -77,7 +77,7 @@
         refresh: function() {
           stream.loading = true;
           var promise = ask({
-            url: "stream/unread",
+            url: "./stream/unread",
             params: {
               limit: Settings.get().stream.length
             }
@@ -90,7 +90,7 @@
         },
         stats: function() {
           ask({
-            url: "stream/status"
+            url: "./stream/status"
           }).then(function(data) {
             updateStatus(data);
           });

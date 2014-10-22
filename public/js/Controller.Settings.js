@@ -24,7 +24,7 @@
       }
       
       var totp = Request.ask({
-        url: "/checkpoint"
+        url: "./checkpoint"
       });
       
       totp.then(function(data) {
