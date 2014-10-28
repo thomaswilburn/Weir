@@ -139,6 +139,7 @@ var checkpoint = function(req) {
         if (passed) {
           var today = new Date();
           var cookieString = "key=" + token + ";";
+          cookieString += " path=/;";
           cookieString += " expires=" + new Date(today.getFullYear() + 1, today.getMonth(), today.getDate()).toGMTString();
           req.setHeader("Set-Cookie", cookieString);
           req.reply({ success: true });
