@@ -35,6 +35,13 @@
       color: @accent;
     }
     
+    &.refresh {
+      //hide on mobile, since we have charms
+      @media @mobile {
+        display: none;
+      }
+    }
+    
     a {
       display: block;
       color: @accent;
