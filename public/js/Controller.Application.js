@@ -29,9 +29,9 @@
           favicon = document.createElement("link");
           favicon.rel = "icon";
           if (count > lastCount) {
-            favicon.href = "./favicon-alert.ico";
+            favicon.href = "./favicon-alert.png";
           } else {
-            favicon.href = "./favicon.ico";
+            favicon.href = "./favicon.png";
           }
           document.head.appendChild(favicon);
         }
