@@ -84,6 +84,7 @@
           }
           $scope.$apply();
         } else if (action) {
+          e.preventDefault();
           Events.fire("key:" + action);
           $scope.$apply();
         }
