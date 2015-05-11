@@ -59,10 +59,24 @@
         each.call(spam, function(s) {
           s.parentElement.removeChild(s);
         });
+        
+        //classes won't mean anything in our stylesheet
+        var classed = doc.querySelectorAll("[class]");
+        each.call(classed, function(element) {
+          element.className = "";
+        });
 
         //Remove oversized widths (Dinosaur Comics, weird embeds)
         var oversized = doc.querySelectorAll("[width],[style]");
         each.call(oversized, function(element) {
+          //strip out positional styles
+          var offset = ["margin", "padding"];
+          offset.forEach(function(style) {
+            element.style[style] = "";
+            ["Left", "Right", "Top", "Bottom"].forEach(function(direction) {
+              element.style[style + direction] = "";
+            });
+          });
           var width = element.getAttribute("width") || element.style.width;
           if (typeof width == "string") {
             width = width.replace(/[a-z]/gi, "") * 1;
