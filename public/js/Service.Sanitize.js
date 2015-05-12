@@ -43,9 +43,9 @@
         for (var i = 0; i < links.length; i++) {
           var link = links[i];
           link.target = "_blank";
-          var href = link.href;
-          if (relative.test(href)) {
-            link.href = url + href;
+          if (!link.hostname || link.hostname == window.location.hostname) {
+            var href = link.getAttribute("href").replace(/^\//, "");
+            link.href = url + "/" + href;
           }
         }
 
