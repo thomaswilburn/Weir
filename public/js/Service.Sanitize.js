@@ -44,7 +44,7 @@
           var link = links[i];
           link.target = "_blank";
           var href = link.getAttribute("href");
-          if (!href) return;
+          if (!href) break;
           //convert relative links to absolute
           if (!link.hostname || link.hostname == window.location.hostname) {
             //remove opening slash for consistency
