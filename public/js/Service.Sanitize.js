@@ -43,8 +43,12 @@
         for (var i = 0; i < links.length; i++) {
           var link = links[i];
           link.target = "_blank";
+          var href = link.getAttribute("href");
+          if (!href) return;
+          //convert relative links to absolute
           if (!link.hostname || link.hostname == window.location.hostname) {
-            var href = link.getAttribute("href").replace(/^\//, "");
+            //remove opening slash for consistency
+            href = href.replace(/^\//, "");
             link.href = url + "/" + href;
           }
         }
