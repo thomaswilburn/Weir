@@ -3,6 +3,7 @@
 var cfg = require("./Config");
 var Manos = require("./Manos");
 var console = require("./DevConsole");
+var url = require("url");
 
 var pg = require("pg");
 var psql = new pg.Client({
@@ -89,6 +90,7 @@ var db = {
   addItem: function(feed, article, c) {
     //if there's no pubdate, we use null 
     var date = article.pubDate || article.date || null;
+    //check the URL as well
     var q = psql.query("INSERT INTO stories (feed, title, url, author, content, guid, published) VALUES ($1, $2, $3, $4, $5, $6, $7)",
       [feed, article.title, article.link, article.author, article.description, article.guid, date]);
     q.on("error", console.log.bind(console, article.link, article.pubDate));

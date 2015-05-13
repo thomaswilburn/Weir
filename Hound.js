@@ -7,6 +7,7 @@ var Manos = require("./Manos");
 var console = require("./DevConsole");
 var zlib = require("zlib");
 var stream = require("stream");
+var url = require("url");
 
 var noop = function() {};
 
@@ -149,6 +150,11 @@ var saveItems = function(feed, meta, articles) {
         date = published.getTime();
       } else {
         date = null;
+      }
+      //fix bad link URLs
+      var link = url.parse(article.link);
+      if (!link.host) {
+        article.link = url.resolve(meta.link, article.link);
       }
       //don't add old articles
       if (date && date < expires) {
