@@ -1,7 +1,9 @@
+var browserify = require("browserify");
+var fs = require("fs");
+
 module.exports = function(grunt) {
 
   grunt.loadNpmTasks("grunt-contrib-watch");
-  grunt.loadNpmTasks("grunt-contrib-concat");
   grunt.loadNpmTasks("grunt-contrib-less");
   
   var options = {
@@ -15,7 +17,7 @@ module.exports = function(grunt) {
       },
       js: {
         files: ["public/js/Main.js", "public/js/Controller.*.js", "public/js/Service.*.js"],
-        tasks: ["concat"],
+        tasks: ["browserify"],
         options: {
           nospawn: true
         }
@@ -27,17 +29,6 @@ module.exports = function(grunt) {
           "public/css/rss.css": "public/css/rss.less"
         }
       } 
-    },
-    concat: {
-      dev: {
-        src: [
-          "public/js/angular.min.js",
-          "public/js/Main.js",
-          "public/js/Controller.*.js",
-          "public/js/Service.*.js",
-        ],
-        dest: "public/js/weir.js"
-      }
     }
   }
   
@@ -132,6 +123,23 @@ module.exports = function(grunt) {
     console.log(credits);
     
   });
+
+
+  grunt.registerTask("browserify", function() {
+
+    var done = this.async();
+
+    var b = browserify({debug: true});
+    var output = fs.createWriteStream("public/js/weir.js");
+    b.add("public/js/Main.js");
+    
+    var bundle = b.bundle();
+    bundle.on("error", done);
+    
+    bundle.pipe(output).on("finish", done);
+
+  });
+
     
 };
     
