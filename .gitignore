@@ -1,6 +1,6 @@
 node_modules/
 public/css/*.css
-public/js/weir.js
+*/js/weir.js
 cfg.json
 weir.log
 log.txt

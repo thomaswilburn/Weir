@@ -5,7 +5,9 @@ module.exports = function(grunt) {
 
   grunt.loadNpmTasks("grunt-contrib-watch");
   grunt.loadNpmTasks("grunt-contrib-less");
-  
+  grunt.loadNpmTasks('grunt-contrib-uglify');
+  grunt.loadNpmTasks('grunt-browserify');
+
   var options = {
     watch: {
       css: {
@@ -17,10 +19,34 @@ module.exports = function(grunt) {
       },
       js: {
         files: ["public/js/Main.js", "public/js/Controller.*.js", "public/js/Service.*.js"],
-        tasks: ["browserify"],
         options: {
           nospawn: true
         }
+      }
+    },
+    browserify: {
+      js: {
+        options: {
+          debug: false
+        },
+        src: 'src/js/weir.js',
+        dest: 'public/js/weir.js'
+      }
+    },
+    uglify: {
+      options: {
+        compress: {
+          drop_console:false
+        }
+      },
+      js: {
+        options: {
+          nospawn: true
+        },
+        tasks: ["browserify"],
+        files: {
+          'src/js/weir.js': ["public/js/Main.js", "public/js/Controller.*.js", "public/js/Service.*.js"]
+        },
       }
     },
     less: {
@@ -36,7 +62,7 @@ module.exports = function(grunt) {
   
   grunt.registerTask("default", ["watch"]);
   
-  grunt.registerTask("build", "Create client-side files", ["concat", "less"]);
+  grunt.registerTask("build", "Create client-side files", ["less", "browserify:js", "uglify:js"]);
   
   grunt.registerTask("cleanConfig", "Create commitable config file and credits", function() {
   
