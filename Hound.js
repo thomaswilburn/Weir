@@ -152,7 +152,7 @@ var saveItems = function(feed, meta, articles) {
         date = null;
       }
       //fix bad link URLs
-      var link = url.parse(article.link);
+      var link = url.parse(article.link || "");
       if (!link.host) {
         article.link = url.resolve(meta.link, article.link);
       }
