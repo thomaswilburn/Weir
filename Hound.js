@@ -154,7 +154,7 @@ var saveItems = function(feed, meta, articles) {
       //fix bad link URLs
       var link = url.parse(article.link || article.meta.link || "");
       if (!link.host) {
-        article.link = url.resolve(meta.link, article.link);
+        article.link = url.resolve(meta.link, link.href);
       }
       //don't add old articles
       if (date && date < expires) {
