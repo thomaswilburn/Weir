@@ -40,9 +40,9 @@ Weir.service("Weir.Sanitize", [
       var links = doc.querySelectorAll('a');
       for (var i = 0; i < links.length; i++) {
         var link = links[i];
-        link.target = "_blank";
+        link.setAttribute("target", "_blank");
         var href = link.getAttribute("href");
-        if (!href) break;
+        if (!href) continue;
         //convert relative links to absolute
         if (!link.hostname || link.hostname == window.location.hostname) {
           //remove opening slash for consistency
