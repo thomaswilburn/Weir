@@ -36,9 +36,9 @@ module.exports = function(grunt) {
   
   grunt.registerTask("default", ["watch"]);
   
-  grunt.registerTask("build", "Create client-side files", ["concat", "less"]);
+  grunt.registerTask("build", "Create client-side files", ["browserify", "less"]);
   
-  grunt.registerTask("cleanConfig", "Create commitable config file and credits", function() {
+  grunt.registerTask("cleanConfig", "Create commitable config file", function() {
   
     /*
 
@@ -50,9 +50,8 @@ module.exports = function(grunt) {
     built in. Handy!
     
     Running this script will also generate a package.json file, or update your existing package 
-    with the current node_modules, and it logs out a list of credits for the packages used. I 
-    place this in the Credits section of the settings dialog.
-    
+    with the current node_modules.
+        
     */
     
     var cfg = require("./Config");
@@ -86,14 +85,24 @@ module.exports = function(grunt) {
     }
     
     fs.writeFileSync("cfg-example.json", JSON.stringify(cfg, replacer, 2));
+});
+
+grunt.registerTask("credits", function() {
+    /*
+    
+    Manual task that logs out a list of credits for the packages used, based on NPM 
+    metadata. I place this in the Credits section of the settings dialog.
+
+    */
+    var fs = require("fs");
+    var path = require("path");
     var credits = "";
     
     var package = {};
     if (fs.existsSync("package.json")) {
       package = JSON.parse(fs.readFileSync("package.json"))
     }
-    package.dependencies = {};
-    var modules = fs.readdirSync("./node_modules");
+    var modules = Object.keys(package.dependencies);
     modules.forEach(function(mod) {
       var packagePath = path.join("./node_modules/", mod, "/package.json");
       if (fs.existsSync(packagePath)) {
@@ -119,9 +128,7 @@ module.exports = function(grunt) {
         credits += "\n";
       }
     });
-    fs.writeFileSync("package.json", JSON.stringify(package, null, 2), "utf8");
     console.log(credits);
-    
   });
 
 

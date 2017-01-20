@@ -9,7 +9,7 @@
   "updateInterval": 10,
   "requestTimeout": 30,
   "feedsPerFetch": 8,
-  "feedMax": 10,
+  "feedMax": 20,
   "expirationDate": 30,
   "totp": false
 }
