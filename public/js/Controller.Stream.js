@@ -25,7 +25,7 @@ function($scope, Server, Scroll, Sanitize, Events) {
   };
   
   $scope.deactivate = function($event, item) {
-    item.active = false;
+    item.read = true;
     Server.stream.currentItem = null;
     $event.stopImmediatePropagation();
   }

@@ -44,6 +44,7 @@ Weir.service("Weir.Server", [
       stream: stream,
       markAsRead: function(item) {
         if (item.read) return;
+        item.read = true;
         ask({
           url: "./stream/mark",
           params: {
@@ -98,15 +99,9 @@ Weir.service("Weir.Server", [
         if (item == stream.currentItem) {
           return;
         }
-        for (var i = 0; i < stream.items.length; i++) {
-          var post = stream.items[i];
-          //mark previously active item as read
-          if (post.active) {
-            post.read = true;
-          }
-          post.active = false;
+        if (stream.currentItem) {
+          stream.currentItem.read = true;
         }
-        item.active = true;
         facade.markAsRead(item);
         stream.cursor = stream.items.indexOf(item);
         stream.currentItem = item;
