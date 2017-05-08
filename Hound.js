@@ -45,14 +45,12 @@ var fetch = function() {
       var chunk = rows.slice(0, feedsPerFetch);
       rows = rows.slice(feedsPerFetch);
 
-      if (!chunk.length) {
-        return done();
-      }
+      if (!chunk.length) return done();
 
-      var schedule = [];
+      var work = [];
 
       chunk.forEach(function(row) {
-        schedule.push(function(c) {
+        work.push(function(c) {
         
           var headers = {
             "If-Modified-Since": (row.pulled && row.pulled.toUTCString()) || new Date(0).toUTCString(),
@@ -82,6 +80,7 @@ var fetch = function() {
           r.on("response", function(response, body) {
 
             if (response.statusCode !== 200) {
+              // console.log(row.url, response.statusCode);
               //Not Modified isn't an error
               if (response.statusCode !== 304) {
                 console.log("Unsuccessful request:", row.url);
@@ -109,6 +108,10 @@ var fetch = function() {
             
               var unzipper = zlib.createGunzip();
               unzipper.pipe(parser);
+              unzipper.on("error", function(err) { 
+                console.log(row.url, err);
+                c()
+              });
               r.pipe(unzipper);
               return;
             }
@@ -122,9 +125,7 @@ var fetch = function() {
       });
 
       //at the end, call back again for more feeds
-      schedule.push(pull);
-
-      Manos.when.apply(null, schedule);
+      Manos.parallel(work, pull);
 
     };
 

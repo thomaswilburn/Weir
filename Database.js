@@ -112,13 +112,13 @@ var db = {
   
   //unsubscribe from a feed
   unsubscribe: function(id, c) {
-    Manos.when(
+    Manos.parallel([
       function(done) {
         psql.query("DELETE FROM feeds WHERE id = $1;", [id], done);
       },
       function(done) {
         psql.query("DELETE FROM stories WHERE feed = $1;", [id], done);
-      },
+      }],
       function(feeds, stories) {
         if (!feeds[0] && !stories[0]) {
           return c(null, {

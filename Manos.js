@@ -4,7 +4,7 @@ var slice = Array.prototype.slice;
 var each = Array.prototype.forEach;
 
 //call a series of functions, with the last being called when all others
-//finish arguments can be passed in by embedding the function in an array with
+//finish. Arguments can be passed in by embedding the function in an array with
 //them: [f, arg1, arg2]
 var when = function() {
   var calls = slice.call(arguments);
@@ -16,6 +16,11 @@ var when = function() {
     var f = typeof call == "function" ? call : call.shift();
     var args = typeof call == "function" ? [] : call;
     args.push(function() {
+      if (returned[index]) {
+        console.log(index);
+        console.log(arguments);
+        throw "Can't execute Manos.when callback multiple times";
+      }
       returned[index] = slice.call(arguments);
       finished++;
       if (finished == all) {
@@ -23,6 +28,22 @@ var when = function() {
       }
     });
     f.apply(null, args);
+  });
+};
+
+//Simpler version of when, doesn't try to map the input values
+var parallel = function(procs, done) {
+  var finished = 0;
+  var tracking = {};
+  procs.forEach(function(f, index) {
+    f(function() {
+      if (tracking[index]) return; //you can only call once per proc
+      tracking[index] = true;
+      finished++;
+      if (finished == procs.length) {
+        done();
+      }
+    });
   });
 };
 
@@ -54,5 +75,6 @@ var chain = function() {
 
 module.exports = {
   when: when,
-  chain: chain
+  chain: chain,
+  parallel: parallel
 }
