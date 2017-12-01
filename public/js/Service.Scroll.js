@@ -42,6 +42,8 @@ Weir.service("Weir.Scroll", [
       top: function() {
         $location.hash("");
         document.body.scrollTop = document.documentElement.scrollTop = 0;
+        document.activeElement.blur();
+        requestAnimationFrame(() => document.querySelector(".counter").focus());
       }
     };
 

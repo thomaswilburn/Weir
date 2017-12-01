@@ -47,6 +47,11 @@ var respond = function(request, data) {
 };
 
 var serve = function(file, req) {
+  if (!file) {
+    req.writeHead(500);
+    req.end();
+    return;
+  }
   file = path.join(pub, file);
   if (file.slice(-1) == "/") file += "index.html";
   if (file.indexOf("public") == -1) {

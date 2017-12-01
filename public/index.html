@@ -17,7 +17,6 @@
     <ul class="menu">
       <li class="header">Weir
       <li> Last update: {{stream.updatedAt.toLocaleTimeString()}}
-      <li> Remaining: <span class="unread">{{stream.unread}}</span> / {{stream.total}}
       <li class="refresh"> <a href="javascript:;" ng-click="refresh()">Refresh stream</a>
       <li class="settings"> <a href="javascript:;" ng-click="stack.push('settings')">Settings</a>
       <li class="feeds"> <a href="javascript:;" ng-click="stack.push('feeds')">Manage Feeds</a>
@@ -25,6 +24,9 @@
       <li class="alert message" ng-show="message"> {{message}}
       <li class="alert warning" ng-show="warning"> {{warning}}
       <li class="alert error" ng-show="error"> {{error}}
+
+      <li class="counter" tabindex="-1">
+        Remaining: <span class="unread">{{stream.unread}}</span> <span alt="out of">/</span> {{stream.total}}
     </ul>
 
     <div class="settings-container ui-panel" id="settings" stack-id="settings">

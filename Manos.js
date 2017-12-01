@@ -34,14 +34,14 @@ var when = function() {
 //Simpler version of when, doesn't try to map the input values
 var parallel = function(procs, done) {
   var finished = 0;
-  var tracking = {};
+  var tracking = [];
   procs.forEach(function(f, index) {
     f(function() {
       if (tracking[index]) return; //you can only call once per proc
-      tracking[index] = true;
+      tracking[index] = Array.prototype.slice.call(arguments);
       finished++;
       if (finished == procs.length) {
-        done();
+        done.apply(null, tracking);
       }
     });
   });
