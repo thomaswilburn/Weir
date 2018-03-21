@@ -8,8 +8,8 @@
   padding: 0;
   margin: 0;
   text-transform: uppercase;
-  color: lighten(@foreground, 20%);
-  background: @background;
+  color: var(--foreground);
+  background: var(--background);
   border-right: 1px dotted #DDD;
 
   @media @mobile {
@@ -25,6 +25,10 @@
     margin-bottom: 4px;
     padding: 4px 1em;
     letter-spacing: 1.5px;
+    
+    &:focus {
+      outline: none;
+    }
 
     @media @mobile {
       display: inline-block;
@@ -32,7 +36,7 @@
     
     &.header {
       font-weight: normal;
-      color: @accent;
+      color: var(--accent);
     }
     
     &.refresh {
@@ -44,13 +48,13 @@
     
     a {
       display: block;
-      color: @accent;
+      color: var(--accent);
     }
     
   }
   
   .unread {
-    color: @accent;
+    color: var(--accent);
     font-weight: bold;
   }
 
@@ -69,8 +73,6 @@
       margin: 0;
       padding: 1em;
       text-align: center;
-      color: @background;
-      background: @foreground;
       box-shadow: 0px 4px 8px rgba(0, 0, 0, .3);
     }
 
@@ -81,15 +83,15 @@
   }
 
   .warning {
-    border-color: @foreground;
+    border-color: var(--foreground);
     background: @warning;
-    color: @foreground;
+    color: var(--foreground);
   }
 
   .error {
-    border-color: @background;
+    border-color: var(--background);
     background: @error;
-    color: @background;
+    color: var(--background);
   }
   
 }

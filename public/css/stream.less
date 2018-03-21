@@ -3,7 +3,7 @@
 
   width: 70%;
   margin-left: 30%;
-  background: @background;
+  background: var(--background);
   padding: 1em 4px 2em;
 
   @media @mobile {
@@ -23,7 +23,7 @@
   &:after {
   
     @media @mobile {
-      content: ".";
+      content: "";
       display: block;
       position: absolute;
       bottom: -20px;
@@ -46,15 +46,14 @@
   
 .stream li {
   display: block;
-  background: white;
   list-style-type: none;
   margin-bottom: 1em;
   padding: 0 2px;
   position: relative;
   max-width: 700px;
-
+  
   &.read .header, &.read .header a {
-    color: lighten(@foreground, 50%);
+    opacity: .5;
   }
 
   .tracking-pixel {
@@ -103,7 +102,7 @@
   &.active {
   
     .header, .header a {
-      color: @foreground;
+      color: var(--foreground);
     }
   
     h2 {
@@ -111,7 +110,6 @@
     }
     
     .close-item {
-      color: lighten(@foreground, 50%);
       padding: 8px;
       position: absolute;
       top: 8px;
@@ -119,9 +117,11 @@
       cursor: pointer;
       font-weight: bold;
       font-size: 18px;
-
+      color: var(--foreground);
+      opacity: .5;
+      
       &:hover {
-        color: @foreground;
+        opacity: 1;
       }
       
       @media @mobile {
@@ -173,10 +173,10 @@
 
   .text {
     padding: 0 1em;
-    border-left: 1px solid darken(@background, 20%);
+    border-left: 2px solid var(--@background);
 
     .active & {
-      border-left: 2px solid @accent;
+      border-left: 2px solid var(--accent);
       
       @media @mobile {
         border: none;

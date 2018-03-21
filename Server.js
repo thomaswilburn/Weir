@@ -34,15 +34,14 @@ var mimeTypes = {
   ".png": "image/png"
 };
 
-var respond = function(request, data) {
+var respond = function(response, data) {
   var json = JSON.stringify(data);
-  request.setHeader("Content-Type", "application/json");
-  request.setHeader("Content-Encoding", "gzip");
-  request.setHeader("Access-Control-Allow-Origin", "*");
-  request.writeHead(200);
+  response.setHeader("Content-Type", "application/json");
+  response.setHeader("Content-Encoding", "gzip");
+  response.writeHead(200);
   zlib.gzip(json, function(err, zipped) {
-    request.write(zipped);
-    request.end();
+    response.write(zipped);
+    response.end();
   });
 };
 
@@ -54,6 +53,7 @@ var serve = function(file, req) {
   }
   file = path.join(pub, file);
   if (file.slice(-1) == "/") file += "index.html";
+  // console.log("Serving", file);
   if (file.indexOf("public") == -1) {
     req.writeHead(403);
     req.end();
@@ -107,8 +107,9 @@ var parseCookies = function(request) {
 
 var makeRequest = function(request, response) {
   var parsed = url.parse(request.url, true, true);
-  var request = {
+  var req = {
     url: parsed.pathname,
+    request: request,
     cookies: request.cookie,
     params: parsed.query,
     body: "",
@@ -126,7 +127,14 @@ var makeRequest = function(request, response) {
     },
     setHeader: response.setHeader.bind(response)
   };
-  return request;
+  var ref = request.headers.referer;
+  if (ref) {
+    var parsed = url.parse(ref);
+    ref = parsed.protocol + "//" + parsed.host;
+  } else ref = "*";
+  response.setHeader("Access-Control-Allow-Origin", ref);
+  response.setHeader("Access-Control-Allow-Credentials", "true");
+  return req;
 };
 
 //checkpoint() is a pseudo-route that's immune to authorization
@@ -187,6 +195,7 @@ Server.http.on("request", function(incoming, response) {
     request.body += bytes;
   });
   incoming.on("end", function() {
+    // console.log("Requested:", request.url);
     //special case for the checkpoint
     if (request.url == "/checkpoint") {
       return checkpoint(request);

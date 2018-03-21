@@ -7,7 +7,7 @@
     border-left: 1px dotted #DDD;
     text-align: center;
     padding-top: 2em;
-    background: @background;
+    background: var(--background);
 
     @media @mobile {
         top: inherit;
@@ -31,13 +31,11 @@
 }
 
 @charm-radius: 50px;
-@charm-inactive: black;
-@charm-active: @accent;
 
 .charm {
     border-radius: 50px;
-    border: 2px solid @charm-inactive;
-    color: @charm-inactive;
+    border: 2px solid var(--foreground);
+    color: var(--foreground);
     width: @charm-radius - 1px;
     height: @charm-radius - 1px;
     font-size: @charm-radius * .8;
@@ -48,7 +46,7 @@
     text-decoration: none;
 
     &:active {
-        border-color: @charm-active;
-        color: @charm-active;
+        border-color: var(--accent);
+        color: var(--accent);
     }
 }

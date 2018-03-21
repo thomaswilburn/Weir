@@ -4,16 +4,30 @@
   box-sizing: border-box;
 }
 
+:root {
+  --foreground: black;
+  --background: white;
+  --accent: #808;
+  
+  &.dark {
+    --foreground: white;
+    --background: #333;
+    --accent: #FFA200;
+  }
+}
+
 body {
   font-family: calibri, tahoma, verdana, sans-serif;
   font-size: 14px;
   line-height: 20px;
   padding: 0;
   margin: 0;
+  background: var(--background);
+  color: var(--foreground);
 }
 
 a {
-  color: lighten(@foreground, 10%);
+  color: var(--foreground);
 }
 
 //Resets for the various in-stream elements to bring them in-line with our style

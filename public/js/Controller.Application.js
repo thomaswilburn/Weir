@@ -10,6 +10,8 @@ Weir.controller("Weir.Application", [
 
     Stack.push("stream");
     $scope.stack = Stack;
+    
+    $scope.theme = "light";
 
     var lastCount = 0;
 
@@ -39,6 +41,10 @@ Weir.controller("Weir.Application", [
     Events.on("status", updateStatus);
     Events.on("activated", updateStatus);
     
+    $scope.toggleTheme = function() {
+      $scope.theme = $scope.theme == "light" ? "dark" : "light";
+    };
+    
     var keyMapping = {
       "j": "next",
       "k": "previous",
@@ -48,7 +54,7 @@ Weir.controller("Weir.Application", [
       " ": "pagedown",
       34 : "pagedown",
       13 : "open"
-    }
+    };
 
     angular.element(document).bind("keypress keydown", function(e) {
 
