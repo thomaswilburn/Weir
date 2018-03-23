@@ -12,6 +12,7 @@ Weir.controller("Weir.Application", [
     $scope.stack = Stack;
     
     $scope.theme = "light";
+    $scope.themeColor = "#808";
 
     var lastCount = 0;
 
@@ -43,6 +44,7 @@ Weir.controller("Weir.Application", [
     
     $scope.toggleTheme = function() {
       $scope.theme = $scope.theme == "light" ? "dark" : "light";
+      $scope.themeColor = $scope.theme == "light" ? "#808" : "#333";//"#FFA200";
     };
     
     var keyMapping = {
