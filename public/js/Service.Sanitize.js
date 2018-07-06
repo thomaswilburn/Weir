@@ -79,26 +79,10 @@ Weir.service("Weir.Sanitize", [
             element.style[style + direction] = "";
           });
         });
-        var width = element.getAttribute("width") || element.style.width;
-        if (typeof width == "string") {
-          width = width.replace(/[a-z]/gi, "") * 1;
-        }
-        if (!width) return;
-        if (width > streamWidth) {
-          var height = element.getAttribute("height") || element.style.height;
-          if (typeof height == "string") {
-            height = height.replace(/[a-z]/gi, "") * 1;
-          }
-          if (height) {
-            //scale
-            element.setAttribute("height", height * (streamWidth / width));
-            element.setAttribute("width", streamWidth);
-          } else {
-            element.removeAttribute("width");
-          }
-          element.style.width = null;
-          element.style.height = null;
-        }
+        ["width", "height"].forEach(function(s) {
+          element.style[s] = "";
+        });
+        element.removeAttribute("width");
       });
 
       //process images (defer loading, remove dimensions for CSS reasons)  
