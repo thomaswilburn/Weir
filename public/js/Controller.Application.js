@@ -44,7 +44,7 @@ Weir.controller("Weir.Application", [
     
     $scope.toggleTheme = function() {
       $scope.theme = $scope.theme == "light" ? "dark" : "light";
-      $scope.themeColor = $scope.theme == "light" ? "#808" : "#333";//"#FFA200";
+      $scope.themeColor = $scope.theme == "light" ? "#808" : "#888";//"#FFA200";
     };
     
     var keyMapping = {
@@ -58,7 +58,7 @@ Weir.controller("Weir.Application", [
       13 : "open"
     };
 
-    angular.element(document).bind("keypress keydown", function(e) {
+    angular.element(document).bind("keypress", function(e) {
 
       if (["INPUT", "TEXTAREA"].indexOf(e.target.tagName) > -1) return;
     
@@ -91,6 +91,7 @@ Weir.controller("Weir.Application", [
         $scope.$apply();
       } else if (action) {
         e.preventDefault();
+        e.stopImmediatePropagation();
         Events.fire("key:" + action);
         $scope.$apply();
       }

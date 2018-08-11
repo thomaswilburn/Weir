@@ -66,7 +66,8 @@ function($scope, Server, Scroll, Sanitize, Events) {
     }
   }
 
-  $scope.openCurrent = function() {
+  $scope.openCurrent = function(e) {
+    if (e && e.preventDefault) e.preventDefault();
     if (!Server.stream.currentItem || !Server.stream.currentItem.url) return;
     window.open(Server.stream.currentItem.url, "_blank");
   }
