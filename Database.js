@@ -93,7 +93,7 @@ var db = {
     //check the URL as well
     var q = psql.query("INSERT INTO stories (feed, title, url, author, content, guid, published) VALUES ($1, $2, $3, $4, $5, $6, $7)",
       [feed, article.title, article.link, article.author, article.description, article.guid, date]);
-    q.on("error", console.log.bind(console, article.link, article.pubDate));
+    q.catch(() => console.log(article.link, article.pubDate));
     if (c) return c();
   },
   
