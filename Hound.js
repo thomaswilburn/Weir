@@ -83,7 +83,7 @@ var fetch = function() {
               // console.log(row.url, response.statusCode);
               //Not Modified isn't an error
               if (response.statusCode !== 304) {
-                console.log("Unsuccessful request:", row.url);
+                console.log("Unsuccessful request:", row.url, response.statusCode);
               }
               database.setFeedResult(row.id, response.statusCode);
               return c();
