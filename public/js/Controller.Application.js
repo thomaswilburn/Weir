@@ -55,14 +55,16 @@ Weir.controller("Weir.Application", [
       ".": "refresh",
       " ": "pagedown",
       34 : "pagedown",
-      13 : "open"
+      13 : "open",
+      "Enter" : "open"
     };
 
     angular.element(document).bind("keypress", function(e) {
 
       if (["INPUT", "TEXTAREA"].indexOf(e.target.tagName) > -1) return;
     
-      var key = e.charCode ? String.fromCharCode(e.charCode).toLowerCase() : e.keyCode;
+      var char = String.fromCharCode(e.charCode).toLowerCase().trim();
+      var key = char || e.code || e.keyCode;
       var action = keyMapping[key];
       
       if (action == "pagedown") {
