@@ -64,8 +64,7 @@ Weir.controller("Weir.Application", [
       if (["INPUT", "TEXTAREA"].indexOf(e.target.tagName) > -1) return;
     
       var char = String.fromCharCode(e.charCode).toLowerCase().trim();
-      var key = char || e.code || e.keyCode;
-      var action = keyMapping[key];
+      var action = keyMapping[char] || keyMapping[e.code] || keyMapping[e.keyCode];
       
       if (action == "pagedown") {
         //take over scrolling, unfortunately
