@@ -54,9 +54,10 @@ Weir.controller("Weir.Application", [
       "r": "refresh",
       ".": "refresh",
       " ": "pagedown",
+      "space": "pagedown",
       34 : "pagedown",
       13 : "open",
-      "Enter" : "open"
+      "enter" : "open"
     };
 
     angular.element(document).bind("keypress", function(e) {
@@ -64,7 +65,7 @@ Weir.controller("Weir.Application", [
       if (["INPUT", "TEXTAREA"].indexOf(e.target.tagName) > -1) return;
     
       var char = String.fromCharCode(e.charCode).toLowerCase().trim();
-      var action = keyMapping[char] || keyMapping[e.code] || keyMapping[e.keyCode];
+      var action = keyMapping[char] || keyMapping[e.code && e.code.toLowerCase()] || keyMapping[e.keyCode];
       
       if (action == "pagedown") {
         //take over scrolling, unfortunately
