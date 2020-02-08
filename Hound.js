@@ -182,7 +182,10 @@ var getMeta = function(url, c) {
   
   try {
     r = request({
-      url: url
+      url: url,
+      headers: {
+        "User-Agent": "Weir RSS Reader"
+      }
     });
   } catch (e) {
     c({error: "Invalid URL"});
@@ -193,7 +196,8 @@ var getMeta = function(url, c) {
   
   r.on("response", function(data) {
     if (data.statusCode !== 200) {
-      return c({error: "Invalid response"});
+      return c({error: "Invalid response", statusCode: data.statusCode, statusText: 
+      data.statusText });
     }
     
     var parser = new FeedParser();
