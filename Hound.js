@@ -55,7 +55,8 @@ var fetch = function() {
           var headers = {
             "If-Modified-Since": (row.pulled && row.pulled.toUTCString()) || new Date(0).toUTCString(),
             "Connection": "close",
-            "Accept-Encoding": "gzip"
+            "Accept-Encoding": "gzip",
+            "User-Agent": "Wier RSS reader"
           };
           
           var r = request({
