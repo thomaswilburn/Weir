@@ -121,7 +121,7 @@
           <div class="header" ng-click="activate(item, false);">
             <cite>{{item.feed}}</cite>
             <a href="{{item.url}}" prevent-default>
-              <h2>{{item.title}}</h2>
+              <h2 ng-bind-html-unsafe="item.title"></h2>
             </a>
             <!-- tags go here -->
             <a ng-click="deactivate($event, item)" class="close-item">&times;</a>

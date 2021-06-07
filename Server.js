@@ -162,7 +162,14 @@ var checkpoint = function(req) {
       });
       return;
     }
-    req.reply({ secure: true });
+    // if no body, check current auth status
+    if (req.cookies && req.cookies.key) {
+      Security.check(req.cookies.key, function(pass) {
+        req.reply({ secure: true, authenticated: pass });
+      });
+    } else {
+      req.reply({ secure: true, authenticated: false });
+    }
     return;
   }
   req.reply(Security.generateKey());
