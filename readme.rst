@@ -28,37 +28,20 @@ these features.
 -  Filtering on tags or categories
 -  Offline mode
 
-What's still missing?
----------------------
+Quirks
+------
 
-At this stage, Weir is sufficient, but not fully fleshed out. There are
-still plans to add the following features:
+Since it has an intended userbase of 1, Weir has some personal oddities:
 
--  Multiple database support
--  Visual coloring based on tags
-
-Also, a number of the features are intentionally built with the minimum
-degree of functionality (see also: worse is better). These will need to
-be rebuilt at some point, but they are fine for what it does now.
-
--  The router accepts only strings and matches them precisely, because
-   JavaScript's regex model is a wasteland lacking named groups and I
-   haven't gotten around to copying in my routing code from Grue.
--  The Database layer executes SQL directly, instead of going through a
-   builder like it probably should.
--  There is no migration plan, because Weir stores almost nothing that's
-   not ephemeral or able to be recreated given fifteen minutes and a
-   decent Internet connection.
--  Everything gets hosted at the root of the server, using a
-   user-selected port to keep from colliding with regular web services.
-   This is because I personally run all my sites from a single VM. You
-   may need to reverse-proxy Weir in production.
+* Auth is through timed one-time passcode - when the server is set up, it will default to an "insecure" state and show the user a QR code for Google Authenticator and a matching hash to enter into the server config. Once completed, you don't need a username or password to access Weir, just a TOTP token.
+* I wrote the server routing on my own when I was first learning Node, so it can be a little finicky but it's reliable enough.
+* You can mark items as read, but there's no API endpoint to revert that. Just as in life, we can only move forward past our mistakes.
 
 Requirements
 ------------
 
 -  NodeJS
--  PostgreSQL (other DB types coming)
+-  PostgreSQL
 
 Installation Instructions
 -------------------------
@@ -100,9 +83,6 @@ Installation Instructions
    subscriptions, but it'll be done by the amount of time you set in the
    configuration as updateInterval.
 
-7. File bugs, issues, and patches here to make Weir better! Thanks for
-   your help!
-
 What's with the name?
 ---------------------
 
@@ -118,9 +98,3 @@ Why Weir instead of other services?
 If you're happy using a subscription or free service, go for it. In the
 wake of the Reader shutdown, I'm personally wary about relying on other
 people's servers.
-
-License
--------
-
-Weir is licensed under the GPL because I'm a filthy socialist. Make
-yourself at home.
