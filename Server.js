@@ -147,6 +147,7 @@ var checkpoint = async function(req) {
       } catch (e) {
         req.reply({ error: "Couldn't parse request" });
       }
+      console.log(passed, token, body);
       var [ passed, token ] = await Security.challenge(body.totp);
       if (passed) {
         var today = new Date();
@@ -176,9 +177,9 @@ var checkpoint = async function(req) {
 var authorize = async function(req, response, c) {
   if (cfg.totp) {
     if (req.cookie.key) {
-      var pass = Security.check(req.cookie.key, function(pass) {
+      var pass = await Security.check(req.cookie.key);
       if (pass) {
-        return;
+        return true;
       } else {
         respond(response, { challenge: "TOTP" });
       }
@@ -186,6 +187,7 @@ var authorize = async function(req, response, c) {
       respond(response, { challenge: "TOTP" });
     }
   }
+  return false;
 };
 
 //process requests, checking for routes before serving static files
@@ -195,9 +197,10 @@ Server.http.on("request", function(incoming, response) {
   incoming.on("data", function(bytes) {
     request.body += bytes;
   });
-  incoming.on("end", function() {
+  incoming.on("end", async function() {
     // console.log("Requested:", request.url);
     //special case for the checkpoint
+    console.log(request.url);
     if (request.url == "/checkpoint") {
       return checkpoint(request);
     }
@@ -205,10 +208,9 @@ Server.http.on("request", function(incoming, response) {
     for (var i = 0; i < routes.length; i++) {
       var route = routes[i];
       if (route.p.test(request.url)) {
-        authorize(incoming, response, function() {
-          //if auth passes, call the route function
-          route.c(request);
-        });
+        var passed = await authorize(incoming, response);
+        //if auth passes, call the route function
+        if (passed) route.c(request);
         return;
       }
     }

@@ -54,7 +54,7 @@ var fetch = async function () {
 
   var chunks = [];
   for (var i = 0; i < rows.length; i += feedsPerFetch) {
-    chunks.push(rows.slice(i, feedsPerFetch));
+    chunks.push(rows.slice(i, i + feedsPerFetch));
   }
 
   for (var chunk of chunks) {
@@ -131,11 +131,12 @@ var fetch = async function () {
       await Promise.all(work);
     }
   }
+  console.log("Fetch complete");
 };
 
 var saveItems = async function (feed, meta, articles) {
   var added = 0;
-  var marks = database.getIdentifiers(feed);
+  var marks = await database.getIdentifiers(feed);
   var max = cfg.feedMax || 20;
   if (articles.length > max) {
     articles = articles.slice(0, max);
@@ -192,7 +193,7 @@ var getMeta = function (url) {
       return;
     }
 
-    r.on("error", c);
+    r.on("error", fail);
 
     r.on("response", function (data) {
       if (data.statusCode !== 200) {

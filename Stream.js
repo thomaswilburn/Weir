@@ -16,14 +16,14 @@ server.route("/stream/unread", async function (req) {
     limit = req.params.limit;
   }
   var [unread, status] = await Promise.all([
-    db.getUnread(limit, done),
+    db.getUnread(limit),
     db.getStatus()
   ]);
-  if (!unread[0] && !status[0]) {
+  if (unread && status) {
     req.reply({
-      items: unread[1],
-      unread: status[1].unread,
-      total: status[1].total
+      items: unread,
+      unread: status.unread,
+      total: status.total
     });
   } else {
     req.reply({
@@ -44,14 +44,15 @@ server.route("/stream/markRefresh", async function (req) {
   var items = req.params.items;
   if (!items) return req.reply({ marked: 0 });
   items = items.split(",");
+  var limit = req.params.limit || cfg.displayLimit || 15;
   await Promise.all(items.map((item) => db.mark(item)));
   var [unread, status] = await Promise.all([
     db.getUnread(limit),
     db.getStatus()
   ]);
   req.reply({
-    items: unread[1],
-    total: status[1] && status[1].total,
-    unread: status[1] && status[1].unread
+    items: unread,
+    total: status.total,
+    unread: status.unread
   });
 });

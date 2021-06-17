@@ -4,7 +4,7 @@ var Hound = require("./Hound");
 
 server.route("/feeds", async function (req) {
   try {
-    var feeds = db.getFeedsDetailed();
+    var feeds = await db.getFeedsDetailed();
     return req.reply({ feeds });
   } catch (err) {
     return req.reply({ feeds: [] });
@@ -13,7 +13,7 @@ server.route("/feeds", async function (req) {
 
 server.route("/feeds/subscribe", async function (req) {
   try {
-    var meta = Hound.getMeta(req.params.url);
+    var meta = await Hound.getMeta(req.params.url);
     var row = await db.subscribe(meta);
     meta.id = row.id;
     req.reply(meta);

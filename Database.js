@@ -108,6 +108,7 @@ var db = {
       RETURNING id;`,
       [metadata.title, metadata.url, metadata.site_url]
     );
+    console.log(data);
     return data ? data.rows[0] : {};
   },
   
@@ -161,8 +162,8 @@ var db = {
         console.log("Deleted " + data.rowCount + " old stories.");
       }
       return data && data.rowCount;
-    } catch (err) 
-        console.log("Error deleting stories:", err);
+    } catch (err) {
+      console.log("Error deleting stories:", err);
     }
   },
   
