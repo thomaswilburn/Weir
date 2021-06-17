@@ -3,7 +3,6 @@ var request = require("request");
 var pg = require("pg");
 var EventEmitter = require("events").EventEmitter;
 var cfg = require("./Config");
-var Manos = require("./Manos");
 var console = require("./DevConsole");
 var zlib = require("zlib");
 var stream = require("stream");

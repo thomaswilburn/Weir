@@ -1,7 +1,6 @@
 //Postgres abstraction
 
 var cfg = require("./Config");
-var Manos = require("./Manos");
 var console = require("./DevConsole");
 var url = require("url");
 
