@@ -37,11 +37,6 @@ var fetch = async function () {
   console.log("Starting fetch...");
 
   var done = function () {
-    Hound.busy = false;
-    Hound.emit("fetch:end");
-    console.log("All done!");
-    var interval = (cfg.updateInterval || 15) * 60 * 1000;
-    setTimeout(fetch, interval);
   };
 
   var rows = await database.getFeeds();
@@ -130,7 +125,13 @@ var fetch = async function () {
       await Promise.all(work);
     }
   }
-  console.log("Fetch complete");
+
+  Hound.busy = false;
+  Hound.emit("fetch:end");
+  console.log("All done!");
+  var interval = (cfg.updateInterval || 15) * 60 * 1000;
+  setTimeout(fetch, interval);
+  
 };
 
 var saveItems = async function (feed, meta, articles) {
