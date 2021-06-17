@@ -2,29 +2,31 @@ var server = require("./Server");
 var db = require("./Database");
 var Hound = require("./Hound");
 
-server.route("/feeds", function(req) {
-  db.getFeedsDetailed(function(err, rows) {
-    if (err) {
-      return req.reply({ feeds: [] });
-    }
-    return req.reply({ feeds: rows });
-  });
+server.route("/feeds", async function (req) {
+  try {
+    var feeds = db.getFeedsDetailed();
+    return req.reply({ feeds });
+  } catch (err) {
+    return req.reply({ feeds: [] });
+  }
 });
 
-server.route("/feeds/subscribe", function(req) {
-  Hound.getMeta(req.params.url, function(err, meta) {
-    if (err) {
-      return req.reply(err);
-    }
-    db.subscribe(meta, function(err, row) {
-      meta.id = row.id;
-      req.reply(meta);
-    });
-  });
+server.route("/feeds/subscribe", async function (req) {
+  try {
+    var meta = Hound.getMeta(req.params.url);
+    var row = await db.subscribe(meta);
+    meta.id = row.id;
+    req.reply(meta);
+  } catch (err) {
+    return req.reply(err);
+  }
 });
 
-server.route("/feeds/unsubscribe", function(req) {
-  db.unsubscribe(req.params.id, function(err, result) {
-    req.reply(err || result);
-  });
+server.route("/feeds/unsubscribe", async function (req) {
+  try {
+    var result = await db.unsubscribe(req.params.id);
+    req.reply(result)
+  } catch (err) {
+    req.reply(err);
+  }
 });

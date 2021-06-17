@@ -1,4 +1,3 @@
-var Manos = require("./Manos");
 var fs = require("fs");
 var cfg = require("./Config");
 if (typeof cfg.logPath == "undefined" || cfg.logPath !== false) {

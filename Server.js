@@ -19,7 +19,6 @@ var http = require("http");
 var url = require("url");
 var fs = require("fs");
 var path = require("path");
-var Manos = require("./Manos");
 var Security = require("./Security");
 
 var routes = [];
@@ -138,7 +137,7 @@ var makeRequest = function(request, response) {
 };
 
 //checkpoint() is a pseudo-route that's immune to authorization
-var checkpoint = function(req) {
+var checkpoint = async function(req) {
   if (cfg.totp) {
     //check for passkey
     if (req.body) {
@@ -148,25 +147,23 @@ var checkpoint = function(req) {
       } catch (e) {
         req.reply({ error: "Couldn't parse request" });
       }
-      Security.challenge(body.totp, function(passed, token) {
-        if (passed) {
-          var today = new Date();
-          var cookieString = "key=" + token + ";";
-          cookieString += " path=/;";
-          cookieString += " expires=" + new Date(today.getFullYear() + 1, today.getMonth(), today.getDate()).toGMTString();
-          req.setHeader("Set-Cookie", cookieString);
-          req.reply({ success: true });
-        } else {
-          req.reply({ error: "Failed password challenge" });
-        }
-      });
+      var [ passed, token ] = await Security.challenge(body.totp);
+      if (passed) {
+        var today = new Date();
+        var cookieString = "key=" + token + ";";
+        cookieString += " path=/;";
+        cookieString += " expires=" + new Date(today.getFullYear() + 1, today.getMonth(), today.getDate()).toGMTString();
+        req.setHeader("Set-Cookie", cookieString);
+        req.reply({ success: true });
+      } else {
+        req.reply({ error: "Failed password challenge" });
+      }
       return;
     }
     // if no body, check current auth status
     if (req.cookies && req.cookies.key) {
-      Security.check(req.cookies.key, function(pass) {
-        req.reply({ secure: true, authenticated: pass });
-      });
+      var pass = await Security.check(req.cookies.key);
+      req.reply({ secure: true, authenticated: pass });
     } else {
       req.reply({ secure: true, authenticated: false });
     }
@@ -176,22 +173,19 @@ var checkpoint = function(req) {
 };
 
 //before routing, check the cookie for session guarantee
-var authorize = function(req, response, c) {
+var authorize = async function(req, response, c) {
   if (cfg.totp) {
     if (req.cookie.key) {
-      Security.check(req.cookie.key, function(pass) {
-        if (pass) {
-          c();
-        } else {
-          respond(response, { challenge: "TOTP" });
-        }
-      });
+      var pass = Security.check(req.cookie.key, function(pass) {
+      if (pass) {
+        return;
+      } else {
+        respond(response, { challenge: "TOTP" });
+      }
     } else {
       respond(response, { challenge: "TOTP" });
     }
-    return;
   }
-  c();
 };
 
 //process requests, checking for routes before serving static files

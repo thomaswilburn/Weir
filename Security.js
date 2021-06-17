@@ -3,14 +3,12 @@ var cfg = require("./Config");
 var db = require("./Database");
 
 module.exports = {
-  check: function(session, c) {
+  check: function(session) {
     //check database for token, run callback with true if found, else false
-    db.getAuthToken(session, function(exists) {
-      c(exists);
-    });
+    return db.getAuthToken(session);
   },
-  challenge: function(pass, c) {
-    if (!cfg.totp) return c(true);
+  challenge: async function(pass) {
+    if (!cfg.totp) return [ true ];
     pass = pass * 1;
     var secret = cfg.totp;
     var expected = [];
@@ -24,12 +22,10 @@ module.exports = {
       //return a cookie value to be set, stored
       //using speakeasy keys as random tokens is silly, but will work
       var sessionToken = speakeasy.generate_key({length: 32}).hex;
-      db.setAuthToken(sessionToken, function() {
-        c(true, sessionToken);
-      });
-      return;
+      await db.setAuthToken(sessionToken);
+      return [ true, sessionToken ];
     }
-    return c(false);
+    return [ false ];
   },
   generateKey: function() {
     var key = speakeasy.generate_key({length: 16, google_auth_qr: true, name: "Weir"});
