@@ -199,8 +199,7 @@ Server.http.on("request", function(incoming, response) {
   });
   incoming.on("end", async function() {
     // console.log("Requested:", request.url);
-    //special case for the checkpoint
-    console.log(request.url);
+    // special case for the checkpoint
     if (request.url == "/checkpoint") {
       return checkpoint(request);
     }
