@@ -1,5 +1,5 @@
 var FeedParser = require("feedparser");
-var request = require("request");
+var fetch = require("node-fetch");
 var pg = require("pg");
 var EventEmitter = require("events").EventEmitter;
 var cfg = require("./Config");
@@ -28,24 +28,6 @@ var makeHeaders = function (row) {
   };
 };
 
-var requestFeed = function(url, headers) {
-  // console.log("Requesting", url);
-  return new Promise(function(ok, fail) {
-    var r = request({
-      url,
-      headers,
-      jar: false,
-      timeout: cfg.requestTimeout * 1000 || 30,
-      encoding: null
-    });
-
-    r.pause();
-
-    r.on("error", err => fail(r));
-    r.on("response", ok);
-  });
-};
-
 var parseFeed = function(input) {
   return new Promise(function(ok, fail) {
     var parser = new FeedParser();
@@ -56,16 +38,7 @@ var parseFeed = function(input) {
   });
 };
 
-var readResponse = function(response) {
-  return new Promise(ok => {
-    var buffer = "";
-    response.on("data", d => buffer += d.toString("utf-8"));
-    response.on("end", () => ok(buffer));
-    response.resume();
-  });
-};
-
-var fetch = async function () {
+var release = async function () {
   if (Hound.busy) return;
   Hound.busy = true;
   Hound.emit("fetch:start");
@@ -88,60 +61,32 @@ var fetch = async function () {
     for (var row of chunk) {
       work.push(
         new Promise(async (ok, fail) => {
-          var headers = makeHeaders(row);
 
           try {
-            var response = await requestFeed(row.url, headers);
-            var r = response.request;
-            // console.log(row.url, response.statusCode);
-            if (response.statusCode !== 200) {
-              //Not Modified isn't an error
-              if (response.statusCode !== 304) {
+            var headers = makeHeaders(row);
+            var response = await fetch(row.url, { headers });
+            // console.log(row.url, response.status);
+            if (response.status !== 200) {
+              // Not Modified isn't an error
+              if (response.status !== 304) {
                 console.log(
                   "Unsuccessful request:",
                   row.url,
-                  response.statusCode
+                  response.status,
+                  response.statusText
                 );
               }
-              database.setFeedResult(row.id, response.statusCode);
+              database.setFeedResult(row.id, response.status);
               return ok();
             }
 
-            try {
-              var encoding = response.headers["content-encoding"];
-              // default to uncompressed input for the parser
-              var input = response;
-              var compressed = encoding && encoding.indexOf("gzip") > -1;
-              var body = "";
-              // if compressed, feed it to the unzipper and use that as input
-              if (compressed) {
-                var unzipper = zlib.createGunzip();
-                unzipper.on("error", function (err) {
-                  console.log(row.url, err);
-                  return ok();
-                });
-                r.pipe(unzipper);
-                r.resume();
-                body = await readResponse(unzipper);
-              } else {
-                body = await readResponse(response);
-              }
-              
-              var [ meta, articles ] = await parseFeed(body);
-              database.setFeedResult(row.id, 200);
-              saveItems(row.id, meta, articles);
-            } catch (err) {
-              console.log("Broken feed:", err, row.url);
-              database.setFeedResult(row.id, 0);
-            }
-          } catch (r) {
-            if (r.response && r.response.statusCode == 304) {
-              //some servers send 304 badly
-              database.setFeedResult(row.id, 304);
-            } else {
-              console.log("Request error:", row.url, r);
-              database.setFeedResult(row.id, 0);
-            }
+            var body = await response.text();
+            var [ meta, articles ] = await parseFeed(body);
+            database.setFeedResult(row.id, 200);
+            saveItems(row.id, meta, articles);
+          } catch (err) {
+            console.log("Hound request/parse error:", row.url, err);
+            database.setFeedResult(row.id, 0);
           }
           // this step is basically always considered a success for flow purposes
           ok();
@@ -156,7 +101,7 @@ var fetch = async function () {
   Hound.emit("fetch:end");
   console.log("All done!");
   var interval = (cfg.updateInterval || 15) * 60 * 1000;
-  setTimeout(fetch, interval);
+  setTimeout(release, interval);
   
 };
 
@@ -206,9 +151,9 @@ var saveItems = async function (feed, meta, articles) {
 var getMeta = async function (url) {
 
   var headers = { "User-Agent": "Weir RSS Reader" };
-  var response = await requestFeed(url, headers);
-  
-  if (response.statusCode !== 200) {
+  var response = await fetch(url, { headers });
+
+  if (response.status !== 200) {
     throw {
       error: "Invalid response",
       statusCode: data.statusCode,
@@ -216,7 +161,7 @@ var getMeta = async function (url) {
     };
   }
 
-  var body = await readResponse(response);
+  var body = await response.text();
 
   var [ meta ] = await parseFeed(body);
   return {
@@ -227,9 +172,9 @@ var getMeta = async function (url) {
 
 };
 
-Hound.fetch = fetch;
+Hound.fetch = release;
 Hound.setDB = setDB;
-Hound.start = fetch;
+Hound.start = release;
 Hound.getMeta = getMeta;
 
 module.exports = Hound;
