@@ -29,6 +29,7 @@ var makeHeaders = function (row) {
 };
 
 var requestFeed = function(url, headers) {
+  // console.log("Requesting", url);
   return new Promise(function(ok, fail) {
     var r = request({
       url,
@@ -38,17 +39,29 @@ var requestFeed = function(url, headers) {
       encoding: null
     });
 
-    r.on("error", () => fail(r));
-    r.on("response", () => ok([r, r.response, body]));
+    r.pause();
+
+    r.on("error", err => fail(r));
+    r.on("response", ok);
   });
 };
 
-var parseFeed = function(stream) {
+var parseFeed = function(input) {
   return new Promise(function(ok, fail) {
     var parser = new FeedParser();
     parser.on("error", fail);
     parser.on("complete", (meta, articles) => ok([meta, articles]));
-    stream.pipe(parser);
+    parser.write(input);
+    parser.end();
+  });
+};
+
+var readResponse = function(response) {
+  return new Promise(ok => {
+    var buffer = "";
+    response.on("data", d => buffer += d.toString("utf-8"));
+    response.on("end", () => ok(buffer));
+    response.resume();
   });
 };
 
@@ -78,9 +91,10 @@ var fetch = async function () {
           var headers = makeHeaders(row);
 
           try {
-            var [ r, response, body ] = requestFeed(row.url, headers);
+            var response = await requestFeed(row.url, headers);
+            var r = response.request;
+            // console.log(row.url, response.statusCode);
             if (response.statusCode !== 200) {
-              // console.log(row.url, response.statusCode);
               //Not Modified isn't an error
               if (response.statusCode !== 304) {
                 console.log(
@@ -96,32 +110,36 @@ var fetch = async function () {
             try {
               var encoding = response.headers["content-encoding"];
               // default to uncompressed input for the parser
-              var input = r;
+              var input = response;
+              var compressed = encoding && encoding.indexOf("gzip") > -1;
+              var body = "";
               // if compressed, feed it to the unzipper and use that as input
-              if (encoding && encoding.indexOf("gzip") > -1) {
+              if (compressed) {
                 var unzipper = zlib.createGunzip();
-                input = unzipper;
                 unzipper.on("error", function (err) {
                   console.log(row.url, err);
                   return ok();
                 });
                 r.pipe(unzipper);
+                r.resume();
+                body = await readResponse(unzipper);
+              } else {
+                body = await readResponse(response);
               }
-
-              var [ meta, articles ] = await parseFeed(input);
+              
+              var [ meta, articles ] = await parseFeed(body);
               database.setFeedResult(row.id, 200);
               saveItems(row.id, meta, articles);
             } catch (err) {
-              console.log("Broken feed:", row.url);
+              console.log("Broken feed:", err, row.url);
               database.setFeedResult(row.id, 0);
             }
           } catch (r) {
             if (r.response && r.response.statusCode == 304) {
               //some servers send 304 badly
               database.setFeedResult(row.id, 304);
-              
             } else {
-              console.log("Request error:", row.url, err.code);
+              console.log("Request error:", row.url, r);
               database.setFeedResult(row.id, 0);
             }
           }
@@ -188,7 +206,8 @@ var saveItems = async function (feed, meta, articles) {
 var getMeta = async function (url) {
 
   var headers = { "User-Agent": "Weir RSS Reader" };
-  var [ r, response, body ] = await requestFeed(url, headers);
+  var response = await requestFeed(url, headers);
+  
   if (response.statusCode !== 200) {
     throw {
       error: "Invalid response",
@@ -197,7 +216,9 @@ var getMeta = async function (url) {
     };
   }
 
-  var [ meta ] = await parseFeed(r);
+  var body = await readResponse(response);
+
+  var [ meta ] = await parseFeed(body);
   return {
     title: meta.title,
     site_url: meta.link,

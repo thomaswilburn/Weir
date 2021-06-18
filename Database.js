@@ -107,7 +107,6 @@ var db = {
       RETURNING id;`,
       [metadata.title, metadata.url, metadata.site_url]
     );
-    console.log(data);
     return data ? data.rows[0] : {};
   },
   
