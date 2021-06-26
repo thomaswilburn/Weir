@@ -1,215 +1,60 @@
 <!doctype html>
-<html ng-app="Weir" ng-controller="Weir.Application" ng-class="theme" lang="en-US">
+<html>
 <head>
-  <title>Weir</title>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, minimum-scale=1.0">
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="theme-color" content="{{themeColor}}">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-eval'; img-src *; media-src *; frame-src *;">
-  <link rel="stylesheet" type="text/css" href="./css/rss.css">
+  <meta name="viewport" content="width=device-width">
+  <title>Weir</title>
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400&family=Raleway:wght@200;400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
   <link rel="icon" type="image/png" href="./favicon.png">
-  <link rel="manifest" href="manifest.json">
-  <style>[ng-cloak], .ng-cloak { display: none; }</style>
+  <base target="_blank">
 </head>
-<body ng-cloak>
-  <div class="root-container" ng-controller="Weir.StreamController" id="top">
-    
-    <ul class="menu">
-      <li class="header">Weir
-      <li> Last update: {{stream.updatedAt.toLocaleTimeString()}}
-      <li class="refresh"> <a href="javascript:;" ng-click="refresh()">Refresh stream</a>
-      <li class="settings"> <a href="javascript:;" ng-click="stack.push('settings')">Settings</a>
-      <li class="feeds"> <a href="javascript:;" ng-click="stack.push('feeds')">Manage Feeds</a>
+<body>
 
-      <li class="counter" tabindex="-1">
-        Remaining: <span class="unread">{{stream.unread}}</span> of {{stream.total}}
+<main class="app">
 
-      <li class="alert message" ng-show="message"> {{message}}
-      <li class="alert warning" ng-show="warning"> {{warning}}
-      <li class="alert error" ng-show="error"> {{error}}
+  <section class="admin panel">
+    <h1>Weir</h1>
 
-    </ul>
+    <letter-dream aria-hidden="true"></letter-dream>
 
-    <div class="settings-container ui-panel" id="settings" stack-id="settings">
-      <a class="close" ng-click="stack.pop()">&times;</a>
-      <div ng-controller="Weir.SettingsController">
-        <h2>Local Settings</h2>
-        <p>
-          These settings will be applied only to your local client. For server-side settings, edit the <var>cfg.json</var> file in your Weir installation directory.
-          
-        <div class="ajax">
-          <label>Client Prefs</label>
-          
-          <input type="text" ng-model="settings.stream.autoRefresh" class="inline">
-          <label class="inline">Status refresh interval (in minutes)</label>
+    <connection-status></connection-status>
 
-          <br>
-          
-          <input type="text" ng-model="settings.stream.length" class="inline">
-          <label class="inline">Items per page</label>
-          
-          <br>
-          
-          <input type="checkbox" ng-model="settings.stream.startActive" class="inline">
-          <label class="inline">Activate first item automatically</label>
-          
-          <br>
-          
-          <input type="checkbox" ng-model="settings.application.flash" class="inline">
-          <label class="inline">Flash on updates when pinned</label>
-          
-          <br>
-          
-          <input type="checkbox" ng-model="settings.stream.deferImages" class="inline">
-          <label class="inline">Defer image loading</label>
-        </div>
+    <div class="theme-select capsule">
+      <input type="radio" name="theme" value="auto" id="theme-auto">
+      <label for="theme-auto">Auto</label>
 
-        <div class="totp" ng-show="secret">
-          <label>Security</label>
-          <p>
-          
-            Your instance of Weir is unsecured! Enable TOTP authentication to keep 
-            your reader safe. Add the following key to the "totp" property in your cfg.json 
-            file, and to your smartphone or tablet (using <a 
-            href="https://support.google.com/accounts/answer/1066447">Google 
-            Authenticator</a> or other two-factor apps). You can scan the QR code 
-            to add it more easily to your device:
-          
-          <div class="secrets">
-            <img ng-src="{{secretQR}}">
-            <div class="base32">{{secret}}</div>
-          </div>
-        </div>
+      <input type="radio" name="theme" value="light" id="theme-light">
+      <label for="theme-light">Light</label>
 
-        <div class="verbs">
-          <button ng-click="stack.pop()">cancel</button>
-          <button ng-click="saveSettings()">done</button>
-        </div>
-
-        <div class="credits">
-          <p>
-            Weir is written by <a href="http://thomaswilburn.net" target="_blank">Thomas Wilburn</a>. You can find the source code for the entire project or submit bug reports <a target="_blank" href="https://github.com/thomaswilburn/Weir">here</a>. Thank you for your time!
-            
-          <p>
-            Weir uses the following Node packages:
-            <ul>
-              <li> <a href="https://github.com/substack/node-browserify#readme">browserify</a> - <a href='http://substack.net'>James Halliday</a>
-              <li> <a href="http://github.com/danmactough/node-feedparser">feedparser</a> - Dan MacTough
-              <li> <a href="http://gruntjs.com/">grunt</a> - <a href='http://gruntjs.com/development-team'>Grunt Development Team</a>
-              <li> <a href="https://github.com/gruntjs/grunt-contrib-less#readme">grunt-contrib-less</a> - <a href='http://gruntjs.com/'>Grunt Team</a>
-              <li> <a href="https://github.com/gruntjs/grunt-contrib-watch">grunt-contrib-watch</a> - <a href='http://gruntjs.com/'>Grunt Team</a>
-              <li> <a href="https://github.com/TooTallNate/node-gyp#readme">node-gyp</a> - <a href='http://tootallnate.net'>Nathan Rajlich</a>
-              <li> <a href="http://github.com/brianc/node-postgres">pg</a> - Brian Carlson
-              <li> <a href="https://github.com/request/request#readme">request</a> - Mikeal Rogers
-              <li> <a href="http://github.com/markbao/speakeasy">speakeasy</a> - <a href='http://markbao.com/'>Mark Bao</a>
-              <li> <a href="https://github.com/Leonidas-from-XIV/node-xml2js">xml2js</a> - <a href='http://xivilization.net'>Marek Kubica</a>
-            </ul>
-              
-        </div>
-      </div>
-    </div>
-    
-    <div class="stream-container" stack-id="stream">
-
-      <ul class="stream" ng-show="!stream.loading">
-        <li 
-          ng-repeat="item in stream.items" id="{{item.id}}" 
-          ng-class="{'read': item.read == true, 'active': item == stream.currentItem }" 
-          click-reveal
-        >
-          <div class="header" ng-click="activate(item, false);">
-            <cite>{{item.feed}}</cite>
-            <a href="{{item.url}}" prevent-default>
-              <h2 ng-bind-html-unsafe="item.title"></h2>
-            </a>
-            <!-- tags go here -->
-            <a ng-click="deactivate($event, item)" class="close-item">&times;</a>
-          </div>
-          <div class="tracking-pixel" scroll-focus="activate(item, true)"></div>
-          <div class="content">
-            <h3>
-            Posted by {{item.author}} at {{item.published | date: 'h:mm a MMM d, yyyy'}}
-            </h3>
-            <div class="text" ng-bind-html-unsafe="item.content" scroll-reveal></div> 
-            <a class="view-full" href="{{item.url}}" target="_blank">View full post</a> 
-          </div> 
-        </li> 
-      </ul>
-
-      <div class="stream no-items" ng-show="stream.items.length == 0 && !stream.loading">
-        <h2 class="banner">You have no unread items.</h2>
-      </div>
-      
-      <div class="stream no-items" ng-show="stream.loading">
-        <h2 class="banner">Loading items...</h2>
-      </div>
-
-      <div class="charm-panel only-mobile">
-        <!-- <a class="charm" title="Next item" href="javascript:;" ng-click="next()">&raquo;</a> -->
-        <!-- <a class="charm" title="Open in new window" href="javascript:;" ng-click="openCurrent()">&#x21F2;</a> -->
-        <a class="charm" title="Toggle theme" href="javascript:;" ng-click="toggleTheme()">&#9728;</a>
-        <a class="charm" title="Refresh stream" href="javascript:;" ng-click="refresh()">&#8693;</a>
-        <a class="charm" title="Mark all as read" href="javascript:;" ng-click="markRefresh()">&times;</a>
-      </div>
-
-    </div>
-    
-    <div class="feed-management ui-panel" stack-id="feeds">
-      <a class="close" ng-click="stack.pop()">&times;</a>
-      <div ng-controller="Weir.FeedController">
-        <h2>Manage Feeds</h2>
-        
-        <div class="opml" ng-show="batchMode">
-          <a href="javascript:;" ng-click="batchMode = false">Switch to Current Subscriptions</a>
-        
-          <label>Import OPML</label>
-          <p>
-            OPML is a standard form of feed list, which you can use to import your subscriptions from another RSS reader. If you've been using Google Reader, visit <a target="_blank" href="https://www.google.com/takeout/">Takeout</a> to get a subscriptions.xml file, then upload it here. Once imported, subscriptions will be pulled in the next fetch cycle.
-          <input type="file" class="inputOPML">
-          <p>
-            You can get an OPML export of feeds currently loaded into Weir by clicking <a target="_blank" href="meta/export">this link</a>
-        </div>
-        
-        <div class="individual" ng-show="!batchMode">
-          <a href="javascript:;" ng-click="batchMode = true">Switch to OPML Import/Export</a>
-        
-          <label>Current Subscriptions</label>
-          <p>
-            To subscribe to a feed, enter the RSS URL in the box below and press subscribe. 
-            The feed contents will not be pulled in until the next fetch.
-        
-          <div>
-            <input ng-model="subscribeURL">
-            <button class="subscribe-button" href="javascript:;" ng-click="subscribe()">Subscribe</button>
-          </div>
-
-          <p ng-show="loading">Loading...</p>
-        
-          <table ng-hide="loading" class="feed-list">
-            <tr>
-              <th> 
-              <th> Title
-              <th> Health
-              <th> Count
-              <th>
-            <tr ng-repeat="feed in feeds | orderBy:'title'" class="feed">
-              <td> <a href="{{feed.site_url}}" title="View Site" target="_blank">&raquo;</a>
-              <td> <a title="{{feed.url}}">{{feed.title}}</a>
-              <td class="health-{{feed.health}}"> {{feed.health}}
-              <td class="count">{{feed.count || 0}}
-              <td>
-                <a href="javascript:;" class="unsubscribe" ng-click="unsubscribe(feed)">&times;</a>
-          </table>
-          <div class="verbs">
-            <button ng-click="stack.pop()">Done</button>
-          </div>
-        </div>
-      </div>
+      <input type="radio" name="theme" value="dark" id="theme-dark">
+      <label for="theme-dark">Dark</label>
     </div>
 
-  </div>
+    <feed-manager></feed-manager>
+    
+  </section>
 
-  <script src="./js/weir.js"></script>
+  <scroll-panel class="list panel">
+    <!-- <h2 class="h1">Stories</h2> -->
+
+    <story-list></story-list>
+  </scroll-panel>
+
+  <scroll-panel class="reader panel">
+
+    <!-- <h2 class="h1">Reader</h2> -->
+
+    <story-renderer></story-renderer>
+
+  </scroll-panel>
+
+</main>
+
+<toast-alert></toast-alert>
+
+<script type="module" src="app.js"></script>
+
 </body>
 </html>

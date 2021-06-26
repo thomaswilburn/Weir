@@ -1,0 +1,208 @@
+* {
+  box-sizing: border-box;
+  transition: color .3s linear, background .2s linear;
+}
+
+:root {
+  --display-font: Raleway, Roboto, sans-serif;
+  --reader-font: "Open Sans", Roboto, sans-serif;
+  --background: white;
+  --foreground: black;
+  --accent: #808;
+
+
+  --font-size-1: 48px;
+  --font-size-2: 32px;
+  --font-size-3: 24px;
+  --font-size-4: 16px;
+  --font-size-5: 12px;
+
+  --fab-offset: 0;
+  --fab-spacing-block: 8px;
+  --fab-spacing-inline: 24px;
+}
+
+@media (max-width: 600px) {
+  :root {
+    --fab-offset: 60px;
+    --font-size-4: 20px;
+    --font-size-5: 16px;
+  }
+}
+
+html {
+  padding: 0;
+  margin: 0;
+  font-family: var(--reader-font);
+  line-height: 1.6;
+  background: var(--background);
+  color: var(--foreground);
+}
+
+body {
+  padding: 0;
+  margin: 0;
+}
+
+html[data-theme=dark] {
+  --background: black;
+  --foreground: white;
+  --accent: #FFA200;
+}
+
+@media (prefers-color-scheme: dark) {
+  html[data-theme=auto] {
+    --background: black;
+    --foreground: white;
+    --accent: #FFA200;
+  }
+}
+
+.app {
+  display: grid;
+  width: 100vw;
+  height: 100vh;
+  grid-template-columns: minmax(250px, 1fr) minmax(300px, 2fr) 3fr;
+  gap: 8px;
+  overflow: hidden;
+}
+
+.panel {
+  min-height: 0;
+  min-width: 0;
+  max-height: 100vh;
+  overflow-y: auto;
+  scroll-snap-align: center;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  position: relative;
+}
+
+@media (max-width: 600px) {
+  .app {
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-snap-stop: always;
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .panel {
+    width: 100vw;
+  }
+}
+
+/* columns */
+
+.admin.panel {
+  padding: 0 16px;
+}
+
+letter-dream {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  color: #8883;
+  z-index: -1;
+}
+
+feed-manager {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+story-list { flex: 1; }
+story-renderer { flex: 1; }
+
+
+/* general UI */
+
+h1, h2, h3, h4, h5 {
+  font-family: var(--display-font);
+  font-weight: normal;
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1;
+}
+
+h1, .h1 {
+  white-space: nowrap;
+  display: block;
+  font-weight: 100;
+  font-size: var(--font-size-1);
+}
+
+a, button {
+  cursor: pointer;
+  border: none;
+  padding: 0;
+  background: transparent;
+  border-bottom: 1px solid transparent;
+  color: inherit;
+}
+
+a:hover, a:focus,
+button:hover, button:focus {
+  border-bottom: 1px solid var(--foreground);
+}
+
+/* theme selector */
+
+.capsule {
+  display: flex;
+  width: 100%;
+  font-size: var(--font-size-5);
+  text-align: center;
+  margin: 16px 0;
+  background: var(--background);
+}
+
+.capsule input {
+  position: absolute;
+  top: 0;
+  left: -100px;
+  width: 1px;
+  height: 1px;
+}
+
+.capsule input + label {
+  display: block;
+  flex: 1;
+  border: 1px solid var(--foreground);
+  padding: 12px 8px;
+  text-transform: uppercase;
+}
+
+.capsule input:checked + label {
+  background: var(--accent);
+  color: var(--background);
+}
+
+.capsule input:first-child + label {
+  border-radius: 4px 0 0 4px;
+}
+
+.capsule label:last-child {
+  border-radius: 0 4px 4px 0;
+}
+
+toast-alert {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  --direction: column-reverse;
+}
+
+@media (max-width: 600px) {
+  toast-alert {
+    top: auto;
+    bottom: 60px;
+    --direction: column;
+  }
+}

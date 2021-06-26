@@ -1,0 +1,114 @@
+<style>
+:host {
+  display: flex;
+  flex-direction: column;
+  /*overflow-y: auto;*/
+  padding: 16px 16px 0 0;
+}
+
+.counts {
+  position: sticky;
+  top: 0;
+  text-align: right;
+  background: var(--background);
+  font-size: var(--font-size-5);
+  text-transform: uppercase;
+  transition: background .2s linear;
+}
+
+.counts span {
+  font-weight: bold;
+}
+
+.list {
+  display: block;
+  flex: 1;
+  min-width: 0;
+}
+
+.placeholder {
+  padding: 40px;
+  text-align: center;
+  font-family: var(--display-font);
+  font-weight: lighter;
+}
+
+:host .selected {
+  font-weight: bold;
+}
+
+.buttons {
+  position: sticky;
+  bottom: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: flex-end;
+  padding-bottom: var(--fab-offset);
+}
+
+.buttons path {
+  stroke: var(--background);
+  stroke-width: 2px;
+  fill: none;
+}
+
+@keyframes spin {
+  from { transform: rotate(0) }
+  to { transform: rotate(359deg) }
+}
+
+action-button {
+  margin-block: var(--fab-spacing-block);
+  margin-inline: var(--fab-spacing-inline);
+}
+
+action-button.working svg {
+  animation-name: spin;
+  animation-duration: 10s;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+}
+
+action-button svg {
+  position: absolute;
+  top: 20%;
+  left: 20%;
+  width: 60%;
+  height: 60%;
+}
+
+@media (min-width: 600px) {
+  action-button svg {
+    position: static;
+    width: 24px;
+    height: auto;
+    display: inline-block;
+  }
+}
+
+</style>
+
+<div class="counts">
+  Unread: <span as="unread">__</span> of <span as="total">__</span>
+</div>
+
+<visibility-observer as="list" class="list">
+  <slot>
+    <div class="placeholder">No unread items</div>
+  </slot>
+</visibility-observer>
+
+<div class="buttons">
+  <action-button command="stream:refresh" as="refreshButton">
+    <svg viewBox="0 0 24 24" preserveAspectRatio="none" role="img" aria-label="Refresh list">
+      <path d="M 21 12 A 9 9 0 1 1 12 3 M 16 3 l -4 -3 m 4 3 l -4 3" />
+    </svg>
+  </action-button>
+  <action-button command="stream:mark-all" as="markButton">
+    <svg viewBox="0 0 24 24" preserveAspectRatio="none" role="img" aria-label="Mark all as read">
+      <path d="M3 3 l 18 18 M 3 21 l 18 -18" />
+    </svg>
+  </action-button>
+</div>

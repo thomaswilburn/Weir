@@ -1,0 +1,159 @@
+<style>
+:host {
+  display: flex;
+  flex-direction: column;
+  /*overflow-y: auto;*/
+  padding: 16px;
+}
+
+[as=metadata] {
+  font-family: var(--display-font);
+  font-size: var(--font-size-5);
+  text-transform: uppercase;
+  line-height: 1;
+  display: flex;
+  align-items: stretch;
+  justify-content: flex-start;
+}
+
+[as=metadata][hidden] {
+  display: none;
+}
+
+[as=metadata] hr {
+  margin: 0 8px;
+  border: none;
+  border-left: 1px solid var(--foreground);
+}
+
+@media (max-width: 600px) {
+  [as=metadata] {
+    display: block;
+    text-align: right;
+    line-height: 1.2;
+  }
+
+  [as=metadata] hr {
+    display: none;
+  }
+}
+
+[as=title] {
+  font-size: var(--font-size-3);
+  font-weight: bold;
+}
+
+[as=title]:focus {
+  outline: none;
+  border: none;
+}
+
+.content {
+  flex: 1;
+  font-size: var(--font-size-4);
+  max-width: 600px;
+}
+
+@media (max-width: 600px) {
+  .content {
+    font-size: var(--font-size-5);
+  }
+}
+
+.content img {
+  max-width: 100%;
+  display: block;
+  margin: 20px auto;
+}
+
+.content a {
+  color: inherit;
+}
+
+.content .placeholder {
+  padding: 100px 30px;
+  text-align: center;
+  font-family: var(--display-font);
+  font-weight: lighter;
+}
+
+.content pre {
+  overflow-x: auto;
+}
+
+.buttons {
+  position: sticky;
+  bottom: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: center;
+  align-items: flex-end;
+  padding-bottom: var(--fab-offset);
+}
+
+.buttons path, .buttons circle {
+  stroke: var(--background);
+  stroke-width: 2px;
+  fill: none;
+}
+
+action-button {
+  margin-block: var(--fab-spacing-block);
+  margin-inline: var(--fab-spacing-inline);
+}
+
+action-button svg {
+  position: absolute;
+  top: 20%;
+  left: 20%;
+  width: 60%;
+  height: 60%;
+}
+
+@media (min-width: 600px) {
+  action-button svg {
+    position: static;
+    width: 24px;
+    height: auto;
+    display: inline-block;
+  }
+}
+
+
+</style>
+<div as="metadata" hidden>
+  <div as="feed"></div>
+  <hr aria-hidden="true">
+  <div as="author"></div>
+  <hr aria-hidden="true">
+  <div as="published"></div>
+</div>
+<div as="title" tabindex="-1"></div>
+
+<visibility-observer class="content" as="content">
+  <div class="placeholder">No story selected</div>
+</visibility-observer>
+
+<div class="buttons">
+  <action-button as="nextButton" command="stream:next">
+    <svg viewBox="0 0 24 24" preserveAspectRatio="none" role="img" aria-label="Next article">
+      <path d="M3,1l9,6l9,-6 M3,8l9,7l9,-6 M3,16l9,6l9,-6" />
+    </svg>
+  </action-button>
+
+  <action-button as="openButton">
+    <svg viewBox="0 0 24 24" preserveAspectRatio="none" role="img" aria-label="Open in new tab">
+      <path d="M2,2L12,2l1,3L22,5L22,22L2,22L2,2 M6,10l12,0 M6,14l12,0 M6,18l9,0" />
+    </svg>
+  </action-button>
+
+  <action-button as="shareButton" command="reader:share">
+    <svg viewBox="0 0 24 24" preserveAspectRatio="none" role="img" aria-label="Share">
+      <circle cx="4" cy="12" r="3" />
+      <circle cx="18" cy="6" r="3" />
+      <circle cx="18" cy="18" r="3" />
+      <path d="M6,11L16,6 M6,13L16,18" />
+    </svg>
+  </action-button>
+</div>

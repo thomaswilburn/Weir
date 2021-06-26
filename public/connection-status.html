@@ -1,0 +1,85 @@
+<style>
+:host {
+  display: block;
+  padding: 16px 0;
+}
+
+.status {
+  font-size: var(--font-size-5);
+}
+
+svg {
+  width: 12px;
+  display: inline-block;
+}
+
+input {
+  width: 100%;
+  padding: 8px;
+  border: none;
+  border-bottom: 1px solid var(--accent);
+}
+
+input:focus {
+  outline: 2px solid var(--accent);
+}
+
+button {
+  border: none;
+  background: var(--accent);
+  color: var(--background);
+  padding: 4px 12px;
+  font-family: var(--display-font);
+}
+
+button:focus {
+  outline: none;
+  background: var(--foreground);
+}
+
+[as=auth] {
+  display: flex;
+  align-items: middle;
+  gap: 4px;
+}
+
+[as=auth][hidden] {
+  display: none;
+}
+
+[as=auth] input {
+  flex: 1;
+  width: auto;
+  margin-right: 4px;
+}
+
+[as=insecureQR] {
+  display: block;
+  max-width: 100%;
+}
+
+[as=insecure] .warning {
+  margin: 10px 0;
+  font-size: var(--font-size-5);
+}
+
+</style>
+<div as="domain"></div>
+<div class="status">
+  <svg viewBox="0 0 16 16">
+    <circle as="icon" cx=8 cy=8 r=7 fill="none" stroke="none" />
+  </svg>
+  <span as="status"></span> - <span as="domain"></span>
+</div>
+<div hidden as="auth">
+  <input type="tel" as="totp" placeholder="Enter TOTP" maxlength=6>
+  <button as="submit">Send</button>
+</div>
+<div hidden as="insecure">
+  <div class="warning">
+    Server setup not complete: Scan the QR code into your TOTP device, and add the hash value to the server's <var>cfg.json</var> file.
+  </div>
+
+  <img as="insecureQR">
+  <input as="insecureHash">
+</div>

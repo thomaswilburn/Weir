@@ -1,0 +1,99 @@
+<style>
+:host {
+  display: block;
+  width: 40px;
+  height: 40px;
+  position: relative;
+  text-align: center;
+}
+
+@media (max-width: 600px) {
+  :host {
+    width: 60px;
+    height: 60px;
+  }
+}
+
+:host([hidden]) {
+  display: none;
+}
+
+a, button {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 100%;
+  color: var(--background);
+  background: var(--accent);
+  padding: 0;
+  box-shadow: 0 4px 3px #0003;
+  transition: all .2s linear;
+  cursor: pointer;
+}
+
+@media (min-width: 600px) {
+  :host {
+    width: 80px;
+  }
+
+  a, button {
+    border-radius: 20px;
+  }
+
+  a:hover, button:hover {
+    background: var(--foreground);
+  }
+}
+
+button:disabled {
+  filter: saturate(0%);
+  opacity: .8;
+  pointer-events: none;
+}
+
+a:focus-visible, button:focus-visible {
+  background: var(--foreground);
+}
+
+[hidden] {
+  display: none;
+}
+
+svg {
+  position: absolute;
+  top: 20%;
+  left: 20%;
+  width: 60%;
+  height: 60%;
+  pointer-events: none;
+}
+
+circle {
+  fill: none;
+  stroke: var(--background);
+  stroke-dasharray: 25.2 25.2;
+  stroke-dashoffset: 25.2;
+  transform-origin: center;
+  transform: rotate(-90deg);
+}
+
+</style>
+<button as="button">
+  <slot as="slot"></slot>
+</button>
+<a target="_blank" as="link" hidden></a>
+<svg class="progress-dot" viewBox="0 0 10 10" preserveAspectRatio="none">
+  <circle
+    as="delay"
+    cx="5"
+    cy="5"
+    r="4"
+    stroke-width="1"
+  />
+</svg>

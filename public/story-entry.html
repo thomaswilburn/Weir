@@ -1,0 +1,38 @@
+<style>
+:host {
+  display: block;
+  padding: 12px 4px;
+  line-height: 1.3;
+  font-family: var(--display-font);
+  border-width: 0 0 0 3px;
+  border-color: transparent;
+  border-style: solid;
+  cursor: pointer;
+}
+
+[as=feed] {
+  font-size: var(--font-size-5);
+  text-transform: uppercase;
+  font-weight: bold;
+  opacity: .8;
+}
+
+[as=link] {
+  font-size: var(--font-size-4);
+  color: var(--foreground);
+  text-decoration: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+}
+
+:host(.selected) {
+  border-color: var(--accent);
+}
+</style>
+<div as="feed">
+  <slot name="feed"></slot>
+</div>
+<a as="link">
+  <slot name="title"></slot>
+</a>
