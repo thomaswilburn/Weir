@@ -11,7 +11,14 @@ var fills = {
 };
 
 class ConnectionStatus extends ElementBase {
-  static boundMethods = ["onKey", "networkUpdate", "ping", "authenticate", "apiSuccess"];
+  static boundMethods = [
+    "onKey",
+    "networkUpdate",
+    "ping",
+    "authenticate",
+    "apiSuccess",
+    "apiFailure"
+  ];
 
   constructor() {
     super();
@@ -27,6 +34,7 @@ class ConnectionStatus extends ElementBase {
 
     events.on("connection:totp-challenge", this.networkUpdate);
     events.on("connection:successful-request", this.apiSuccess);
+    events.on("connection:error", this.apiFailure);
 
     this.ping();
   }
@@ -78,6 +86,11 @@ class ConnectionStatus extends ElementBase {
     this.setStatus("connected", "Connected");
     this.elements.auth.toggleAttribute("hidden", true);
     this.elements.insecure.toggleAttribute("hidden", true);
+  }
+
+  apiFailure() {
+    this.setStatus("error", "Request failed");
+    setTimeout(this.ping, 30 * 1000);
   }
 
   async authenticate() {

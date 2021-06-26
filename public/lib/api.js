@@ -12,6 +12,8 @@ export var get = async function(path, params = {}) {
   }
   try {
     var response = await fetch(url.toString(), { credentials });
+    console.log(response.status);
+    if (response.status >= 400) throw "Request failed";
     var json = response.json();
     if (json.challenge) {
       fire("connection:totp-challenge");
@@ -20,6 +22,7 @@ export var get = async function(path, params = {}) {
     fire("connection:successful-request");
     return json;
   } catch (err) {
+    console.log(err);
     fire("connection:error", err);
   }
 }
@@ -32,6 +35,7 @@ export var post = async function(path, data) {
       body: JSON.stringify(data),
       credentials
     });
+    if (response.status >= 400) throw "Request failed";
     var json = response.json();
     if (json.challenge) {
       fire("connection:totp-challenge");
