@@ -12,7 +12,6 @@ export var get = async function(path, params = {}) {
   }
   try {
     var response = await fetch(url.toString(), { credentials });
-    console.log(response.status);
     if (response.status >= 400) throw "Request failed";
     var json = response.json();
     if (json.challenge) {
