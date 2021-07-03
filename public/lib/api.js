@@ -13,7 +13,7 @@ export var get = async function(path, params = {}) {
   try {
     var response = await fetch(url.toString(), { credentials });
     if (response.status >= 400) throw "Request failed";
-    var json = response.json();
+    var json = await response.json();
     if (json.challenge) {
       fire("connection:totp-challenge");
       throw "TOTP challenge issued";
