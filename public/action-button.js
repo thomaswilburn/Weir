@@ -30,6 +30,7 @@ class ActionButton extends ElementBase {
 
       case "disabled":
         this.elements.button.disabled = value != null;
+        this.elements.link.classList.toggle("disabled", value != null);
       break;
 
       case "href":

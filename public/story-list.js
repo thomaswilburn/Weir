@@ -106,6 +106,7 @@ class StoryList extends ElementBase {
       } else {
         // throw a status toast if it fails
         events.fire("toast:error", "Something went wrong!");
+        console.log(err);
       }
     }
     this.loading = false;
@@ -177,7 +178,7 @@ class StoryList extends ElementBase {
   }
 
   selectOffset(offset = 1) {
-    if (!this.selected) return;
+    if (!this.selected) return events.fire("view:list");
     var currentIndex = this.stories.indexOf(this.selected);
     if (currentIndex == -1) return;
     var index = currentIndex + offset;

@@ -30,17 +30,25 @@ class StoryRenderer extends ElementBase {
 
   clear() {
     this.current = null;
-    this.elements.metadata.toggleAttribute("hidden", true);
-    this.elements.title.innerHTML = "";
-    this.elements.content.innerHTML = this.placeholder;
+    var { metadata, title, content, shareButton, openButton } = this.elements;
+    metadata.toggleAttribute("hidden", true);
+    title.innerHTML = "";
+    content.innerHTML = this.placeholder;
+    shareButton.toggleAttribute("disabled", true);
+    openButton.toggleAttribute("disabled", true);
     if (this.elements.content.visible) events.fire("view:list");
   }
 
   onSelect(data) {
     if (!data) return this.clear();
+    var {
+      metadata, feed, title, author, published,
+      content, shareButton, openButton
+    } = this.elements;
+    shareButton.toggleAttribute("disabled", false);
+    openButton.toggleAttribute("disabled", false);
     this.current = data;
     var date = new Date(Date.parse(data.published));
-    var { metadata, feed, title, author, published, content } = this.elements;
     metadata.removeAttribute("hidden");
     feed.innerHTML = data.feed;
     title.innerHTML = data.title;
