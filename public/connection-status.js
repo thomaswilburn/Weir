@@ -46,6 +46,7 @@ class ConnectionStatus extends ElementBase {
   async ping() {
     if (!navigator.onLine) return this.networkUpdate();
     this.setStatus("unknown", "Connecting");
+    this.elements.totp.value = "";
     try {
       var response = await get("/checkpoint");
       if (!response.secure) {
@@ -59,7 +60,6 @@ class ConnectionStatus extends ElementBase {
         this.elements.totp.focus({ preventScroll: true });
       } else {
         this.setStatus("connected", "Connected");
-        this.elements.totp.value = "";
       }
       this.elements.auth.toggleAttribute("hidden", response.authenticated || !response.secure);
       this.elements.insecure.toggleAttribute("hidden", response.secure);

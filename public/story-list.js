@@ -1,5 +1,5 @@
 import ElementBase from "./lib/elementBase.js";
-import { get, post } from "./lib/api.js";
+import { get, post, TOTPError } from "./lib/api.js";
 import events from "./lib/events.js";
 import h from "./lib/dom.js";
 import * as config from "./config.js";
@@ -65,9 +65,15 @@ class StoryList extends ElementBase {
     // schedule the next check
     this.timeout = window.setTimeout(this.getCounts, CHECK_INTERVAL);
     // actually get the counts
-    var response = await get("/stream/status");
-    var { total, unread, items } = response;
-    events.fire("stream:counts", { total, unread });
+    try {
+      var response = await get("/stream/status");
+      var { total, unread, items } = response;
+      events.fire("stream:counts", { total, unread });
+    } catch (err) {
+      if (err instanceof TOTPError) {
+        events.fire("toast:error", "TOTP expired");
+      }
+    }
     // if we were empty, either get items now, or
     // (if the tab is hidden) wait for it to resurface
     unread *= 1;
@@ -94,8 +100,13 @@ class StoryList extends ElementBase {
       events.fire("stream:counts", { total, unread });
       this.updateStoryList(items);
     } catch (err) {
-      // throw a status toast if it fails
-      events.fire("toast:error", "Something went wrong!");
+      // check for TOTP
+      if (err instanceof TOTPError) {
+        events.fire("toast:error", "TOTP expired");
+      } else {
+        // throw a status toast if it fails
+        events.fire("toast:error", "Something went wrong!");
+      }
     }
     this.loading = false;
     this.elements.refreshButton.disabled = false;
