@@ -2,7 +2,7 @@ import ElementBase from "./lib/elementBase.js";
 import events from "./lib/events.js";
 import h from "./lib/dom.js";
 import * as config from "./config.js";
-import * as stories from "./lib/stories.js";
+import * as server from "./lib/server.js";
 
 import "./story-entry.js";
 import "./action-button.js";
@@ -66,7 +66,7 @@ class StoryList extends ElementBase {
     this.timeout = window.setTimeout(this.getCounts, CHECK_INTERVAL);
     // actually get the counts
     try {
-      var { total, unread } = stories.getCounts();
+      var { total, unread } = server.getCounts();
     } catch (err) {
       if (err instanceof TOTPError) {
         events.fire("toast:error", "TOTP expired");
@@ -93,7 +93,7 @@ class StoryList extends ElementBase {
     this.elements.refreshButton.classList.add("working");
     this.elements.refreshButton.disabled = true;
     try {
-      var items = await stories.getUnread();
+      var items = await server.getUnread();
       this.updateStoryList(items);
     } catch (err) {
       // check for TOTP
@@ -121,8 +121,8 @@ class StoryList extends ElementBase {
     this.elements.markButton.disabled = true;
     this.elements.markButton.classList.add("working");
     try {
-      var stories = await stories.markRefresh(ids);
-      this.updateStoryList(stories);
+      var items = await server.markRefresh(ids);
+      this.updateStoryList(items);
     } catch (err) {
       // throw status toast
       events.fire("toast:error", "Something went wrong!");

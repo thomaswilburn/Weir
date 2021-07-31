@@ -1,7 +1,7 @@
 import ElementBase from "./lib/elementBase.js";
 import events from "./lib/events.js";
 import * as sanitize from "./lib/sanitize.js";
-import * as stories from "./lib/stories.js";
+import * as server from "./lib/server.js";
 
 import "./visibility-observer.js";
 import "./action-button.js";
@@ -43,7 +43,7 @@ class StoryRenderer extends ElementBase {
   onSelect(data) {
     if (!data) return this.clear();
     if (this.current && data.id != this.current.id) {
-      stories.mark(this.current.id);
+      server.mark(this.current.id);
     }
     var {
       metadata, feed, title, author, published,
