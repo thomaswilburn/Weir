@@ -33,11 +33,10 @@ server.route("/stream/unread", async function (req) {
 });
 
 server.route("/stream/mark", async function (req) {
-  var items = req.params.item;
-  if (!items) return req.reply({ marked: 0 });
-  await Promise.all(items.map((item) => db.mark(item)));
+  var item = req.params.item;
+  await db.mark(item);
   var { total, unread } = await db.getStatus();
-  req.reply({ marked: items.length, total, unread });
+  req.reply({ marked: 1, total, unread });
 });
 
 server.route("/stream/markRefresh", async function (req) {
