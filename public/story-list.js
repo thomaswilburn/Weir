@@ -1,15 +1,15 @@
 import ElementBase from "./lib/elementBase.js";
-import { get, post, TOTPError } from "./lib/api.js";
 import events from "./lib/events.js";
 import h from "./lib/dom.js";
 import * as config from "./config.js";
+import * as stories from "./lib/stories.js";
 
 import "./story-entry.js";
 import "./action-button.js";
 import "./visibility-observer.js";
 
 const CHECK_INTERVAL = config.pingInterval || 2 * 60 * 1000;
-const UPDATE_LIMIT = config.updateLimit || 10;
+
 var favicon = document.querySelector("link[rel=icon]");
 
 class StoryList extends ElementBase {
@@ -66,9 +66,7 @@ class StoryList extends ElementBase {
     this.timeout = window.setTimeout(this.getCounts, CHECK_INTERVAL);
     // actually get the counts
     try {
-      var response = await get("/stream/status");
-      var { total, unread, items } = response;
-      events.fire("stream:counts", { total, unread });
+      var { total, unread } = stories.getCounts();
     } catch (err) {
       if (err instanceof TOTPError) {
         events.fire("toast:error", "TOTP expired");
@@ -95,9 +93,7 @@ class StoryList extends ElementBase {
     this.elements.refreshButton.classList.add("working");
     this.elements.refreshButton.disabled = true;
     try {
-      var response = await get("/stream/unread", { limit: UPDATE_LIMIT });
-      var { total, unread, items } = response;
-      events.fire("stream:counts", { total, unread });
+      var items = await stories.getUnread();
       this.updateStoryList(items);
     } catch (err) {
       // check for TOTP
@@ -121,14 +117,12 @@ class StoryList extends ElementBase {
     this.loading = true;
     var plural = count > 1 ? "items" : "item";
     events.fire("toast:alert", `Marking ${count} ${plural} as read...`, 1500);
-    var items = this.stories.map(s => s.id);
+    var ids = this.stories.map(s => s.id);
     this.elements.markButton.disabled = true;
     this.elements.markButton.classList.add("working");
     try {
-      var response = await get("/stream/markRefresh", { items, limit: UPDATE_LIMIT });
-      var { total, unread, items } = response;
-      events.fire("stream:counts", { total, unread });
-      this.updateStoryList(items);
+      var stories = await stories.markRefresh(ids);
+      this.updateStoryList(stories);
     } catch (err) {
       // throw status toast
       events.fire("toast:error", "Something went wrong!");
@@ -155,7 +149,7 @@ class StoryList extends ElementBase {
     this.replaceChildren(...listed);
 
     this.stories = items;
-    this.selectStory(items[0], false);
+    this.selectStory(items[0]);
   }
 
   onSelect(e) {
