@@ -65,8 +65,10 @@ class StoryList extends ElementBase {
     // schedule the next check
     this.timeout = window.setTimeout(this.getCounts, CHECK_INTERVAL);
     // actually get the counts
+    var unread = 0;
     try {
-      var { total, unread } = server.getCounts();
+      var counts = await server.getCounts();
+      unread = counts.unread * 1;
     } catch (err) {
       if (err instanceof TOTPError) {
         events.fire("toast:error", "TOTP expired");
@@ -74,7 +76,6 @@ class StoryList extends ElementBase {
     }
     // if we were empty, either get items now, or
     // (if the tab is hidden) wait for it to resurface
-    unread *= 1;
     if (unread && !this.stories.length) {
       if (document.hidden) {
         // this can be added multiple times, it'll only fire once
