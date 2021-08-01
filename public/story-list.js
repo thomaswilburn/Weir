@@ -3,6 +3,7 @@ import events from "./lib/events.js";
 import h from "./lib/dom.js";
 import * as config from "./config.js";
 import * as server from "./lib/server.js";
+import { TOTPError } from "./lib/api.js";
 
 import "./story-entry.js";
 import "./action-button.js";
