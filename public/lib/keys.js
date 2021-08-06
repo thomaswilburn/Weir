@@ -6,7 +6,8 @@ var keymap = {
   "k": "stream:previous",
   ".": "stream:refresh",
   "m": "stream:mark-all",
-  "s": "reader:share"
+  "s": "reader:share",
+  " ": "reader:scroll"
 }
 
 document.body.addEventListener("keydown", function(e) {

@@ -1,13 +1,36 @@
 import ElementBase from "./lib/elementBase.js";
+import events from "./lib/events.js";
 
 class ScrollPanel extends ElementBase {
 
-  static boundMethods = ["onRequest"];
+  static boundMethods = ["onRequest", "onPageDown"];
 
   constructor() {
     super();
 
     this.addEventListener("requestscroll", this.onRequest);
+
+    this.addEventListener("keydown", e => {
+      if (e.key == " ") return e.stopImmediatePropagation();
+    });
+  }
+
+  static observedAttributes = ["page-on"];
+
+  attributeChangedCallback(attr, was, value) {
+    if (was) {
+      events.off(was, this.onPageDown);
+    }
+    if (value) {
+      events.on(value, this.onPageDown);
+    }
+  }
+
+  onPageDown() {
+    this.scroll({
+      top: this.scrollTop + this.offsetHeight * .9,
+      behavior: "smooth"
+    });
   }
 
   onRequest(e) {
