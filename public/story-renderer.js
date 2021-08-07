@@ -42,13 +42,13 @@ class StoryRenderer extends ElementBase {
 
   onSelect(data) {
     if (!data) return this.clear();
-    if (this.current && data.id != this.current.id) {
-      server.mark(this.current.id);
-    }
     var {
       metadata, feed, title, author, published,
       content, shareButton, openButton
     } = this.elements;
+    if (this.current && data.id != this.current.id && content.visible) {
+      server.mark(this.current.id);
+    }
     shareButton.toggleAttribute("disabled", false);
     openButton.toggleAttribute("disabled", false);
     this.current = data;
