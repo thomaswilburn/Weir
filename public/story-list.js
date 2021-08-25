@@ -171,6 +171,7 @@ class StoryList extends ElementBase {
       }
     }
     events.fire("reader:render", story);
+    this.setFavicon(false);
   }
 
   selectOffset(offset = 1) {
@@ -192,7 +193,7 @@ class StoryList extends ElementBase {
     this.elements.unread.innerHTML = unread;
     this.elements.total.innerHTML = total;
     document.title = `Weir (${unread})`;
-    this.setFavicon(unread && unread >= this.counts.unread);
+    this.setFavicon(unread && unread != this.counts.unread);
     this.counts = { unread, total };
   }
 
