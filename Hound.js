@@ -64,7 +64,7 @@ var release = async function () {
 
           try {
             var headers = makeHeaders(row);
-            var response = await fetch(row.url, { headers });
+            var response = await fetch(row.url, { headers, timeout: 10 * 1000 });
             // console.log(row.url, response.status);
             if (response.status !== 200) {
               // Not Modified isn't an error
@@ -93,7 +93,7 @@ var release = async function () {
 
         })
       );
-      await Promise.all(work);
+      await Promise.allSettled(work);
     }
   }
 
