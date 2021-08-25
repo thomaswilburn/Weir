@@ -47,6 +47,7 @@ class StoryList extends ElementBase {
     this.selected = null;
     this.loading = null;
     this.counts = {};
+    this.hasUnread = false;
   }
 
   connectedCallback() {
@@ -193,11 +194,15 @@ class StoryList extends ElementBase {
     this.elements.unread.innerHTML = unread;
     this.elements.total.innerHTML = total;
     document.title = `Weir (${unread})`;
-    this.setFavicon(unread && unread != this.counts.unread);
+    var changed = unread != this.counts.unread;
+    if (!this.hasUnread && unread && changed) {
+      this.setFavicon(true);
+    }
     this.counts = { unread, total };
   }
 
   async setFavicon(alert) {
+    this.hasUnread = alert;
     favicon.remove();
     favicon = document.createElement("link");
     favicon.rel = "icon";
