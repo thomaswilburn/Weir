@@ -203,13 +203,13 @@ class StoryList extends ElementBase {
 
   async setFavicon(alert) {
     this.hasUnread = alert;
-    favicon.remove();
+    var oldIcon = favicon;
     favicon = document.createElement("link");
-    favicon.rel = "icon";
+    favicon.rel = "shortcut icon";
     favicon.setAttribute("type", "image/png");
     favicon.href = `./${alert ? "favicon" : "favicon-nulled"}.png`;
     await new Promise(ok => requestAnimationFrame(ok));
-    document.head.appendChild(favicon);
+    document.head.replaceChild(favicon, oldIcon);
   }
 
   onTabVisibility() {

@@ -41,7 +41,7 @@ export var html = function(input, baseURL) {
     img.setAttribute("loading", "lazy");
     var src = img.getAttribute("src");
     if (isRelative.test(src)) {
-      img.src = baseURL + src;
+      img.src = new URL(src, baseURL).href;//baseURL + src;
     }
   }
 

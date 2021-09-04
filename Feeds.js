@@ -12,12 +12,14 @@ server.route("/feeds", async function (req) {
 });
 
 server.route("/feeds/subscribe", async function (req) {
+  console.log(`Subscription request for ${req.params.url}`);
   try {
     var meta = await Hound.getMeta(req.params.url);
     var row = await db.subscribe(meta);
     meta.id = row.id;
     req.reply(meta);
   } catch (err) {
+    console.log(err);
     return req.reply(err);
   }
 });
