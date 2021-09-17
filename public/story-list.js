@@ -209,7 +209,7 @@ class StoryList extends ElementBase {
     favicon.setAttribute("type", "image/png");
     favicon.href = `./${alert ? "favicon" : "favicon-nulled"}.png`;
     await new Promise(ok => requestAnimationFrame(ok));
-    document.head.replaceChild(favicon, oldIcon);
+    oldIcon.replaceWith(favicon);
   }
 
   onTabVisibility() {
