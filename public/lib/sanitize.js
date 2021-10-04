@@ -40,9 +40,13 @@ export var html = function(input, baseURL) {
   for (var img of images) {
     img.setAttribute("loading", "lazy");
     var src = img.getAttribute("src");
+    // force absolute URLs
     if (isRelative.test(src)) {
-      img.src = new URL(src, baseURL).href;//baseURL + src;
+      src = new URL(src, baseURL).href;
     }
+    // force HTTPS
+    src = src.replace(/^http:/, "https:");
+    img.src = src;
   }
 
   return dom.body.innerHTML;
