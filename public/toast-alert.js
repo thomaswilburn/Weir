@@ -33,6 +33,7 @@ class ToastAlert extends ElementBase {
   --direction: column;
   font-family: var(--display-font);
   font-size: var(--font-size-4);
+  pointer-events: none;
 }
 
 [as="container"] {

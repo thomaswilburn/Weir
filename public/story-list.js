@@ -208,8 +208,9 @@ class StoryList extends ElementBase {
     favicon.rel = "shortcut icon";
     favicon.setAttribute("type", "image/png");
     favicon.href = `./${alert ? "favicon" : "favicon-nulled"}.png`;
+    oldIcon.remove();
     await new Promise(ok => requestAnimationFrame(ok));
-    oldIcon.replaceWith(favicon);
+    document.head.append(favicon);
   }
 
   onTabVisibility() {
