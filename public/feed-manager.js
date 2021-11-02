@@ -47,6 +47,11 @@ class FeedManager extends ElementBase {
     // this shouldn't be a get!
     var response = await get("/feeds/subscribe", { url });
     console.log(response);
+    if (response.id) {
+      this.elements.subscribeURL.value = `Subscribed!`;
+      await new Promise(ok => setTimeout(ok, 2000));
+      this.elements.subscribeURL.value = "";
+    }
     this.refresh();
   }
 
