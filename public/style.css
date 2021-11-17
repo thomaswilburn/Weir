@@ -119,7 +119,6 @@ feed-manager {
 story-list { flex: 1; }
 story-renderer { flex: 1; }
 
-
 /* general UI */
 
 h1, h2, h3, h4, h5 {
@@ -149,6 +148,11 @@ a, button {
 a:hover, a:focus,
 button:hover, button:focus {
   border-bottom: 1px solid var(--foreground);
+}
+
+scroll-panel:focus {
+  outline: none;
+  border: none;
 }
 
 /* theme selector */

@@ -8,6 +8,7 @@ class ScrollPanel extends ElementBase {
   constructor() {
     super();
 
+    this.setAttribute("tabindex", "-1");
     this.addEventListener("requestscroll", this.onRequest);
 
     this.addEventListener("keydown", e => {
