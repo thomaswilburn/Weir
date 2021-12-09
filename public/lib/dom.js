@@ -11,10 +11,12 @@ var h = function(tag, attrs = {}, children = "") {
   for (var k in attrs) {
     element.setAttribute(k, attrs[k]);
   }
-  if (typeof children == "string" || typeof children == "number") {
-    element.innerHTML = children;
-  } else {
-    children.forEach(c => element.appendChild(c));
+  if (children) {
+    if (typeof children == "string" || typeof children == "number") {
+      element.innerHTML = children;
+    } else {
+      children.forEach(c => element.appendChild(c));
+    }
   }
   return element;
 }
