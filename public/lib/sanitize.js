@@ -40,6 +40,7 @@ export var html = function(input, baseURL) {
   for (var img of images) {
     img.setAttribute("loading", "lazy");
     var src = img.getAttribute("src");
+    if (!src) continue;
     // force absolute URLs
     if (isRelative.test(src)) {
       src = new URL(src, baseURL).href;
