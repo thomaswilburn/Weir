@@ -141,10 +141,10 @@ var db = {
     var data = await psql.query(q);
     return data ? data.rows[0].count : 0;
   },
-  
+
   //preferred over individual calls to getUnreadCount and getTotal
   getStatus: async function(c) {
-    var q = "SELECT COUNT(CASE WHEN read THEN null ELSE 1 END) AS unread, COUNT(read) AS total from stories;";
+    var q = "SELECT COUNT(CASE WHEN read THEN null ELSE 1 END) AS unread, COUNT(read) AS total, MAX(id) AS last FROM stories;";
     var data = await psql.query(q);
     return data && data.rows[0];
   },

@@ -23,6 +23,8 @@ class ConnectionStatus extends ElementBase {
   constructor() {
     super();
 
+    this.validTOTP = false;
+
     window.addEventListener("offline", this.networkUpdate);
     window.addEventListener("online", this.networkUpdate);
 
@@ -56,10 +58,10 @@ class ConnectionStatus extends ElementBase {
         this.scrollIntoView({ behavior: "smooth" });
       } else if (!response.authenticated) {
         this.setStatus("error", "Unauthenticated");
-        this.scrollIntoView({ behavior: "smooth" });
-        this.elements.totp.focus({ preventScroll: true });
+        this.updateTOTP(false);
       } else {
         this.setStatus("connected", "Connected");
+        this.updateTOTP(true);
       }
       this.elements.auth.toggleAttribute("hidden", response.authenticated || !response.secure);
       this.elements.insecure.toggleAttribute("hidden", response.secure);
@@ -82,6 +84,16 @@ class ConnectionStatus extends ElementBase {
     }
   }
 
+  updateTOTP(status) {
+    // only show error and focus the field once
+    if (this.validTOTP && !status) {
+      this.scrollIntoView({ behavior: "smooth" });
+      this.elements.totp.focus({ preventScroll: true });
+      events.fire("toast:error", "TOTP error");
+    }
+    this.validTOTP = status;
+  }
+
   apiSuccess() {
     this.setStatus("connected", "Connected");
     this.elements.auth.toggleAttribute("hidden", true);
@@ -101,7 +113,8 @@ class ConnectionStatus extends ElementBase {
       this.setStatus("connected", "Connected");
       events.fire("connection:established");
     } else {
-      this.setStatus("error", "Bad TOTP")
+      this.setStatus("error", "Bad TOTP");
+      this.updateTOTP(false);
     }
     this.elements.auth.toggleAttribute("hidden", result.success);
   }

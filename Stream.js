@@ -23,7 +23,8 @@ server.route("/stream/unread", async function (req) {
     req.reply({
       items: unread,
       unread: status.unread,
-      total: status.total
+      total: status.total,
+      last: status.last
     });
   } else {
     req.reply({
@@ -35,8 +36,8 @@ server.route("/stream/unread", async function (req) {
 server.route("/stream/mark", async function (req) {
   var item = req.params.item;
   await db.mark(item);
-  var { total, unread } = await db.getStatus();
-  req.reply({ marked: 1, total, unread });
+  var { total, unread, last } = await db.getStatus();
+  req.reply({ marked: 1, total, unread, last });
 });
 
 server.route("/stream/markRefresh", async function (req) {
@@ -52,6 +53,7 @@ server.route("/stream/markRefresh", async function (req) {
   req.reply({
     items: unread,
     total: status.total,
-    unread: status.unread
+    unread: status.unread,
+    last: status.last
   });
 });

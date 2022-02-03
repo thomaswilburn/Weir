@@ -47,7 +47,6 @@ class StoryList extends ElementBase {
     this.selected = null;
     this.loading = null;
     this.counts = {};
-    this.hasUnread = false;
   }
 
   connectedCallback() {
@@ -72,9 +71,7 @@ class StoryList extends ElementBase {
       var counts = await server.getCounts();
       unread = counts.unread * 1;
     } catch (err) {
-      if (err instanceof TOTPError) {
-        events.fire("toast:error", "TOTP expired");
-      }
+      // connection-status handles error display now
     }
     // if we were empty, either get items now, or
     // (if the tab is hidden) wait for it to resurface
@@ -100,9 +97,7 @@ class StoryList extends ElementBase {
       this.updateStoryList(items);
     } catch (err) {
       // check for TOTP
-      if (err instanceof TOTPError) {
-        events.fire("toast:error", "TOTP expired");
-      } else {
+      if (!(err instanceof TOTPError)) {
         // throw a status toast if it fails
         events.fire("toast:error", "Something went wrong!");
         console.log(err);
@@ -151,7 +146,7 @@ class StoryList extends ElementBase {
 
     this.replaceChildren(...listed);
 
-    this.stories = items;
+    this.stories = items; 
     this.selectStory(items[0]);
   }
 
@@ -189,20 +184,19 @@ class StoryList extends ElementBase {
   }
 
   updateCounts(e) {
-    var { unread, total } = e;
+    var { unread, total, last } = e;
     unread *= 1;
     this.elements.unread.innerHTML = unread;
     this.elements.total.innerHTML = total;
     document.title = `Weir (${unread})`;
-    var changed = unread != this.counts.unread;
-    if (!this.hasUnread && unread && changed) {
+    var changed = last != this.counts.last;
+    if (changed && unread) {
       this.setFavicon(true);
     }
-    this.counts = { unread, total };
+    this.counts = { unread, total, last };
   }
 
   async setFavicon(alert) {
-    this.hasUnread = alert;
     var oldIcon = favicon;
     favicon = document.createElement("link");
     favicon.rel = "shortcut icon";
