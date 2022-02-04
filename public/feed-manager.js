@@ -24,7 +24,7 @@ class FeedManager extends ElementBase {
 
   async refresh() {
     var response = await get("/feeds");
-    var feeds = response.feeds.sort((a, b) => (a.title < b.title ? -1 : 1));
+    var feeds = response.feeds.sort((a, b) => (a.title.toLowerCase() < b.title.toLowerCase() ? -1 : 1));
     var rows = feeds.map(f => h("tr", [
       h("td.title", [
         h("a", { href: f.site_url }, f.title)
