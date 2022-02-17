@@ -1,7 +1,7 @@
 import events from "./events.js";
 
 var keymap = {
-  "Enter": "reader:open-tab",
+  "enter": "reader:open-tab",
   "j": "stream:next",
   "k": "stream:previous",
   ".": "stream:refresh",
@@ -11,7 +11,7 @@ var keymap = {
 }
 
 document.body.addEventListener("keydown", function(e) {
-  var mapping = keymap[e.key];
+  var mapping = keymap[e.key.toLowerCase()];
   if (typeof mapping == "string") mapping = [mapping];
   if (!mapping) return;
   var [ command, ...args ] = mapping;

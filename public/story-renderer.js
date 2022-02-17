@@ -52,12 +52,18 @@ class StoryRenderer extends ElementBase {
     shareButton.toggleAttribute("disabled", false);
     openButton.toggleAttribute("disabled", false);
     this.current = data;
-    var date = new Date(Date.parse(data.published));
+    try {
+      var date = new Date(Date.parse(data.published));
+      published.innerHTML = formatter.format(date);
+    } catch (err) {
+      // if the date can't be parsed, handle it
+      console.log(`Couldn't parse date: ${data.published}`);
+      published.innerHTML = data.published || "No date";
+    }
     metadata.removeAttribute("hidden");
     feed.innerHTML = data.feed;
     title.innerHTML = data.title;
     author.innerHTML = data.author || "Nobody";
-    published.innerHTML = formatter.format(date);
     content.innerHTML = sanitize.html(data.content, data.url);
     this.dispatch("requestscroll", { top: 0 });
     this.elements.title.focus({ preventScroll: true });
