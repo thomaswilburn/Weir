@@ -4,10 +4,10 @@ import events from "./lib/events.js";
 import { endpoint } from "./config.js";
 
 var fills = {
-  error: "#600",
-  unknown: "#E70",
-  connected: "#0C4",
-  offline: "gray"
+  error: "#A41D29",
+  unknown: "#DFC952",
+  connected: "#808",
+  offline: "#BFBFBF"
 };
 
 class ConnectionStatus extends ElementBase {
