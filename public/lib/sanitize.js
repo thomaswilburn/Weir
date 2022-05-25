@@ -1,6 +1,6 @@
 import { sanitizerBlocklist } from "../config.js";
 
-export var html = function(input, baseURL) {
+export var html = function(input, post) {
 
   var dom = document.implementation.createHTMLDocument("");
   dom.body.innerHTML = input;
@@ -43,11 +43,20 @@ export var html = function(input, baseURL) {
     if (!src) continue;
     // force absolute URLs
     if (isRelative.test(src)) {
-      src = new URL(src, baseURL).href;
+      src = new URL(src, post.url).href;
     }
     // force HTTPS
     src = src.replace(/^http:/, "https:");
     img.src = src;
+  }
+
+  // remove H1 elements that are duplicated
+  // this is primarily for 538, which is annoying
+  var h1s = dom.querySelectorAll("h1");
+  for (var h1 of h1s) {
+    if (h1.innerHTML.trim() == post.title) {
+      h1.remove();
+    }
   }
 
   return dom.body.innerHTML;

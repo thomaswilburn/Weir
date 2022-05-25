@@ -81,6 +81,15 @@
   overflow-x: auto;
 }
 
+.content header {
+  font-size: 80%;
+}
+
+/* bad rule just for 538 metadata block */
+.content header :is(p, div) {
+  display: inline-block;
+}
+
 .buttons {
   position: sticky;
   bottom: 0;

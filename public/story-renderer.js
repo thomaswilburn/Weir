@@ -64,7 +64,7 @@ class StoryRenderer extends ElementBase {
     feed.innerHTML = data.feed;
     title.innerHTML = data.title;
     author.innerHTML = data.author || "Nobody";
-    content.innerHTML = sanitize.html(data.content, data.url);
+    content.innerHTML = sanitize.html(data.content, data);
     this.dispatch("requestscroll", { top: 0 });
     this.elements.title.focus({ preventScroll: true });
     this.elements.openButton.href = data.url;
