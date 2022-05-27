@@ -53,8 +53,11 @@ export var html = function(input, post) {
   // remove H1 elements that are duplicated
   // this is primarily for 538, which is annoying
   var h1s = dom.querySelectorAll("h1");
+  var dequoter = /['‘’❛❜"“”‟❝❞＂]/g;
+  var title = post.title.trim().replace(dequoter, "");
   for (var h1 of h1s) {
-    if (h1.innerHTML.trim() == post.title) {
+    var headline = h1.innerHTML.trim().replace(dequoter, "");
+    if (headline == title) {
       h1.remove();
     }
   }
