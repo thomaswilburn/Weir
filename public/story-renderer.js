@@ -13,12 +13,13 @@ var formatOptions = {
 var formatter = new Intl.DateTimeFormat("en-US", formatOptions);
 
 class StoryRenderer extends ElementBase {
-  static boundMethods = ["onSelect", "onShare", "onOpen", "onFeature"];
+  static boundMethods = ["onSelect", "onShare", "onCopy", "onOpen", "onFeature"];
 
   constructor() {
     super();
     events.on("reader:render", this.onSelect);
     events.on("reader:share", this.onShare);
+    events.on("reader:copy", this.onCopy);
     events.on("reader:open-tab", this.onOpen);
     events.on("view:reader",this.onFeature);
     this.current = null;
@@ -26,6 +27,9 @@ class StoryRenderer extends ElementBase {
 
     if (!("share" in navigator)) {
       this.elements.shareButton.toggleAttribute("hidden", true);
+      if ("clipboard" in navigator) {
+        this.elements.copyButton.removeAttribute("hidden");
+      }
     }
   }
 
@@ -81,6 +85,17 @@ class StoryRenderer extends ElementBase {
     if (!("share" in navigator)) return;
     var { url, title } = this.current;
     navigator.share({ url, title });
+  }
+
+  async onCopy() {
+    if (!("clipboard" in navigator)) return;
+    var { url } = this.current;
+    try {
+      await navigator.clipboard.writeText(url);
+      events.fire("toast:alert", "Copied story URL");
+    } catch (err) {
+      events.fire("toast:error", "Unable to copy URL");
+    }
   }
 
   onOpen() {
