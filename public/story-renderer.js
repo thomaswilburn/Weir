@@ -35,11 +35,12 @@ class StoryRenderer extends ElementBase {
 
   clear() {
     this.current = null;
-    var { metadata, title, content, shareButton, openButton } = this.elements;
+    var { metadata, title, content, shareButton, openButton, copyButton } = this.elements;
     metadata.toggleAttribute("hidden", true);
     title.innerHTML = "";
     content.innerHTML = this.placeholder;
     shareButton.toggleAttribute("disabled", true);
+    copyButton.toggleAttribute("disabled", true);
     openButton.toggleAttribute("disabled", true);
     if (this.elements.content.visible) events.fire("view:list");
   }
@@ -48,11 +49,12 @@ class StoryRenderer extends ElementBase {
     if (!data) return this.clear();
     var {
       metadata, feed, title, author, published,
-      content, shareButton, openButton
+      content, shareButton, openButton, copyButton
     } = this.elements;
     if (this.current && data.id != this.current.id && content.visible) {
       server.mark(this.current.id);
     }
+    copyButton.toggleAttribute("disabled", false);
     shareButton.toggleAttribute("disabled", false);
     openButton.toggleAttribute("disabled", false);
     this.current = data;
