@@ -76,7 +76,7 @@ class StoryList extends ElementBase {
     // if we were empty, either get items now, or
     // (if the tab is hidden) wait for it to resurface
     if (unread && !this.stories.length) {
-      if (document.hidden) {
+      if (document.visibilityState != "visible") {
         // this can be added multiple times, it'll only fire once
         document.addEventListener("visibilitychange", this.getStories, { once: true });
       } else {
@@ -208,7 +208,7 @@ class StoryList extends ElementBase {
   }
 
   onTabVisibility() {
-    if (!document.hidden) {
+    if (document.visibilityState != "visible") {
       this.setFavicon(false);
     }
   }
