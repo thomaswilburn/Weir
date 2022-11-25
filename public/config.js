@@ -1,4 +1,4 @@
-export var endpoint = "./";
+export var endpoint = "https://flesh-refoe.com/weir/";
 export var sanitizerBlocklist = [
   ".feedflare",
   ".mf-viral",

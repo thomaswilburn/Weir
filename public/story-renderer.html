@@ -2,8 +2,6 @@
 :host {
   display: flex;
   flex-direction: column;
-  /*overflow-y: auto;*/
-  padding: 16px 16px 0;
 }
 
 [as=metadata] {
@@ -14,6 +12,7 @@
   display: flex;
   align-items: stretch;
   justify-content: flex-start;
+  padding: 16px;
 }
 
 [as=metadata][hidden] {
@@ -48,16 +47,22 @@
   border: none;
 }
 
-.content {
+.viewport {
   flex: 1;
   font-size: var(--font-size-4);
-  max-width: 600px;
+  overflow: auto;
+  min-height: 0;
+  padding: 0 16px;
 }
 
 @media (max-width: 600px) {
-  .content {
+  .viewport {
     font-size: var(--font-size-5);
   }
+}
+
+.viewport > * {
+  max-width: 600px;
 }
 
 .content :is(img, video, svg) {
@@ -91,14 +96,17 @@
 }
 
 .buttons {
-  position: sticky;
-  bottom: 0;
   width: 100%;
   display: flex;
   flex-direction: row-reverse;
   justify-content: center;
   align-items: flex-end;
-  padding-bottom: var(--fab-offset);
+}
+
+@media (max-width: 600px) {
+  .buttons {
+    box-shadow: 0 -12px 16px #0002;
+  }
 }
 
 .buttons path, .buttons circle {
@@ -131,17 +139,21 @@ action-button svg {
 
 
 </style>
-<div as="metadata" hidden>
-  <div as="feed"></div>
-  <hr aria-hidden="true">
-  <div as="author"></div>
-  <hr aria-hidden="true">
-  <div as="published"></div>
-</div>
-<div as="title" tabindex="-1"></div>
 
-<visibility-observer class="content" as="content">
-  <div class="placeholder">No story selected</div>
+<visibility-observer class="viewport" as="viewport">
+  <div as="metadata" hidden>
+    <div as="feed"></div>
+    <hr aria-hidden="true">
+    <div as="author"></div>
+    <hr aria-hidden="true">
+    <div as="published"></div>
+  </div>
+
+  <div as="title" tabindex="-1"></div>
+
+  <article class="content" as="content">
+    <div class="placeholder">No story selected</div>
+  </article>
 </visibility-observer>
 
 <div class="buttons">

@@ -4,6 +4,7 @@
   flex-direction: column;
   /*overflow-y: auto;*/
   padding: 16px 16px 0 0;
+  width: 100%;
 }
 
 .counts {
@@ -24,6 +25,8 @@
   display: block;
   flex: 1;
   min-width: 0;
+  min-height: 0;
+  overflow: auto;
 }
 
 .placeholder {
@@ -38,14 +41,16 @@
 }
 
 .buttons {
-  position: sticky;
-  bottom: 0;
-  width: 100%;
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: flex-end;
-  padding-bottom: var(--fab-offset);
+}
+
+@media (max-width: 600px) {
+  .buttons {
+    box-shadow: 0 -12px 16px #0002;
+  }
 }
 
 .buttons path {

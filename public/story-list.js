@@ -22,7 +22,8 @@ class StoryList extends ElementBase {
     "markAll",
     "selectOffset",
     "onFeature",
-    "onTabVisibility"
+    "onTabVisibility",
+    "onElementVisibility"
   ];
 
   constructor() {
@@ -42,6 +43,8 @@ class StoryList extends ElementBase {
     events.on("stream:previous", () => this.selectOffset(-1));
 
     document.addEventListener("visibilitychange", this.onTabVisibility);
+
+    this.elements.list.addEventListener("visibility", this.onElementVisibility);
 
     this.timeout = null;
     this.selected = null;
@@ -163,7 +166,8 @@ class StoryList extends ElementBase {
       var selected = c.story == story.id;
       c.classList.toggle("selected", selected);
       if (selected && this.elements.list.visible) {
-        this.dispatch("requestscroll", { element: c, behavior: "smooth" });
+        // this.dispatch("requestscroll", { element: c, behavior: "smooth" });
+        c.scrollIntoView({ behavior: "smooth", block: "nearest" });
       }
     }
     events.fire("reader:render", story);
@@ -210,6 +214,16 @@ class StoryList extends ElementBase {
   onTabVisibility() {
     if (document.visibilityState != "visible") {
       this.setFavicon(false);
+    }
+  }
+
+  onElementVisibility(e) {
+    console.log(e, this.selected);
+    if (e.detail.visible && this.selected) {
+      var child = this.querySelector(`[story="${this.selected.id}"]`);
+      console.log(child);
+      if (!child) return;
+      child.scrollIntoView({ behavior: "smooth", block: "nearest" });
     }
   }
 }

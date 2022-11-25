@@ -1,7 +1,6 @@
 import "./connection-status.js";
 import "./feed-manager.js";
 import "./letter-dream.js";
-import "./scroll-panel.js";
 import "./story-list.js";
 import "./story-renderer.js";
 import "./toast-alert.js";

@@ -8,12 +8,20 @@ import "./action-button.js";
 
 var formatOptions = {
   dateStyle: "medium",
-  timeStyle: "medium"
-}
+  timeStyle: "medium",
+};
 var formatter = new Intl.DateTimeFormat("en-US", formatOptions);
 
 class StoryRenderer extends ElementBase {
-  static boundMethods = ["onSelect", "onShare", "onCopy", "onOpen", "onFeature"];
+  static boundMethods = [
+    "onSelect",
+    "onShare",
+    "onCopy",
+    "onOpen",
+    "onFeature",
+    "onKey",
+    "onScrollRequest",
+  ];
 
   constructor() {
     super();
@@ -21,7 +29,9 @@ class StoryRenderer extends ElementBase {
     events.on("reader:share", this.onShare);
     events.on("reader:copy", this.onCopy);
     events.on("reader:open-tab", this.onOpen);
-    events.on("view:reader",this.onFeature);
+    events.on("view:reader", this.onFeature);
+    events.on("reader:scroll", this.onScrollRequest);
+    this.addEventListener("keydown", this.onKey);
     this.current = null;
     this.placeholder = this.elements.content.innerHTML;
 
@@ -35,7 +45,8 @@ class StoryRenderer extends ElementBase {
 
   clear() {
     this.current = null;
-    var { metadata, title, content, shareButton, openButton, copyButton } = this.elements;
+    var { metadata, title, content, shareButton, openButton, copyButton } =
+      this.elements;
     metadata.toggleAttribute("hidden", true);
     title.innerHTML = "";
     content.innerHTML = this.placeholder;
@@ -48,8 +59,15 @@ class StoryRenderer extends ElementBase {
   onSelect(data) {
     if (!data) return this.clear();
     var {
-      metadata, feed, title, author, published,
-      content, shareButton, openButton, copyButton
+      metadata,
+      feed,
+      title,
+      author,
+      published,
+      content,
+      shareButton,
+      openButton,
+      copyButton,
     } = this.elements;
     if (this.current && data.id != this.current.id && content.visible) {
       server.mark(this.current.id);
@@ -71,14 +89,14 @@ class StoryRenderer extends ElementBase {
     title.innerHTML = data.title;
     author.innerHTML = data.author || "Nobody";
     content.innerHTML = sanitize.html(data.content, data);
-    this.dispatch("requestscroll", { top: 0 });
+    this.elements.viewport.scrollTop = 0;
     this.elements.title.focus({ preventScroll: true });
     this.elements.openButton.href = data.url;
   }
 
   onFeature() {
     this.scrollIntoView({
-      behavior: "smooth"
+      behavior: "smooth",
     });
   }
 
@@ -104,6 +122,19 @@ class StoryRenderer extends ElementBase {
     if (!this.current) return;
     var { url } = this.current;
     window.open(url, "_blank");
+  }
+
+  onScrollRequest() {
+    this.elements.viewport.scroll({
+      top: this.elements.viewport.scrollTop + this.elements.viewport.offsetHeight * .9,
+      behavior: "smooth"
+    });
+  }
+
+  onKey(e) {
+    if (e.key == " ") {
+      e.stopImmediatePropagation();
+    }
   }
 }
 

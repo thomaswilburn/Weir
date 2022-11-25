@@ -24,7 +24,6 @@
 
 @media (max-width: 600px) {
   :root {
-    --fab-offset: 60px;
     --font-size-4: 20px;
     --font-size-5: 16px;
   }
@@ -61,7 +60,7 @@ html[data-theme=dark] {
 .app {
   display: grid;
   width: 100vw;
-  height: 100vh;
+  height: 100dvh;
   grid-template-columns: minmax(250px, 1fr) minmax(300px, 2fr) 3fr;
   gap: 8px;
   overflow: hidden;
@@ -70,7 +69,7 @@ html[data-theme=dark] {
 .panel {
   min-height: 0;
   min-width: 0;
-  max-height: 100vh;
+  height: 100%;
   overflow-y: auto;
   scroll-snap-align: center;
   padding: 0;
@@ -115,9 +114,6 @@ feed-manager {
   min-height: 0;
   overflow-y: auto;
 }
-
-story-list { flex: 1; }
-story-renderer { flex: 1; }
 
 /* general UI */
 
