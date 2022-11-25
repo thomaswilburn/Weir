@@ -36,11 +36,13 @@ html {
   line-height: 1.6;
   background: var(--background);
   color: var(--foreground);
+  height: 100lvh;
 }
 
 body {
   padding: 0;
   margin: 0;
+  height: 100%;
 }
 
 html[data-theme=dark] {
@@ -71,7 +73,8 @@ html[data-theme=dark] {
   min-width: 0;
   height: 100%;
   overflow-y: auto;
-  scroll-snap-align: center;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
   padding: 0;
   display: flex;
   flex-direction: column;

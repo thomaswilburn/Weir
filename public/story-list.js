@@ -218,7 +218,6 @@ class StoryList extends ElementBase {
   }
 
   onElementVisibility(e) {
-    console.log(e, this.selected);
     if (e.detail.visible && this.selected) {
       var child = this.querySelector(`[story="${this.selected.id}"]`);
       console.log(child);
