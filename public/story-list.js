@@ -21,7 +21,6 @@ class StoryList extends ElementBase {
     "getCounts",
     "markAll",
     "selectOffset",
-    "onFeature",
     "onTabVisibility",
     "onElementVisibility"
   ];
@@ -30,11 +29,11 @@ class StoryList extends ElementBase {
     super();
 
     this.stories = [];
+    this.firstLoad = true;
     this.addEventListener("story-click", this.onSelect);
 
     events.on("stream:counts", this.updateCounts);
     events.on("connection:established", this.getStories);
-    events.on("view:list", this.onFeature);
 
     events.on("stream:refresh", this.getStories);
     events.on("stream:mark-all", this.markAll);
@@ -55,12 +54,6 @@ class StoryList extends ElementBase {
   connectedCallback() {
     this.getStories();
     window.setTimeout(this.getCounts, CHECK_INTERVAL);
-  }
-
-  onFeature() {
-    this.scrollIntoView({
-      behavior: "smooth"
-    });
   }
 
   async getCounts() {
@@ -149,8 +142,12 @@ class StoryList extends ElementBase {
 
     this.replaceChildren(...listed);
 
-    this.stories = items; 
+    this.stories = items;
     this.selectStory(items[0]);
+    if (this.firstLoad && items.length) {
+      this.scrollIntoView({ behavior: "smooth" });
+      this.firstLoad = false;
+    }
   }
 
   onSelect(e) {
