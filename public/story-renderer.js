@@ -21,6 +21,7 @@ class StoryRenderer extends ElementBase {
     "onFeature",
     "onKey",
     "onScrollRequest",
+    "onClick"
   ];
 
   constructor() {
@@ -41,6 +42,8 @@ class StoryRenderer extends ElementBase {
         this.elements.copyButton.removeAttribute("hidden");
       }
     }
+
+    this.addEventListener("click", this.onClick);
   }
 
   clear() {
@@ -133,8 +136,13 @@ class StoryRenderer extends ElementBase {
 
   onKey(e) {
     if (e.key == " ") {
+      e.stopPropagation();
       e.stopImmediatePropagation();
     }
+  }
+
+  onClick() {
+    this.elements.title.focus({ preventScroll: true });
   }
 }
 
