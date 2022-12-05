@@ -62,6 +62,21 @@ export var html = function(input, post) {
     }
   }
 
+  // widon't
+  var nbsp = "\u00A0";
+  var paragraphs = dom.querySelectorAll("p");
+  for (var p of paragraphs) {
+    var last = p.lastChild;
+    while (last && last.nodeType != 3) last = last.lastChild;
+    if (!last) continue;
+    var text = last.textContent.trim();
+    var lastSpaceIndex = text.lastIndexOf(" ");
+    if (lastSpaceIndex == -1) continue;
+    var before = text.slice(0, lastSpaceIndex);
+    var after = text.slice(lastSpaceIndex + 1);
+    last.textContent = [before, after].join(nbsp);
+  }
+
   return dom.body.innerHTML;
 
 }
