@@ -69,7 +69,7 @@ export var html = function(input, post) {
     var last = p.lastChild;
     while (last && last.nodeType != 3) last = last.lastChild;
     if (!last) continue;
-    var text = last.textContent.trim();
+    var text = last.textContent.trimEnd();
     var lastSpaceIndex = text.lastIndexOf(" ");
     if (lastSpaceIndex == -1) continue;
     var before = text.slice(0, lastSpaceIndex);
