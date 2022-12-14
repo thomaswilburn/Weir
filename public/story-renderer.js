@@ -72,7 +72,7 @@ class StoryRenderer extends ElementBase {
       openButton,
       copyButton,
     } = this.elements;
-    if (this.current && data.id != this.current.id && content.visible) {
+    if (this.current && data.id != this.current.id) {
       server.mark(this.current.id);
     }
     copyButton.toggleAttribute("disabled", false);
