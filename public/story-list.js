@@ -144,7 +144,7 @@ class StoryList extends ElementBase {
 
     this.stories = items;
     this.selectStory(items[0]);
-    if (this.firstLoad) {
+    if (this.firstLoad || !items.length) {
       this.scrollIntoView({ behavior: "smooth" });
       this.firstLoad = false;
     }
