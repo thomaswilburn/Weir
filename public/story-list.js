@@ -135,7 +135,7 @@ class StoryList extends ElementBase {
         },
         [
           h("span", { slot: "feed" }, item.feed),
-          h("span", { slot: "title" }, item.title),
+          h("span", { slot: "title" }, item.title || "[untitled post]"),
         ]
       );
     });

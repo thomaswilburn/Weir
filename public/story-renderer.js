@@ -89,7 +89,7 @@ class StoryRenderer extends ElementBase {
     }
     metadata.removeAttribute("hidden");
     feed.innerHTML = data.feed;
-    title.innerHTML = data.title;
+    title.innerHTML = data.title || "untitled post";
     author.innerHTML = data.author || "Nobody";
     content.innerHTML = sanitize.html(data.content, data);
     this.elements.viewport.scrollTop = 0;

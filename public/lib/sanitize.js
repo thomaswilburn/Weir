@@ -54,7 +54,7 @@ export var html = function(input, post) {
   // this is primarily for 538, which is annoying
   var h1s = dom.querySelectorAll("h1");
   var dequoter = /['‘’❛❜"“”‟❝❞＂]/g;
-  var title = post.title.trim().replace(dequoter, "");
+  var title = (post.title || "").trim().replace(dequoter, "");
   for (var h1 of h1s) {
     var headline = h1.innerHTML.trim().replace(dequoter, "");
     if (headline == title) {
