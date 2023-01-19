@@ -21,8 +21,15 @@ class StoryRenderer extends ElementBase {
     "onFeature",
     "onKey",
     "onScrollRequest",
-    "onClick"
+    "onClick",
+    "onMouse"
   ];
+
+  mouseStatus = {
+    moved: false,
+    x: 0,
+    y: 0
+  };
 
   constructor() {
     super();
@@ -44,6 +51,8 @@ class StoryRenderer extends ElementBase {
     }
 
     this.addEventListener("click", this.onClick);
+    this.addEventListener("mousedown", this.onMouse);
+    this.addEventListener("mousemove", this.onMouse);
   }
 
   clear() {
@@ -142,7 +151,27 @@ class StoryRenderer extends ElementBase {
   }
 
   onClick() {
+    if (this.mouseStatus.moved) return;
     this.elements.title.focus({ preventScroll: true });
+  }
+
+  onMouse(e) {
+    switch (e.type) {
+
+      case "mousedown":
+        this.mouseStatus.moved = false;
+        this.mouseStatus.x = e.clientX;
+        this.mouseStatus.y = e.clientY;
+      break;
+      
+      case "mousemove":
+        if (this.mouseStatus.moved) return;
+        var dx = e.clientX - this.mouseStatus.x;
+        var dy = e.clientY - this.mouseStatus.y;
+        var distance = Math.sqrt(dx ** 2 + dy ** 2);
+        if (distance > 10) this.mouseStatus.moved = true;
+      break;
+    }
   }
 }
 
