@@ -15,17 +15,21 @@ var setDB = function (db) {
 };
 
 var feedsPerFetch = cfg.feedsPerFetch || 4;
+// add an hour to the window for modifications
+// some blogs don't generate immediately after publication, which leads to a race
+var ifModifiedBuffer = 1000 * 60 * 60;
 
 var Hound = new EventEmitter();
 
 var makeHeaders = function (row) {
-  return {
-    "If-Modified-Since":
-      (row.pulled && row.pulled.toUTCString()) || new Date(0).toUTCString(),
+  var ims = row.pulled ? new Date(row.pulled - ifModifiedBuffer) : new Date(0);
+  var headers = {
+    "If-Modified-Since": ims.toUTCString(),
     Connection: "close",
     "Accept-Encoding": "gzip",
     "User-Agent": "Wier RSS reader"
   };
+  return headers;
 };
 
 var parseFeed = function(input) {
