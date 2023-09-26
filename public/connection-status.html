@@ -18,10 +18,10 @@ input {
   padding: 8px;
   border: none;
   border-bottom: 1px solid var(--accent);
-}
 
-input:focus {
-  outline: 2px solid var(--accent);
+  &:focus {
+    outline: 2px solid var(--accent);
+  }
 }
 
 button {
@@ -30,27 +30,27 @@ button {
   color: var(--background);
   padding: 4px 12px;
   font-family: var(--display-font);
-}
 
-button:focus {
-  outline: none;
-  background: var(--foreground);
+  &:focus {
+    outline: none;
+    background: var(--foreground);
+  }
 }
 
 [as=auth] {
   display: flex;
   align-items: middle;
   gap: 4px;
-}
 
-[as=auth][hidden] {
-  display: none;
-}
+  &[hidden] {
+    display: none;
+  }
 
-[as=auth] input {
-  flex: 1;
-  min-width: 0;
-  margin-right: 4px;
+  & input {
+    flex: 1;
+    min-width: 0;
+    margin-right: 4px;
+  }
 }
 
 [as=insecureQR] {

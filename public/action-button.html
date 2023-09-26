@@ -14,6 +14,12 @@
   }
 }
 
+@media (min-width: 600px) {
+  :host {
+    width: 80px;
+  }
+}
+
 :host([hidden]) {
   display: none;
 }
@@ -35,30 +41,24 @@ a, button {
   box-shadow: 0 4px 3px #0003;
   transition: all .2s linear;
   cursor: pointer;
-}
 
-@media (min-width: 600px) {
-  :host {
-    width: 80px;
+  &:hover {
+    background: var(--foreground);
   }
 
-  a, button {
+  &.disabled, &[disabled] {
+    filter: saturate(0%);
+    opacity: .8;
+    pointer-events: none;
+  }
+
+  @media (min-width: 600px) {
     border-radius: 20px;
   }
 
-  a:hover, button:hover {
+  &:focus-visible {
     background: var(--foreground);
   }
-}
-
-a.disabled, button:disabled {
-  filter: saturate(0%);
-  opacity: .8;
-  pointer-events: none;
-}
-
-a:focus-visible, button:focus-visible {
-  background: var(--foreground);
 }
 
 [hidden] {

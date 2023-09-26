@@ -8,10 +8,10 @@ input {
   padding: 8px;
   border: none;
   border-bottom: 1px solid var(--accent);
-}
 
-input:focus {
-  outline: 2px solid var(--accent);
+  &:focus {
+    outline: 2px solid var(--accent);
+  }
 }
 
 button {
@@ -21,13 +21,12 @@ button {
   padding: 4px 12px;
   font-family: var(--display-font);
   font-size: inherit;
-}
 
-button:focus {
-  outline: none;
-  background: var(--foreground);
+  &:focus {
+    outline: none;
+    background: var(--foreground);
+  }
 }
-
 
 [as=expander] {
   font-size: var(--font-size-3);
@@ -38,21 +37,21 @@ button:focus {
   padding: 0;
   margin: 0;
   display: block;
-}
 
-[as=expander]:focus {
-  background: none;
-  outline: 1px dotted var(--foreground);
-}
+  &:focus {
+    background: none;
+    outline: 1px dotted var(--foreground);
+  }
 
-[as=expander]::after {
-  display: inline-block;
-  content: "▽";
-  margin: 0 16px;
-}
+  &::after {
+    display: inline-block;
+    content: "▽";
+    margin: 0 16px;
+  }
 
-[as=expander][aria-expanded="true"]::after {
-  content: "△";
+  &[aria-expanded="true"]::after {
+    content: "△";
+  }
 }
 
 [as=container] {
@@ -62,16 +61,16 @@ button:focus {
 .controls {
   display: flex;
   font-size: var(--font-size-5);
-}
 
-.controls input {
-  margin-right: 4px;
-}
+  & input {
+    margin-right: 4px;
+  }
 
-.controls hr {
-  margin: 0 4px;
-  border: none;
-  border-left: 1px solid var(--foreground);
+  & hr {
+    margin: 0 4px;
+    border: none;
+    border-left: 1px solid var(--foreground);
+  }
 }
 
 table {
@@ -84,10 +83,10 @@ table {
 th {
   text-align: right;
   font-weight; normal;
-}
 
-th.title {
-  text-align: left;
+  &.title {
+    text-align: left;
+  }
 }
 
 td {
@@ -95,29 +94,29 @@ td {
   padding-left: 4px;
   padding-bottom: 4px;
   line-height: 1;
+
+  &.title {
+    text-align: left;
+    max-width: 140px;
+  }
+
+  &.kill {
+    padding-left: 4px;
+  }
+
+  & button {
+    padding: 2px 4px;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: var(--font-size-4);
+    padding: 0;
+    background: none;
+    color: var(--foreground);
+  }
 }
 
 tr:nth-child(2n) td {
   background: #8882;
-}
-
-td.title {
-  text-align: left;
-  max-width: 140px;
-}
-
-td.kill {
-  padding-left: 4px;
-}
-
-td button {
-  padding: 2px 4px;
-  font-weight: bold;
-  cursor: pointer;
-  font-size: var(--font-size-4);
-  padding: 0;
-  background: none;
-  color: var(--foreground);
 }
 
 a {
