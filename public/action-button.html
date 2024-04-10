@@ -42,8 +42,10 @@ a, button {
   transition: all .2s linear;
   cursor: pointer;
 
-  &:hover {
-    background: var(--foreground);
+  @media (min-width: 600px) {
+    &:hover {
+      background: var(--foreground);
+    }
   }
 
   &.disabled, &[disabled] {

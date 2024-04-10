@@ -22,7 +22,6 @@ export var html = function(input, post) {
   }
 
   // remove spammy social stuff
-  // we should make this configurable at some point
   var spam = dom.querySelectorAll(sanitizerBlocklist.join());
   for (var s of spam) {
     s.remove();
@@ -60,6 +59,12 @@ export var html = function(input, post) {
     if (headline == title) {
       h1.remove();
     }
+  }
+
+  // make sure media embeds show controls
+  var media = dom.querySelectorAll("audio, video");
+  for (var m of media) {
+    m.toggleAttribute("controls", true);
   }
 
   // widon't
