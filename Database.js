@@ -19,7 +19,7 @@ var db = {
     return new Promise((ok, fail) => {
       psql.query("SELECT * FROM pg_catalog.pg_tables WHERE tablename = 'feeds';", function(err, data) {
         if (err || !data.rows.length) {
-          psql.query("CREATE TABLE feeds (id SERIAL, title TEXT, url TEXT, site_url TEXT, pulled TIMESTAMPTZ, last_result INTEGER);");
+          psql.query("CREATE TABLE feeds (id SERIAL, title TEXT, url TEXT, site_url TEXT, pulled TIMESTAMPTZ, last_result INTEGER, etag TEXT);");
           psql.query("CREATE TABLE stories (id SERIAL, feed INTEGER, title TEXT, url TEXT, author TEXT, content TEXT, guid TEXT, read BOOLEAN DEFAULT false, published TIMESTAMPTZ DEFAULT now());");
           
           //We don't use the database for server-side options yet (possibly ever)
@@ -57,9 +57,9 @@ var db = {
   },
 
   //update a feed with its last fetch result code
-  setFeedResult: function(id, status) {
-    return psql.query("UPDATE feeds SET last_result = $1, pulled = $2 WHERE id = $3;", 
-      [status, new Date(), id]);
+  setFeedResult: function(id, status, etag = "") {
+    return psql.query("UPDATE feeds SET last_result = $1, pulled = $2, etag = $4 WHERE id = $3;", 
+      [status, new Date(), id, etag]);
   },
   
   //get story GUID and dates

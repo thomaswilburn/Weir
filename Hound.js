@@ -22,13 +22,18 @@ var ifModifiedBuffer = 1000 * 60 * 60;
 var Hound = new EventEmitter();
 
 var makeHeaders = function (row) {
-  var ims = row.pulled ? new Date(row.pulled - ifModifiedBuffer) : new Date(0);
+  var { pulled, etag } = row;
+  var ims = pulled ? new Date(pulled - ifModifiedBuffer) : new Date(0);
   var headers = {
-    "If-Modified-Since": ims.toUTCString(),
     Connection: "close",
     "Accept-Encoding": "gzip",
     "User-Agent": "Wier RSS reader"
   };
+  if (etag) {
+    headers["If-None-Match"] = etag;
+  } else {
+    headers["If-Modified-Since"] = ims.toUTCString();
+  }
   return headers;
 };
 
@@ -69,6 +74,11 @@ var release = async function () {
           try {
             var headers = makeHeaders(row);
             var response = await fetch(row.url, { headers, timeout: 10 * 1000 });
+            var etag = response.headers.get("etag");
+            if (etag) {
+              // etag = etag.match(/"([^"]+)"/)?.[1];
+            }
+
             // console.log(row.url, response.status);
             if (response.status !== 200) {
               // Not Modified isn't an error
@@ -80,13 +90,13 @@ var release = async function () {
                   response.statusText
                 );
               }
-              database.setFeedResult(row.id, response.status);
+              database.setFeedResult(row.id, response.status, etag);
               return ok();
             }
 
             var body = await response.text();
             var [ meta, articles ] = await parseFeed(body);
-            database.setFeedResult(row.id, 200);
+            database.setFeedResult(row.id, 200, etag);
             saveItems(row.id, meta, articles);
           } catch (err) {
             console.log("Hound request/parse error:", row.url, err);
