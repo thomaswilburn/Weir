@@ -6,10 +6,11 @@
 :root {
   --display-font: Raleway, Roboto, sans-serif;
   --reader-font: "Open Sans", Roboto, sans-serif;
-  --background: white;
-  --foreground: black;
+  --light: #F8F8F8;
+  --dark: #111;
+  --background: var(--light);
+  --foreground: var(--dark);
   --accent: #808;
-
 
   --font-size-1: 48px;
   --font-size-2: 32px;
@@ -46,15 +47,15 @@ body {
 }
 
 html[data-theme=dark] {
-  --background: black;
-  --foreground: white;
+  --background: var(--dark);
+  --foreground: var(--light);
   --accent: #FFA200;
 }
 
 @media (prefers-color-scheme: dark) {
   html[data-theme=auto] {
-    --background: black;
-    --foreground: white;
+    --background: var(--dark);
+    --foreground: var(--light);
     --accent: #FFA200;
   }
 }

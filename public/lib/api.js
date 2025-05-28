@@ -7,13 +7,21 @@ var join = path => [endpoint, path].join("/").replace(/\/+(\w)/g, "/$1");
 
 export class TOTPError extends Error {}
 
+function timeoutFetch(url, options) {
+  var { timeout = 5000 } = options;
+  var controller = new AbortController();
+  var { signal } = controller;
+  setTimeout(() => controller.abort(), timeout);
+  return fetch(url, { ...options, signal });
+}
+
 export var get = async function(path, params = {}) {
   var url = new URL(join(path), window.location.href);
   for (var k in params) {
     url.searchParams.set(k, params[k]);
   }
   try {
-    var response = await fetch(url.toString(), { credentials });
+    var response = await timeoutFetch(url.toString(), { credentials });
   } catch (err) {
     console.log(err);
     fire("connection:error", err);
@@ -31,7 +39,7 @@ export var get = async function(path, params = {}) {
 export var post = async function(path, data) {
   var url = new URL(join(path), window.location.href);
   try {
-    var response = await fetch(url.toString(), {
+    var response = await timeoutFetch(url.toString(), {
       method: "POST",
       body: JSON.stringify(data),
       credentials
