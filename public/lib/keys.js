@@ -10,7 +10,7 @@ var keymap = {
   " ": "reader:scroll"
 }
 
-document.body.addEventListener("keydown", function(e) {
+window.addEventListener("keydown", function(e) {
   var mapping = keymap[e.key.toLowerCase()];
   if (typeof mapping == "string") mapping = [mapping];
   if (!mapping) return;
