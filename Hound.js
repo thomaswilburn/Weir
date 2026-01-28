@@ -40,8 +40,16 @@ var makeHeaders = function (row) {
 var parseFeed = function(input) {
   return new Promise(function(ok, fail) {
     var parser = new FeedParser();
-    parser.on("error", fail);
-    parser.on("complete", (meta, articles) => ok([meta, articles]));
+    let meta, items = [];
+    parser.on("error", err => console.log(err));
+    parser.on("meta", m => meta = m);
+    parser.on("readable", function() {
+      var item;
+      while (item = this.read()) {
+        items.push(item);
+      }
+    });
+    parser.on("end", () => ok([meta, items]));
     parser.write(input);
     parser.end();
   });
@@ -79,7 +87,7 @@ var release = async function () {
               // etag = etag.match(/"([^"]+)"/)?.[1];
             }
 
-            // console.log(row.url, response.status);
+            console.log(row.url, response.status);
             if (response.status !== 200) {
               // Not Modified isn't an error
               if (response.status !== 304) {
