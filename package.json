@@ -13,10 +13,9 @@
   },
   "dependencies": {
     "feedparser": "^2.2.10",
-    "node-fetch": "^2.6.1",
     "pg": "^8.6.0",
     "speakeasy": "1.0.3",
-    "xml2js": "^0.2.7"
+    "xml2js": "^0.6.2"
   },
   "license": "GPL-3.0",
   "engines": {

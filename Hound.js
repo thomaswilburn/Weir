@@ -1,5 +1,4 @@
 var FeedParser = require("feedparser");
-var fetch = require("node-fetch");
 var pg = require("pg");
 var EventEmitter = require("events").EventEmitter;
 var cfg = require("./Config");
