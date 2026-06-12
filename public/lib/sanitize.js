@@ -5,8 +5,6 @@ export var html = function(input, post) {
   var dom = document.implementation.createHTMLDocument("");
   dom.body.innerHTML = input;
 
-  var isRelative = /^\/[^\/]/;
-
   // remove scripts, styles
   var interactive = dom.querySelectorAll("script, style, link");
   for (var i of interactive) {
@@ -34,6 +32,15 @@ export var html = function(input, post) {
     c.removeAttribute("class");
   }
 
+  // update relative links
+  for (var a of dom.querySelectorAll("a")) {
+    let href = a.getAttribute("href");
+    if (!href.match(/:\/\//)) {
+      href = new URL(href, post.url).href;
+      a.setAttribute("href", href);
+    }
+  }
+
   // update image references
   var images = dom.querySelectorAll("img");
   for (var img of images) {
@@ -41,12 +48,14 @@ export var html = function(input, post) {
     var src = img.getAttribute("src");
     if (!src) continue;
     // force absolute URLs
-    if (isRelative.test(src)) {
+    if (!src.match(/:\/\//)) {
       src = new URL(src, post.url).href;
     }
     // force HTTPS
     src = src.replace(/^http:/, "https:");
     img.src = src;
+    // also drop "sizes" which seems to be causing issues
+    img.removeAttribute("sizes");
   }
 
   // remove H1 elements that are duplicated
