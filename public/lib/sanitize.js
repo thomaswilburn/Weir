@@ -35,7 +35,7 @@ export var html = function(input, post) {
   // update relative links
   for (var a of dom.querySelectorAll("a")) {
     let href = a.getAttribute("href");
-    if (!href.match(/:\/\//)) {
+    if (href && !href.match(/:\/\//)) {
       href = new URL(href, post.url).href;
       a.setAttribute("href", href);
     }
