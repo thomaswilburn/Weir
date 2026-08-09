@@ -1,3 +1,5 @@
+This repo is no longer active--development can now be found at https://codeberg.org/thomaswilburn/weir
+
 Weir
 ====
 
